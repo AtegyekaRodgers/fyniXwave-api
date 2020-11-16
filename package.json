@@ -1,0 +1,29 @@
+{
+  "name": "delv",
+  "version": "1.0.0",
+  "description": "delv web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/123MwanjeMike/delv.git"
+  },
+  "keywords": [
+    "web",
+    "application"
+  ],
+  "author": "Ed Tech @ Refactory",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/123MwanjeMike/delv/issues"
+  },
+  "homepage": "https://github.com/123MwanjeMike/delv#readme",
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "prettier": "2.1.2"
+  }
+}
