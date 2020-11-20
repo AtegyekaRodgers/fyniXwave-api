@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to delv api' });
+  res.status(200).json({ message: 'Welcome to delv api' });
 });
 
 // simple route
@@ -36,8 +36,10 @@ mongoose.connection
     console.log(`Connection error: ${err.message}`);
   });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+module.exports = app;
