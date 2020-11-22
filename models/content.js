@@ -20,10 +20,11 @@ const contentSchema = new Schema({
     type: String,
     trim: true,
   },
+  
   rating: {
     type: String,
     trim: true,
-  },
+  }
 });
 
 const Content = mongoose.model('Content', contentSchema);
