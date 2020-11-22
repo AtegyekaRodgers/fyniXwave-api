@@ -7,7 +7,8 @@ User.create = async (req, res) => {
   try {
     const user = new User(req.body);
     await user.save();
-    res.status(200).send('Success');
+    res.status(200)
+    end('Success');
   } catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while creating new user',
