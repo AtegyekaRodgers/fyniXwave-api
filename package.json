@@ -4,6 +4,7 @@
   "description": "delv web application",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "mocha --exit || true"
   },
   "repository": {
