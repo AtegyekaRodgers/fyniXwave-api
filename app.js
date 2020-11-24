@@ -1,8 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-require('dotenv').config();
+const { dbConnect } = require('./config/db');
 require('./models/user');
 
 const user = require('./routes/user');
@@ -27,19 +26,12 @@ app.use('/user', user);
 app.use('/addcontent', mentorsRoutes);
 
 // Making database connection to delv
-mongoose.connect(process.env.DATABASE, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
-
-mongoose.connection
-  .on('open', () => {
-    console.log('Mongoose connection open');
-  })
-  .on('error', (err) => {
-    console.log(`Connection error: ${err.message}`);
-  });
+try {
+  dbConnect();
+  console.log('Mongoose connection open');
+} catch (error) {
+  console.error(`Connection error: ${error.message}`);
+}
 
 // path
 app.use('/public/content', express.static(path.join(__dirname, 'public/content')));
