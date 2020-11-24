@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "mocha --exit || true"
+    "test": "mocha --exit --timeout 6000 || true"
   },
   "repository": {
     "type": "git",
