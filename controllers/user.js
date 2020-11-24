@@ -7,12 +7,12 @@ User.create = async (req, res) => {
   try {
     const user = new User(req.body);
     await user.save();
-    res.status(200).send('Success');
+    res.status(200).send({ message: 'success' });
   } catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while creating new user',
     });
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -24,7 +24,7 @@ User.readAll = async (req, res) => {
     res.status(500).send({
       message: err.message || 'An error occured while retrieving users',
     });
-    console.log(err);
+    console.error(err);
   }
 };
 
