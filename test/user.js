@@ -9,7 +9,7 @@ const {
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe.skip('creates user', () => {
+describe('creates user', () => {
   before((done) => {
     dbConnect()
       .then(() => done())
