@@ -1,3 +1,6 @@
+#not to push the skipped test too
+test/user.js
+
 # Logs
 logs
 *.log
