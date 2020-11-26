@@ -57,7 +57,7 @@ const userSchema = new Schema({
     type: String,
     trim: true,
     required: [true, 'user category is required'],
-    enum: ['Institution', 'Mentor', 'University Student', 'Secondary Student'],
+    enum: ['institution', 'mentor', 'student'],
   },
 });
 
