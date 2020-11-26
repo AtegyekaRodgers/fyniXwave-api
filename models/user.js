@@ -46,7 +46,7 @@ const userSchema = new Schema({
     trim: true,
     required: true,
     min: [2, 'username too short'],
-    max: 25,
+    max: [15, 'username too long'],
   },
   password: {
     type: String,

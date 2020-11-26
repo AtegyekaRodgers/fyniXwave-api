@@ -29,7 +29,7 @@ describe('creates user', () => {
         username: 'Username',
         password: '*******',
         email: 'mentor@delv.ac.ug',
-        phonenumber: '07xxxxxxxx',
+        phonenumber: '256-771-123456',
         usercategory: 'mentor',
       })
       .then((res) => {
