@@ -26,6 +26,17 @@ const contentSchema = mongoose.Schema({
   cloudinaryId: {
     type: String,
   },
+  createdAt: {
+    type:Date,
+    default: Date.now(),
+  },
+  modifiedAt: {
+    type:Date,
+   default: Date.now(),
+  },
+},
+{
+  timestamps:true
 });
 
 

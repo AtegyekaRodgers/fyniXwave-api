@@ -13,6 +13,8 @@ exports.uploadFile = async (req, res) => {
             rating: req.body.rating,
             cloudinaryFileLink: result.secure_url,
             cloudinaryId: result.public_id,
+            createdAt:Date.now(),
+            modifiedAt:Date.now()
           });
           // Save content
           await content.save();
