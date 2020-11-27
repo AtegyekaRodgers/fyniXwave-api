@@ -7,7 +7,6 @@ const userSchema = new Schema({
     type: String,
     trim: true,
     required: [true, 'email is required'],
-    unique: true,
     validate: {
       validator(v) {
         // eslint-disable-next-line no-useless-escape
@@ -15,11 +14,11 @@ const userSchema = new Schema({
       },
       message: (props) => `${props.value} is not a valid email!`,
     },
+    unique: true,
   },
   phonenumber: {
     type: String,
     trim: true,
-    unique: true,
     validate: {
       validator(v) {
         // Format is 256-774-123456
@@ -27,6 +26,7 @@ const userSchema = new Schema({
       },
       message: (props) => `${props.value} is not a valid phone number!`,
     },
+    unique: true,
   },
   firstname: {
     type: String,
@@ -57,7 +57,7 @@ const userSchema = new Schema({
     type: String,
     trim: true,
     required: [true, 'user category is required'],
-    enum: ['institution', 'mentor', 'student'],
+    enum: ['institution', 'mentor', 'student', 'employee', 'graduate'],
   },
 });
 

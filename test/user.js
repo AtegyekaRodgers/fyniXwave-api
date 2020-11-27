@@ -35,7 +35,7 @@ describe('creates user', () => {
       .then((res) => {
         const { body, status } = res;
         expect(body).to.contain.property('message');
-        expect(status).to.equal(200);
+        expect(status).to.equal(201);
         done();
       })
       .catch((err) => done(err));
