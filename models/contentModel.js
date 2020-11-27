@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose;
 
-const contentSchema = new Schema({
+const contentSchema = mongoose.Schema({
   title: {
     type: String,
     trim: true,
@@ -16,16 +15,18 @@ const contentSchema = new Schema({
     type: String,
     trim: true,
   },
-  content: {
-    type: String,
-    trim: true,
-  },
 
   rating: {
     type: String,
     trim: true,
   },
+  cloudinaryFileLink: {
+    type: String,
+  },
+  cloudinaryId: {
+    type: String,
+  },
 });
 
-const Content = mongoose.model('Content', contentSchema);
-module.exports = Content;
+
+module.exports = mongoose.model('Content', contentSchema);
