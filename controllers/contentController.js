@@ -22,3 +22,17 @@ exports.uploadFile = async (req, res) => {
         } catch (err) {
           console.log(err);
     }}
+
+  //content get route
+    exports.getFile = async(req,res) => {
+      
+        try {
+          let content = await Content.find();
+          res.json(content);
+        } catch (err) {
+          res.status(500).send({
+            message: err.message || 'An error occured while retrieving contents',
+          });
+          console.log(err);
+        }
+      };
