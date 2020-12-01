@@ -37,7 +37,7 @@ describe('auth tests', () => {
   });
 
   // User logs in
-  it('user logs in', (done) => {
+  it.skip('user logs in', (done) => {
     request(app)
       .post('/auth/login')
       .send({
@@ -57,7 +57,7 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
   // User logs out
-  it('user logs out', (done) => {
+  it.skip('user logs out', (done) => {
     request(app)
       .get('/auth/logout')
       .then((res) => {
@@ -70,7 +70,7 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
   // User resets password
-  it('user resets password', (done) => {
+  it.skip('user resets password', (done) => {
     request(app)
       .post('/auth/resetpassword')
       .send({
