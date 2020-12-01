@@ -11,8 +11,22 @@ const { dbConnect, dbClose } = require('../config/db');
 
 describe('auth tests', () => {
   before((done) => {
+    // Connecting to mock database
     dbConnect()
       .then(() => done())
+      .catch((err) => done(err));
+
+    // Creating dummy test user
+    request(app).post('/user/')
+      .send({
+        firstname: 'authFName',
+        lastname: 'authLName',
+        username: 'myUsername',
+        password: 'myPassword',
+        email: 'auth@delv.ac.ug',
+        phonenumber: '256-999-123456',
+        usercategory: 'mentor',
+      })
       .catch((err) => done(err));
   });
 
@@ -21,17 +35,22 @@ describe('auth tests', () => {
       .then(() => done())
       .catch((err) => done(err));
   });
+
   // User logs in
   it('user logs in', (done) => {
     request(app)
-      .post('/auth/')
+      .post('/auth/login')
       .send({
-        username: 'Username',
-        password: '*******',
+        username: 'myUsername',
+        password: 'myPassword',
       })
       .then((res) => {
         const { body, status } = res;
-        expect(body.message).to.equal('loglog in successfullog in successful in successful');
+        // Checking for needed return data
+        expect(body.message).to.equal('log in successful', 'return message failed');
+        expect(body).to.contain.property('token', 'token not sent');
+        expect(body).to.contain.property('username', 'username not sent');
+        expect(body).to.contain.property('usercategory', 'usercategory not sent');
         expect(status).to.equal(200);
         done();
       })
@@ -40,10 +59,11 @@ describe('auth tests', () => {
   // User logs out
   it('user logs out', (done) => {
     request(app)
-      .get('/auth/')
+      .get('/auth/logout')
       .then((res) => {
         const { body, status } = res;
-        expect(body.message).to.equal('log out successful');
+        expect(body.message).to.equal('log out successful', 'return message failed');
+        expect(body).to.not.contain.property('token', 'token maintained after log out');
         expect(status).to.equal(200);
         done();
       })
@@ -52,14 +72,14 @@ describe('auth tests', () => {
   // User resets password
   it('user resets password', (done) => {
     request(app)
-      .post('/auth/reset')
+      .post('/auth/resetpassword')
       .send({
-        username: 'Username',
-        password: '*******',
+        password: 'newPassword',
       })
       .then((res) => {
         const { body, status } = res;
-        expect(body.message).to.equal('password reset successful');
+        expect(body.message).to.equal('password reset successful', 'return message failed');
+        expect(body).to.not.contain.property('token', 'token maintained after password reset');
         expect(status).to.equal(204);
         done();
       })
