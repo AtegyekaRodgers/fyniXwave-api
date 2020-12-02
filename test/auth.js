@@ -6,11 +6,16 @@ const {
   before, describe, it,
 } = require('mocha');
 
-require('./test_helper');
 const app = require('../app');
+const { dbConnect } = require('../config/db');
 
 describe('auth tests', () => {
   before((done) => {
+    // Connecting to mock database
+    dbConnect()
+      .then(() => done())
+      .catch((err) => done(err));
+
     // Creating dummy test user
     request(app).post('/user/')
       .send({
