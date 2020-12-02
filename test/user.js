@@ -3,11 +3,11 @@ process.env.NODE_ENV = 'test';
 const { expect } = require('chai');
 const request = require('supertest');
 const {
-  before, describe, it,
+  before, after, describe, it,
 } = require('mocha');
 
 const app = require('../app');
-const { dbConnect } = require('../config/db');
+const { dbConnect, dbClose } = require('../config/db');
 
 describe('user tests', () => {
   before((done) => {
@@ -16,6 +16,11 @@ describe('user tests', () => {
       .catch((err) => done(err));
   });
 
+  after((done) => {
+    dbClose()
+      .then(() => done())
+      .catch((err) => done(err));
+  });
   // Creates user
   it('create users', (done) => {
     request(app).post('/user/')
