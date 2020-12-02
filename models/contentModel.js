@@ -9,13 +9,7 @@ const contentSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
-
   description: {
-    type: String,
-    trim: true,
-  },
-
-  rating: {
     type: String,
     trim: true,
   },

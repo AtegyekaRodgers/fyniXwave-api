@@ -48,6 +48,7 @@ const userSchema = new Schema({
     required: true,
     min: [2, 'username too short'],
     max: [15, 'username too long'],
+    unique: [true, 'username is already'],
   },
   password: {
     type: String,

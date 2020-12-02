@@ -37,7 +37,7 @@ describe.skip('auth tests', () => {
   });
 
   // User logs in
-  it.skip('user logs in', (done) => {
+  it('user logs in', (done) => {
     request(app)
       .post('/auth/login')
       .send({

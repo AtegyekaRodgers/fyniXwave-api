@@ -4,8 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 const upload = require('../config/multer');
-const { uploadFile } = require('../controllers/contentController');
-const { getFile } = require('../controllers/contentController');
+const { getFile, uploadFile } = require('../controllers/contentController');
 
 // upload content get route
 router.get('/', getFile);

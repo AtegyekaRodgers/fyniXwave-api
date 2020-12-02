@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const user = require('./routes/user');
+const auth = require('./routes/auth');
 const uploadFile = require('./routes/contentRoutes');
 
 // require routes
@@ -22,8 +23,9 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to delv api' });
 });
 
-// simple route
+// Routes
 app.use('/user', user);
+app.use('/auth', auth);
 app.use('/uploadcontent', uploadFile);
 
 // Making database connection to delv

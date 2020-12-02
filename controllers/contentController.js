@@ -10,7 +10,6 @@ exports.uploadFile = async (req, res) => {
       title: req.body.title,
       author: req.body.author,
       description: req.body.description,
-      rating: req.body.rating,
       cloudinaryFileLink: result.secure_url,
       cloudinaryId: result.public_id,
       createdAt: Date.now(),
