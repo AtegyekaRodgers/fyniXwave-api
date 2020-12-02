@@ -3,19 +3,14 @@ process.env.NODE_ENV = 'test';
 const { expect } = require('chai');
 const request = require('supertest');
 const {
-  before, after, describe, it,
+  before, describe, it,
 } = require('mocha');
 
+require('./hooks');
 const app = require('../app');
-const { dbConnect, dbClose } = require('../config/db');
 
 describe('auth tests', () => {
   before((done) => {
-    // Connecting to mock database
-    dbConnect()
-      .then(() => done())
-      .catch((err) => done(err));
-
     // Creating dummy test user
     request(app).post('/user/')
       .send({
@@ -27,12 +22,6 @@ describe('auth tests', () => {
         phonenumber: '256-999-123456',
         usercategory: 'mentor',
       })
-      .catch((err) => done(err));
-  });
-
-  after((done) => {
-    dbClose()
-      .then(() => done())
       .catch((err) => done(err));
   });
 

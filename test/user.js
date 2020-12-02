@@ -6,6 +6,7 @@ const {
   before, after, describe, it,
 } = require('mocha');
 
+require('./hooks');
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
