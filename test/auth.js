@@ -9,42 +9,20 @@ const {
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe('auth tests', () => {
+describe.skip('auth tests', () => {
   before((done) => {
-    // Creating dummy test user
-    request(app).post('/user/')
-      .send({
-        firstname: 'authFName',
-        lastname: 'authLName',
-        username: 'myUsername',
-        password: 'myPassword',
-        email: 'auth@delv.ac.ug',
-        phonenumber: '256-999-123456',
-        usercategory: 'mentor',
-      })
+    // Connecting to mock database
+    dbConnect()
+      .then(() => done())
       .catch((err) => done(err));
   });
 
-  // User logs in
-  it('user logs in', (done) => {
-    request(app)
-      .post('/auth/login')
-      .send({
-        username: 'myUsername',
-        password: 'myPassword',
-      })
-      .then((res) => {
-        const { body, status } = res;
-        // Checking for needed return data
-        expect(body.message).to.equal('log in successful', 'return message failed');
-        expect(body).to.contain.property('token', 'token not sent');
-        expect(body).to.contain.property('username', 'username not sent');
-        expect(body).to.contain.property('usercategory', 'usercategory not sent');
-        expect(status).to.equal(200);
-        done();
-      })
+  after((done) => {
+    dbClose()
+      .then(() => done())
       .catch((err) => done(err));
   });
+
   // User logs out
   it.skip('user logs out', (done) => {
     request(app)
