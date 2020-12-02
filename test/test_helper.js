@@ -10,8 +10,8 @@ before((done) => {
     .catch((err) => done(err));
 });
 
-// after((done) => {
-//   dbClose()
-//     .then(() => done())
-//     .catch((err) => done(err));
-// });
+after((done) => {
+  dbClose()
+    .then(() => done())
+    .catch((err) => done(err));
+});
