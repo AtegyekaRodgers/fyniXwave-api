@@ -6,7 +6,7 @@ const {
   before, describe, it,
 } = require('mocha');
 
-require('./hooks');
+require('./test_helper');
 const app = require('../app');
 
 describe('auth tests', () => {
