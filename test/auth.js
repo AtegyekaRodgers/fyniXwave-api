@@ -7,7 +7,7 @@ const {
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe.skip('auth tests', () => {
+describe('auth tests', () => {
   before((done) => {
     // Connecting to mock database
     dbConnect()
