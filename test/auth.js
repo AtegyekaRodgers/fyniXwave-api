@@ -61,6 +61,7 @@ describe('auth tests', () => {
       .get('/auth/logout')
       .then((res) => {
         const { body, status } = res;
+        
         expect(body.message).to.deep.equal('log out successful');
         expect(body.user).to.deep.equal(null);
         expect(body.token).to.deep.equal(null);
@@ -73,7 +74,7 @@ describe('auth tests', () => {
   // User resets password
   it('user resets password', (done) => {
     request(app)
-      .post('/auth/resetPassword')
+      .post('/auth/resetpassword')
       .send({
         username: 'myUsername',
         password: 'myPassword',
@@ -81,6 +82,7 @@ describe('auth tests', () => {
       })
       .then((res) => {
         const { body, status } = res;
+        console.log(body);
         expect(body.message).to.equal('Password has been reset. Please log in');
         expect(body.user).to.deep.equal(null);
         expect(body.token).to.deep.equal(null);
