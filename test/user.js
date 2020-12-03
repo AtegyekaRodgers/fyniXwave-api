@@ -14,18 +14,6 @@ describe('user tests', () => {
     dbConnect()
       .then(() => done())
       .catch((err) => done(err));
-    // Creating dummy test user
-    request(app).post('/user/')
-      .send({
-        firstname: 'authFName',
-        lastname: 'authLName',
-        username: 'myUsername',
-        password: 'myPassword',
-        email: 'auth@delv.ac.ug',
-        phonenumber: '256-999-123456',
-        usercategory: 'mentor',
-      })
-      .catch((err) => done(err));
   });
 
   after((done) => {
@@ -56,6 +44,18 @@ describe('user tests', () => {
 
   // User logs in
   it('user logs in', (done) => {
+    // Creating dummy test user
+    request(app).post('/user/')
+      .send({
+        firstname: 'authFName',
+        lastname: 'authLName',
+        username: 'myUsername',
+        password: 'myPassword',
+        email: 'auth@delv.ac.ug',
+        phonenumber: '256-999-123456',
+        usercategory: 'mentor',
+      })
+      .catch((err) => done(err));
     request(app)
       .post('/auth/login')
       .send({
