@@ -8,7 +8,7 @@ const {
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
-require('../config/jwt');
+const secret = require('../config/jwt');
 
 describe('auth tests', () => {
   before((done) => {
