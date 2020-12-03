@@ -1,11 +1,12 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const { dbConnect } = require('./config/db');
 require('./models/user');
 
 const app = express();
-
+app.use(cors());
 // parse requests of content-type: application/json
 app.use(bodyParser.json());
 
