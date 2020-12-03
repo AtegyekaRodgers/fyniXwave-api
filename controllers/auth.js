@@ -12,10 +12,13 @@ auth.login = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (user) {
-      const authenticate = await bcrypt.compare(req.body.password, user.password);
+      const authenticate = await bcrypt.compare(
+        req.body.password,
+        user.password,
+      );
       if (authenticate) {
         const token = jwt.sign({ id: user._id }, `${secret}`, {
-        // Token will expire in one month
+          // Token will expire in one month
           expiresIn: 86400 * 30,
         });
         res.status(200).json({
@@ -39,7 +42,15 @@ auth.login = async (req, res) => {
   }
 };
 
-auth.logout = () => {};
+auth.logout = async (req, res) => {
+  res
+    .status(200)
+    .send({
+      user: null,
+      token: null,
+      message: 'log out successful',
+    });
+};
 
 auth.resetPassword = () => {};
 

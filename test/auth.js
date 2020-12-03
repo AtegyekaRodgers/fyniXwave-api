@@ -55,13 +55,14 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
   // User logs out
-  it.skip('user logs out', (done) => {
+  it('user logs out', (done) => {
     request(app)
       .get('/auth/logout')
       .then((res) => {
         const { body, status } = res;
-        expect(body.message).to.equal('log out successful', 'return message failed');
-        expect(body).to.not.contain.property('token', 'token maintained after log out');
+        expect(body.message).to.deep.equal('log out successful');
+        expect(body.user).to.deep.equal('null');
+        expect(body.token).to.deep.equal('null');
         expect(status).to.equal(200);
         done();
       })
@@ -76,8 +77,8 @@ describe('auth tests', () => {
       })
       .then((res) => {
         const { body, status } = res;
-        expect(body.message).to.equal('password reset successful', 'return message failed');
-        expect(body).to.not.contain.property('token', 'token maintained after password reset');
+        expect(body.message).to.equal('password reset successful');
+        expect(body).to.not.contain.property('token');
         expect(status).to.equal(204);
         done();
       })
