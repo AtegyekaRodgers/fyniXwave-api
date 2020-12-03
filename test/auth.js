@@ -55,23 +55,8 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
 
-  // User logs out
-  it('user logs out', (done) => {
-    request(app)
-      .get('/auth/logout')
-      .then((res) => {
-        const { body, status } = res;
-        expect(body.message).to.deep.equal('log out successful');
-        expect(body.user).to.deep.equal(null);
-        expect(body.token).to.deep.equal(null);
-        expect(status).to.equal(200);
-        done();
-      })
-      .catch((err) => done(err));
-  });
-
   // User resets password
-  it.skip('user resets password', (done) => {
+  it('user resets password', (done) => {
     request(app)
       .post('/auth/resetpassword')
       .send({
@@ -92,7 +77,7 @@ describe('auth tests', () => {
   });
 
   // New password logs user in
-  it.skip('new password logs user in', (done) => {
+  it('new password logs user in', (done) => {
     request(app)
       .post('/auth/login')
       .send({
@@ -104,6 +89,20 @@ describe('auth tests', () => {
         // Checking for needed returns
         expect(body).to.contain.property('token');
         expect(body).to.contain.property('user');
+        expect(status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  // User logs out
+  it('user logs out', (done) => {
+    request(app)
+      .get('/auth/logout')
+      .then((res) => {
+        const { body, status } = res;
+        expect(body.message).to.deep.equal('log out successful');
+        expect(body.user).to.deep.equal(null);
+        expect(body.token).to.deep.equal(null);
         expect(status).to.equal(200);
         done();
       })
