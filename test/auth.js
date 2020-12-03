@@ -93,6 +93,7 @@ describe('auth tests', () => {
       })
       .catch((err) => done(err));
   });
+
   // User logs out
   it('user logs out', (done) => {
     request(app)

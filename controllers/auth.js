@@ -42,14 +42,12 @@ auth.login = async (req, res) => {
   }
 };
 
-auth.logout = async (res) => {
-  res
-    .status(200)
-    .json({
-      user: null,
-      token: null,
-      message: 'log out successful',
-    });
+auth.logout = async (req, res) => {
+  res.status(200).json({
+    user: null,
+    token: null,
+    message: 'log out successful',
+  });
 };
 
 auth.resetPassword = async (req, res) => {
