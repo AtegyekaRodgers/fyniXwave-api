@@ -48,8 +48,8 @@ describe('auth tests', () => {
         const { body, status } = res;
         // Checking for needed return
         console.log(body);
-        expect(body).to.contain.property('token', 'token not sent');
-        expect(body).to.contain.property('user', 'username not sent');
+        expect(body).to.contain.property('token');
+        expect(body).to.contain.property('user');
         expect(status).to.equal(200);
         done();
       })
