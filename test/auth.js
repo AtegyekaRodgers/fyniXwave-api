@@ -5,6 +5,7 @@ const request = require('supertest');
 const {
   before, after, describe, it,
 } = require('mocha');
+const secret = require('../config/jwt');
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
