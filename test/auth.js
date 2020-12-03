@@ -66,11 +66,10 @@ describe('auth tests', () => {
       })
       .then((res) => {
         const { body, status } = res;
-        console.log(body);
         expect(body.message).to.equal('Password has been reset. Please log in');
         expect(body.user).to.deep.equal(null);
         expect(body.token).to.deep.equal(null);
-        expect(status).to.equal(204);
+        expect(status).to.equal(200);
         done();
       })
       .catch((err) => done(err));

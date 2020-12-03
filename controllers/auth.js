@@ -71,7 +71,7 @@ auth.resetPassword = async (req, res) => {
             },
           },
         );
-        res.status(204).json({
+        res.status(200).json({
           user: null,
           token: null,
           message: 'Password has been reset. Please log in',
