@@ -5,6 +5,11 @@ const request = require('supertest');
 const {
   before, after, describe, it,
 } = require('mocha');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const secret = require('../config/jwt');
+require('../models/user');
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
@@ -48,6 +53,8 @@ describe('auth tests', () => {
         const { body, status } = res;
         // Checking for needed return
         console.log(body);
+        expect(body).to.contain.property('token', 'token not sent');
+        expect(body).to.contain.property('user', 'username not sent');
         expect(status).to.equal(200);
         done();
       })
