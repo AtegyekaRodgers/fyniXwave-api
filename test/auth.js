@@ -73,7 +73,7 @@ describe('auth tests', () => {
   // User resets password
   it('user resets password', (done) => {
     request(app)
-      .post('/auth/resetpassword')
+      .post('/auth/resetPassword')
       .send({
         username: 'myUsername',
         password: 'myPassword',
@@ -91,7 +91,7 @@ describe('auth tests', () => {
   });
 
   // New password logs user in
-  it.skip('new password logs user in', (done) => {
+  it('new password logs user in', (done) => {
     request(app)
       .post('/auth/login')
       .send({
