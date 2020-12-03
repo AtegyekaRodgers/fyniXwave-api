@@ -41,36 +41,4 @@ describe('user tests', () => {
       })
       .catch((err) => done(err));
   });
-
-  // User logs in
-  it('user logs in', (done) => {
-    // Creating dummy test user
-    request(app).post('/user/')
-      .send({
-        firstname: 'authFName',
-        lastname: 'authLName',
-        username: 'myUsername',
-        password: 'myPassword',
-        email: 'auth@delv.ac.ug',
-        phonenumber: '256-999-123456',
-        usercategory: 'mentor',
-      })
-      .catch((err) => done(err));
-    request(app)
-      .post('/auth/login')
-      .send({
-        username: 'myUsername',
-        password: 'myPassword',
-      })
-      .then((res) => {
-        const { body, status } = res;
-        // Checking for needed return data
-        expect(body.message).to.equal('log in successful', 'return message failed');
-        expect(body).to.contain.property('token', 'token not sent');
-        expect(body).to.contain.property('user', 'username not sent');
-        expect(status).to.equal(200);
-        done();
-      })
-      .catch((err) => done(err));
-  });
 });
