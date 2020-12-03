@@ -7,21 +7,21 @@ const {
 } = require('mocha');
 
 const app = require('../app');
-const { dbConnect, dbClose } = require('../config/db');
+// const { dbConnect, dbClose } = require('../config/db');
 
 describe.skip('auth tests', () => {
-  before((done) => {
-    // Connecting to mock database
-    dbConnect()
-      .then(() => done())
-      .catch((err) => done(err));
-  });
+//   before((done) => {
+//     // Connecting to mock database
+//     dbConnect()
+//       .then(() => done())
+//       .catch((err) => done(err));
+//   });
 
-  after((done) => {
-    dbClose()
-      .then(() => done())
-      .catch((err) => done(err));
-  });
+//   after((done) => {
+//     dbClose()
+//       .then(() => done())
+//       .catch((err) => done(err));
+//   });
 
   // User logs out
   it.skip('user logs out', (done) => {
