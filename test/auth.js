@@ -54,6 +54,7 @@ describe('auth tests', () => {
       })
       .catch((err) => done(err));
   });
+
   // User logs out
   it('user logs out', (done) => {
     request(app)
@@ -68,18 +69,41 @@ describe('auth tests', () => {
       })
       .catch((err) => done(err));
   });
+
   // User resets password
-  it.skip('user resets password', (done) => {
+  it('user resets password', (done) => {
     request(app)
       .post('/auth/resetpassword')
       .send({
+        username: 'myUsername',
+        password: 'myPassword',
+        newPassword: 'newPassword',
+      })
+      .then((res) => {
+        const { body, status } = res;
+        expect(body.message).to.equal('Password has been reset. Please log in');
+        expect(body.user).to.deep.equal(null);
+        expect(body.token).to.deep.equal(null);
+        expect(status).to.equal(204);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  // New password logs user in
+  it('new password logs user in', (done) => {
+    request(app)
+      .post('/auth/login')
+      .send({
+        username: 'myUsername',
         password: 'newPassword',
       })
       .then((res) => {
         const { body, status } = res;
-        expect(body.message).to.equal('password reset successful');
-        expect(body).to.not.contain.property('token');
-        expect(status).to.equal(204);
+        // Checking for needed returns
+        expect(body).to.contain.property('token');
+        expect(body).to.contain.property('user');
+        expect(status).to.equal(200);
         done();
       })
       .catch((err) => done(err));

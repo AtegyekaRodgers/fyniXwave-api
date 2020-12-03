@@ -10,6 +10,6 @@ router.post('/login', auth.login);
 router.get('/logout', auth.logout);
 
 // Reset Password post request
-router.get('/resetpassword', auth.resetPassword);
+router.post('/resetpassword', auth.resetPassword);
 
 module.exports = router;
