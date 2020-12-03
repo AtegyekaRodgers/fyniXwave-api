@@ -5,7 +5,6 @@ const request = require('supertest');
 const {
   before, after, describe, it,
 } = require('mocha');
-const secret = require('../config/jwt');
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
@@ -47,11 +46,8 @@ describe('auth tests', () => {
       })
       .then((res) => {
         const { body, status } = res;
-        // Checking for needed return 
+        // Checking for needed return
         console.log(body);
-        expect(body.message).to.equal('log in successful', 'return message failed');
-        expect(body).to.contain.property('token', 'token not sent');
-        expect(body).to.contain.property('user', 'username not sent');
         expect(status).to.equal(200);
         done();
       })
