@@ -61,8 +61,8 @@ describe('auth tests', () => {
       .then((res) => {
         const { body, status } = res;
         expect(body.message).to.deep.equal('log out successful');
-        expect(body.user).to.deep.equal('null');
-        expect(body.token).to.deep.equal('null');
+        expect(body.user).to.deep.equal(null);
+        expect(body.token).to.deep.equal(null);
         expect(status).to.equal(200);
         done();
       })
