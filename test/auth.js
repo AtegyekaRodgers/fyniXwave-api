@@ -46,8 +46,7 @@ describe('auth tests', () => {
       })
       .then((res) => {
         const { body, status } = res;
-        // Checking for needed return
-        console.log(body);
+        // Checking for needed returns
         expect(body).to.contain.property('token');
         expect(body).to.contain.property('user');
         expect(status).to.equal(200);
