@@ -14,7 +14,7 @@ auth.login = async (req, res) => {
     if (user) {
       const authenticate = await bcrypt.compare(req.body.password, user.password);
       if (authenticate) {
-        const token = jwt.sign({ id: user._id }, 123, {
+        const token = jwt.sign({ id: user._id }, '123', {
         // Token will expire in one month
           expiresIn: 86400 * 30,
         });
