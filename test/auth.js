@@ -5,11 +5,6 @@ const request = require('supertest');
 const {
   before, after, describe, it,
 } = require('mocha');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
-const secret = require('../config/jwt');
-require('../models/user');
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
