@@ -47,8 +47,8 @@ describe('auth tests', () => {
       .then((res) => {
         const { body, status } = res;
         // Checking for needed return data
-        expect(body).to.contain.deep.property('token', 'token not sent');
-        expect(body).to.contain.deep.property('user', 'user details not sent');
+        expect(body[0]).to.contain.deep.property('token', 'token not sent');
+        expect(body[0]).to.contain.deep.property('user', 'user details not sent');
         expect(status).to.equal(200);
         done();
       })
