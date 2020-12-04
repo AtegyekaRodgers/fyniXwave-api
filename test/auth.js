@@ -36,6 +36,8 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
 
+  let token; // will hold the headers bearer token on login
+
   // User logs in
   it('user logs in', (done) => {
     request(app)
@@ -49,6 +51,23 @@ describe('auth tests', () => {
         // Checking for needed returns
         expect(body).to.contain.property('token');
         expect(body).to.contain.property('user');
+        expect(status).to.equal(200);
+        done();
+      })
+      .then((res) => {
+        // Used in next test of authorisation
+        token = res.body.token;
+      })
+      .catch((err) => done(err));
+  });
+
+  // auth.authorize(grant access) works
+  it('auth.authorize (grant access) works', (done) => {
+    request(app)
+      .get('/user/')
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        const { status } = res;
         expect(status).to.equal(200);
         done();
       })
@@ -104,6 +123,20 @@ describe('auth tests', () => {
         expect(body.user).to.deep.equal(null);
         expect(body.token).to.deep.equal(null);
         expect(status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  // auth.authorize (deny access) works
+  it('auth.authorize (deny access) works', (done) => {
+    token = null;
+    request(app)
+      .get('/user/')
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        const { status } = res;
+        expect(status).to.equal(403);
         done();
       })
       .catch((err) => done(err));
