@@ -110,7 +110,7 @@ auth.authorize = async (req, res, next) => {
       next();
     } catch (err) {
       res.status(500).json({
-        error: 'Server Error',
+        err: err.message || 'Server Error',
       });
     }
   } else {
