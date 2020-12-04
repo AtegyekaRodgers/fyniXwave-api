@@ -41,7 +41,7 @@ describe('auth tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        username: 'myUsername',
+        email: 'auth@delv.ac.ug',
         password: 'myPassword',
       })
       .then((res) => {
@@ -60,7 +60,7 @@ describe('auth tests', () => {
     request(app)
       .post('/auth/resetpassword')
       .send({
-        username: 'myUsername',
+        email: 'auth@delv.ac.ug',
         password: 'myPassword',
         newPassword: 'newPassword',
       })
