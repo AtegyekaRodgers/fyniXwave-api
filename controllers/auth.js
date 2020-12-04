@@ -91,6 +91,36 @@ auth.resetPassword = async (req, res) => {
   }
 };
 
+auth.authorize = async (req, res, next) => {
+  const header = req.headers.authorization;
+
+  if (typeof header !== 'undefined') {
+    const bearer = header.split(' ');
+    const token = bearer[1];
+    req.token = token;
+
+    try {
+      const tokenValid = await jwt.verify(token, `${secret}`);
+      if (!tokenValid) {
+        res.status(401).json({
+          user: null,
+          message: 'Authentication failed',
+        });
+      }
+      next();
+    } catch (err) {
+      res.status(500).json({
+        error: 'Server Error',
+      });
+    }
+  } else {
+    // If header is undefined gives status Forbidden
+    res.status(403).json({
+      err: 'Forbidden. Please login',
+    });
+  }
+};
+
 module.exports = {
   auth,
 };

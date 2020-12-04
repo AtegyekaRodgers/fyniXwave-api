@@ -1,5 +1,6 @@
 const express = require('express');
-const { User } = require('../controllers/user.js');
+const { User } = require('../controllers/user');
+const { auth } = require('../controllers/auth');
 
 const router = express.Router();
 
@@ -7,7 +8,7 @@ const router = express.Router();
 router.post('/', User.create);
 
 // Retrieve all Customers
-router.get('/', User.readAll);
+router.get('/', auth.authorize, User.readAll);
 
 // // Retrieve a single user with userId
 // router.get('/:userId', user.readOne);
