@@ -80,7 +80,7 @@ describe('auth tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        username: 'myUsername',
+        email: 'auth@delv.ac.ug',
         password: 'newPassword',
       })
       .then((res) => {
