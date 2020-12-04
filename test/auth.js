@@ -127,10 +127,8 @@ describe('auth tests', () => {
 
   // auth.authorize (deny access) works
   it('auth.authorize (deny access) works', (done) => {
-    token = null;
     request(app)
       .get('/user/')
-      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         const { status } = res;
         expect(status).to.equal(403);
