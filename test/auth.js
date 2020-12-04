@@ -49,14 +49,11 @@ describe('auth tests', () => {
       .then((res) => {
         const { body, status } = res;
         // Checking for needed returns
+        token = res.body.token;
         expect(body).to.contain.property('token');
         expect(body).to.contain.property('user');
         expect(status).to.equal(200);
         done();
-      })
-      .then((res) => {
-        // Used in next test of authorisation
-        token = res.body.token;
       })
       .catch((err) => done(err));
   });
