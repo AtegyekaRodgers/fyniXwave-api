@@ -19,19 +19,17 @@ User.create = async (req, res) => {
     res.status(500).json({
       message: err.message || 'An error occured while creating new user',
     });
-    console.error(err);
   }
 };
 
 User.readAll = async (req, res) => {
   try {
     const users = await User.find();
-    res.json(users);
+    res.status(200).json(users);
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while retrieving users',
     });
-    console.error(err);
   }
 };
 

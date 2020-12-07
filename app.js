@@ -1,29 +1,33 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const { dbConnect } = require('./config/db');
 require('./models/user');
 
-const user = require('./routes/user');
-
 const app = express();
-
+app.use(cors());
 // parse requests of content-type: application/json
 app.use(bodyParser.json());
 
 // parse requests of content-type
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const user = require('./routes/user');
+const auth = require('./routes/auth');
+const uploadFile = require('./routes/contentRoutes');
+
 // require routes
-const mentorsRoutes = require('./routes/mentorsroutes');
+// const uploadContentRoutes = require('./routes/contentRoutes');
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to delv api' });
 });
 
-// simple route
+// Routes
 app.use('/user', user);
-app.use('/addcontent', mentorsRoutes);
+app.use('/auth', auth);
+app.use('/uploadcontent', uploadFile);
 
 // Making database connection to delv
 try {

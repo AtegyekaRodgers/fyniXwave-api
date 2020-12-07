@@ -9,7 +9,7 @@ const {
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe('creates user', () => {
+describe('user tests', () => {
   before((done) => {
     dbConnect()
       .then(() => done())
@@ -21,7 +21,8 @@ describe('creates user', () => {
       .then(() => done())
       .catch((err) => done(err));
   });
-  it('should create new user', (done) => {
+  // Creates user
+  it('create users', (done) => {
     request(app).post('/user/')
       .send({
         firstname: 'FName',
