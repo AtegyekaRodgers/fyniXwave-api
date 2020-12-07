@@ -23,7 +23,7 @@ describe('auth tests', () => {
         lastname: 'authLName',
         username: 'myUsername',
         password: 'myPassword',
-        email: 'auth2@delv.ac.ug',
+        email: 'auth@delv.ac.ug',
         country: 'Uganda',
         usercategory: 'mentor',
       })
@@ -43,7 +43,7 @@ describe('auth tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth2@delv.ac.ug',
+        email: 'auth@delv.ac.ug',
         password: 'myPassword',
       })
       .then((res) => {
