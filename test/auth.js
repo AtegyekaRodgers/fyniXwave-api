@@ -23,7 +23,7 @@ describe('auth tests', () => {
         lastname: 'authLName',
         username: 'myUsername',
         password: 'myPassword',
-        email: 'auth@delv.ac.ug',
+        email: 'authtest@delv.ac.ug',
         country: 'Uganda',
         usercategory: 'mentor',
       })
@@ -43,7 +43,7 @@ describe('auth tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
+        email: 'authtest@delv.ac.ug',
         password: 'myPassword',
       })
       .then((res) => {
@@ -76,7 +76,7 @@ describe('auth tests', () => {
     request(app)
       .post('/auth/resetpassword')
       .send({
-        email: 'auth@delv.ac.ug',
+        email: 'authtest@delv.ac.ug',
         password: 'myPassword',
         newPassword: 'newPassword',
       })
@@ -96,7 +96,7 @@ describe('auth tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
+        email: 'authtest@delv.ac.ug',
         password: 'newPassword',
       })
       .then((res) => {
