@@ -10,7 +10,7 @@ const auth = () => true;
 
 auth.login = async (req, res) => {
   try {
-    const user = await User.find({ email: req.body.email });
+    const user = await User.findOne({ email: req.body.email });
     if (user) {
       const authenticate = await bcrypt.compare(
         req.body.password,
