@@ -24,7 +24,7 @@ describe('auth tests', () => {
         username: 'myUsername',
         password: 'myPassword',
         email: 'auth@delv.ac.ug',
-        phonenumber: '256-999-123456',
+        country: 'Uganda',
         usercategory: 'mentor',
       })
       .catch((err) => done(err));

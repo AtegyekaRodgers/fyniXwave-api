@@ -30,7 +30,7 @@ describe('user tests', () => {
         username: 'Username',
         password: '*******',
         email: 'mentor@delv.ac.ug',
-        phonenumber: '256-771-123456',
+        country: 'Uganda',
         usercategory: 'mentor',
       })
       .then((res) => {
