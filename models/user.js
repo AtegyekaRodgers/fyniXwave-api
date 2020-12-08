@@ -16,6 +16,7 @@ const userSchema = new Schema({
       message: (props) => `${props.value} is not a valid email!`,
     },
     unique: true,
+    uniqueCaseInsensitive: true,
   },
   country: {
     type: String,
@@ -40,6 +41,7 @@ const userSchema = new Schema({
     required: true,
     min: [2, 'username too short'],
     max: [15, 'username too long'],
+    unique: [true, 'username is already taken'],
   },
   password: {
     type: String,
