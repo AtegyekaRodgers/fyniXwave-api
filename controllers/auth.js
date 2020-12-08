@@ -30,7 +30,8 @@ auth.login = async (req, res) => {
           err: 'Username or Password incorrect',
         });
       }
-    } else {
+    }
+    if (!user) {
       res.status(500).json({
         err: 'User account not found',
       });

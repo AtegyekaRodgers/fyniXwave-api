@@ -36,6 +36,18 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
 
+  // auth.authorize (deny access) works
+  it('auth.authorize (deny access) works', (done) => {
+    request(app)
+      .get('/user/')
+      .then((res) => {
+        const { status } = res;
+        expect(status).to.equal(403);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
   let token; // will hold the headers bearer token on login
 
   // User logs in
@@ -120,18 +132,6 @@ describe('auth tests', () => {
         expect(body.user).to.deep.equal(null);
         expect(body.token).to.deep.equal(null);
         expect(status).to.equal(200);
-        done();
-      })
-      .catch((err) => done(err));
-  });
-
-  // auth.authorize (deny access) works
-  it('auth.authorize (deny access) works', (done) => {
-    request(app)
-      .get('/user/')
-      .then((res) => {
-        const { status } = res;
-        expect(status).to.equal(403);
         done();
       })
       .catch((err) => done(err));
