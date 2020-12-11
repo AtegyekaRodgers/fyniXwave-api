@@ -26,7 +26,7 @@ exports.uploadFile = async (req, res) => {
 // content get route
 exports.getFile = async (req, res) => {
   try {
-    const content = await Content.find();
+    let content = await Content.find({},{"title": 1, "author":1, "description": 1, "cloudinaryId":1, "createdAt":1, "modifiedAt":1}).sort({"createdAt": -1});
     res.json(content);
   } catch (err) {
     res.status(500).send({
@@ -40,7 +40,7 @@ exports.getFile = async (req, res) => {
 exports.getFile = async(req,res) => {
       
   try {
-    let content = await Content.find();
+    let content = await Content.find({},{"title": 1, "author":1, "description": 1, "cloudinaryId":1, "createdAt":1, "modifiedAt":1}).sort({"createdAt": -1});
     res.json(content);
   } catch (err) {
     res.status(500).send({
