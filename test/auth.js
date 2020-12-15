@@ -24,7 +24,7 @@ describe('auth tests', () => {
         username: 'myUsername',
         password: 'myPassword',
         email: 'auth@delv.ac.ug',
-        phonenumber: '256-999-123456',
+        country: 'Uganda',
         usercategory: 'mentor',
       })
       .catch((err) => done(err));
@@ -33,6 +33,18 @@ describe('auth tests', () => {
   after((done) => {
     dbClose()
       .then(() => done())
+      .catch((err) => done(err));
+  });
+
+  // auth.authorize (deny access) works
+  it('auth.authorize (deny access) works', (done) => {
+    request(app)
+      .get('/user/')
+      .then((res) => {
+        const { status } = res;
+        expect(status).to.equal(403);
+        done();
+      })
       .catch((err) => done(err));
   });
 
@@ -120,18 +132,6 @@ describe('auth tests', () => {
         expect(body.user).to.deep.equal(null);
         expect(body.token).to.deep.equal(null);
         expect(status).to.equal(200);
-        done();
-      })
-      .catch((err) => done(err));
-  });
-
-  // auth.authorize (deny access) works
-  it('auth.authorize (deny access) works', (done) => {
-    request(app)
-      .get('/user/')
-      .then((res) => {
-        const { status } = res;
-        expect(status).to.equal(403);
         done();
       })
       .catch((err) => done(err));

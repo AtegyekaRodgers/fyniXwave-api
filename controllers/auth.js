@@ -31,7 +31,7 @@ auth.login = async (req, res) => {
         });
       }
     } else {
-      res.status(400).json({
+      res.status(500).json({
         err: 'User account not found',
       });
     }

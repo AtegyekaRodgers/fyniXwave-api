@@ -16,19 +16,11 @@ const userSchema = new Schema({
       message: (props) => `${props.value} is not a valid email!`,
     },
     unique: true,
+    uniqueCaseInsensitive: true,
   },
-  phonenumber: {
+  country: {
     type: String,
     trim: true,
-    required: [true, 'phone number is required'],
-    validate: {
-      validator(v) {
-        // Format is 256-774-123456
-        return /\d{3}-\d{3}-\d{6}/.test(v);
-      },
-      message: (props) => `${props.value} is not a valid phone number!`,
-    },
-    unique: true,
   },
   firstname: {
     type: String,
@@ -49,7 +41,7 @@ const userSchema = new Schema({
     required: true,
     min: [2, 'username too short'],
     max: [15, 'username too long'],
-    unique: [true, 'username is already'],
+    unique: [true, 'username is already taken'],
   },
   password: {
     type: String,
