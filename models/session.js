@@ -4,6 +4,7 @@ const sessionSchema = mongoose.Schema({
   email: {
     type: String,
     trim: true,
+    required: true,
   },
   sessionTitle: {
     type: String,

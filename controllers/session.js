@@ -49,29 +49,29 @@ exports.getSessions = async (req, res) => {
   }
 };
 
-// //session get individuals user sessions route
-// exports.getUserSessions = async (req, res) => {
-//   try {
-//     const session = await Session.find(
-//       { email: req.body.email },
-//       {
-//         sessionTitle: 1,
-//         sessionDate: 1,
-//         presenter: 1,
-//         cloudinaryId: 1,
-//         description: 1,
-//         startTime: 1,
-//         endTime: 1,
-//       },
-//     ).sort({ startDate: -1 });
-//     res.json(session);
-//   } catch (err) {
-//     res.status(500).send({
-//       message: err.message || 'An error occured while retrieving sessions',
-//     });
-//     console.log(err);
-//   }
-// };
+// session get individuals user sessions route
+exports.getMentorSessions = async (req, res) => {
+  try {
+    const session = await Session.find(
+      { email: req.body.email },
+      {
+        sessionTitle: 1,
+        sessionDate: 1,
+        presenter: 1,
+        cloudinaryId: 1,
+        description: 1,
+        startTime: 1,
+        endTime: 1,
+      },
+    ).sort({ startDate: -1 });
+    res.status(200).json(session);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message || 'An error occured while retrieving sessions',
+    });
+    console.log(err);
+  }
+};
 
 // delete session route
 exports.deleteSession = async (req, res) => {

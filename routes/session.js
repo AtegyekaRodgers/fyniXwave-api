@@ -4,12 +4,15 @@ const express = require('express');
 const router = express.Router();
 
 const upload = require('../config/multer');
-const { setSession, getSessions } = require('../controllers/session');
+const { setSession, getSessions, getMentorSessions } = require('../controllers/session');
 
-// upload session get route
+// upload session
+router.post('/', upload.single('photo'), setSession);// photo name to be provided from frontend
+
+// get all sessions
 router.get('/', getSessions);
 
-// upload session post route
-router.post('/', upload.single('photo'), setSession);// photo name to be provided from frontend
+// get all individual mentor's sessions
+router.post('/mentor', getMentorSessions);
 
 module.exports = router;
