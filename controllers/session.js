@@ -28,7 +28,18 @@ exports.setSession = async (req, res) => {
 // session get all session route
 exports.getSessions = async (req, res) => {
   try {
-    let session = await Session.find({},{"sessionTitle":1, "sessionDate":1, "presenter":1, "cloudinaryId":1, "description":1, "startTime":1, "endTime":1}).sort({"startDate": -1});
+    const session = await Session.find(
+      {},
+      {
+        sessionTitle: 1,
+        sessionDate: 1,
+        presenter: 1,
+        cloudinaryId: 1,
+        description: 1,
+        startTime: 1,
+        endTime: 1,
+      },
+    ).sort({ startDate: -1 });
     res.json(session);
   } catch (err) {
     res.status(500).send({
@@ -38,11 +49,21 @@ exports.getSessions = async (req, res) => {
   }
 };
 
-
 // //session get individuals user sessions route
 // exports.getUserSessions = async (req, res) => {
 //   try {
-//     let session = await Session.find({"email":req.body.email},{"sessionTitle":1, "sessionDate":1, "presenter":1, "cloudinaryId":1, "description":1, "startTime":1, "endTime":1}).sort({"startDate": -1});
+//     const session = await Session.find(
+//       { email: req.body.email },
+//       {
+//         sessionTitle: 1,
+//         sessionDate: 1,
+//         presenter: 1,
+//         cloudinaryId: 1,
+//         description: 1,
+//         startTime: 1,
+//         endTime: 1,
+//       },
+//     ).sort({ startDate: -1 });
 //     res.json(session);
 //   } catch (err) {
 //     res.status(500).send({
@@ -52,11 +73,11 @@ exports.getSessions = async (req, res) => {
 //   }
 // };
 
-//delete session route
-exports.deleteSession =  async (req, res) => {
+// delete session route
+exports.deleteSession = async (req, res) => {
   try {
     // Find session by id
-    let session = await Session.findById(req.params.id);
+    const session = await Session.findById(req.params.id);
     // Delete session from cloudinary
     await cloudinary.uploader.destroy(session.cloudinaryId);
     // Delete session from db
@@ -70,10 +91,7 @@ exports.deleteSession =  async (req, res) => {
   }
 };
 
-
-
-exports.modifySession = async (req,res) =>{
-
+exports.modifySession = async (req, res) => {
   try {
     let session = await Session.findById(req.params.id);
     // Delete session from cloudinary
@@ -89,11 +107,11 @@ exports.modifySession = async (req,res) =>{
       description: req.body.description || session.description,
       startTime: req.body.startTime || session.startTime,
       endTime: req.body.endTime || session.endTime,
-      modifiedAt:Date.now()
+      modifiedAt: Date.now(),
     };
     session = await Session.findByIdAndUpdate(req.params.id, data, {
- new: true
- });
+      new: true,
+    });
     res.json(session);
   } catch (err) {
     res.status(500).send({
