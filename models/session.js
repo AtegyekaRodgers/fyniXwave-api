@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const sessionSchema = mongoose.Schema({
+ 
+  email: {
+    type: String,
+    trim: true,
+  },
   sessionTitle: {
     type: String,
     trim: true,
