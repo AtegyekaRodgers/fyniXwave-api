@@ -15,8 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const user = require('./routes/user');
 const auth = require('./routes/auth');
-const uploadFile = require('./routes/contentRoutes');
-const setSession = require('./routes/session');
+const content = require('./routes/contentRoutes');
+const session = require('./routes/session');
 
 // require routes
 // const uploadContentRoutes = require('./routes/contentRoutes');
@@ -28,8 +28,8 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/user', user);
 app.use('/auth', auth);
-app.use('/uploadcontent', uploadFile);
-app.use('/setsession', setSession);
+app.use('/uploadcontent', content);
+app.use('/setsession', session);
 
 // Making database connection to delv
 try {
