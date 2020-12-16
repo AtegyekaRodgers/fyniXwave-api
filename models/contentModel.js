@@ -13,6 +13,10 @@ const contentSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
+  category: {
+    type: String,
+    trim: true,
+  },
   cloudinaryFileLink: {
     type: String,
   },
