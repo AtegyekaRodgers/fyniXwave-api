@@ -39,3 +39,53 @@ exports.getSession = async (req, res) => {
 };
 
 
+//delete session route
+exports.deleteSession =  async (req, res) => {
+  try {
+    // Find session by id
+    let session = await Session.findById(req.params.id);
+    // Delete session from cloudinary
+    await cloudinary.uploader.destroy(session.cloudinaryId);
+    // Delete session from db
+    await session.remove();
+    res.json(session);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'An error occured while deleting session',
+    });
+    console.log(err);
+  }
+};
+
+
+
+exports.modifySession = async (req,res) =>{
+
+  try {
+    let session = await Session.findById(req.params.id);
+    // Delete session from cloudinary
+    await cloudinary.uploader.destroy(session.cloudinaryId);
+    // Upload session to cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const data = {
+      sessionTitle: req.body.sessionTitle || session.sessionTitle,
+      sessionDate: req.body.sessionDate || session.sessionDate,
+      presenter: req.body.presenter || session.presenter,
+      cloudinaryFileLink: result.secure_url || session.cloudinaryFileLink,
+      cloudinaryId: result.public_id || session.cloudinaryId,
+      description: req.body.description || session.description,
+      startTime: req.body.startTime || session.startTime,
+      endTime: req.body.endTime || session.endTime,
+      modifiedAt:Date.now()
+    };
+    session = await Session.findByIdAndUpdate(req.params.id, data, {
+ new: true
+ });
+    res.json(session);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'An error occured while updating session',
+    });
+    console.log(err);
+  }
+};
