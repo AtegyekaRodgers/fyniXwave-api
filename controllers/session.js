@@ -7,6 +7,7 @@ exports.setSession = async (req, res) => {
     const result = await cloudinary.uploader.upload(req.file.path);
     // Create new session
     const session = new Session({
+      email: req.body.email,
       sessionTitle: req.body.sessionTitle,
       sessionDate: req.body.sessionDate,
       presenter: req.body.presenter,

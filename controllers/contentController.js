@@ -7,6 +7,7 @@ exports.uploadFile = async (req, res) => {
     const result = await cloudinary.uploader.upload(req.file.path);
     // Create new content
     const content = new Content({
+      email: req.body.email,
       title: req.body.title,
       author: req.body.author,
       description: req.body.description,
