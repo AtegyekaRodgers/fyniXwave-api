@@ -28,8 +28,8 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/user', user);
 app.use('/auth', auth);
-app.use('/uploadcontent', content);
-app.use('/setsession', session);
+app.use('/content', content);
+app.use('/session', session);
 
 // Making database connection to delv
 try {
