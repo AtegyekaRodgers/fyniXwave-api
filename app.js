@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 app.use('/user', user);
 app.use('/auth', auth);
 app.use('/content', content);
-app.use('/session', session);
+app.use('/sessions', session);
 
 // Making database connection to delv
 try {

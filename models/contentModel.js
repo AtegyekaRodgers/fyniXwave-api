@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const contentSchema = mongoose.Schema({
+  email: {
+    type: String,
+    trim: true,
+    required: true,
+  },
   title: {
     type: String,
     trim: true,

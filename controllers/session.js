@@ -25,7 +25,7 @@ exports.setSession = async (req, res) => {
   }
 };
 
-// session get all session route
+// Get all sessionS
 exports.getSessions = async (req, res) => {
   try {
     const session = await Session.find(
@@ -49,7 +49,7 @@ exports.getSessions = async (req, res) => {
   }
 };
 
-// session get individuals user sessions route
+// Get individuals user sessions
 exports.getMentorSessions = async (req, res) => {
   try {
     const session = await Session.find(

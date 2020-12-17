@@ -24,11 +24,11 @@ exports.uploadFile = async (req, res) => {
   }
 };
 
-// content get route
-exports.getFile = async (req, res) => {
+// Get individual mentor's content
+exports.mentorFiles = async (req, res) => {
   try {
     const content = await Content.find(
-      {},
+      { email: req.body.email },
       {
         title: 1,
         author: 1,
@@ -42,13 +42,13 @@ exports.getFile = async (req, res) => {
     res.json(content);
   } catch (err) {
     res.status(500).send({
-      message: err.message || 'An error occured while retrieving contents',
+      message: err.message || 'An error occured while retrieving mentor content',
     });
     console.log(err);
   }
 };
 
-// content get route
+// Get all content
 exports.getFile = async (req, res) => {
   try {
     const content = await Content.find(
@@ -67,7 +67,7 @@ exports.getFile = async (req, res) => {
     res.json(content);
   } catch (err) {
     res.status(500).send({
-      message: err.message || 'An error occured while retrieving contents',
+      message: err.message || 'An error occured while retrieving all content',
     });
     console.log(err);
   }
