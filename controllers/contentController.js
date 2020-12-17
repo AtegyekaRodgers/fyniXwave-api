@@ -35,6 +35,7 @@ exports.mentorFiles = async (req, res) => {
         author: 1,
         description: 1,
         category: 1,
+        cloudinaryFileLink: 1,
         cloudinaryId: 1,
         createdAt: 1,
         modifiedAt: 1,
