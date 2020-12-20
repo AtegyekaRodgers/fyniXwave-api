@@ -93,6 +93,21 @@ exports.deleteFile = async (req, res) => {
   }
 };
 
+//retrieve single content
+exports.singleContent = async (req, res) => {
+  
+  try {
+    const content = await Content.findById(req.params.id)
+    res.json(content)
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'An error occured while retrieving this content',
+    });
+    console.log(err);
+  }
+};
+  
+
 exports.modifyFile = async (req, res) => {
   try {
     let content = await Content.findById(req.params.id);
@@ -121,3 +136,4 @@ exports.modifyFile = async (req, res) => {
     console.log(err);
   }
 };
+

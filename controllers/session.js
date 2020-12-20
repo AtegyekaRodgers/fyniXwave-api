@@ -75,6 +75,22 @@ exports.getMentorSessions = async (req, res) => {
   }
 };
 
+
+//retrieve single session
+exports.singleSession = async (req, res) => {
+  
+  try {
+    const session = await Session.findById(req.params.id)
+    res.json(session)
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'An error occured while retrieving this session',
+    });
+    console.log(err);
+  }
+};
+
+
 // delete session route
 exports.deleteSession = async (req, res) => {
   try {
