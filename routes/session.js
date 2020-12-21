@@ -5,7 +5,7 @@ const router = express.Router();
 
 const upload = require('../config/multer');
 const {
-  setSession, getSessions, getMentorSessions, singleSession, deleteSession,
+  setSession, getSessions, getMentorSessions, singleSession, deleteSession, modifySession,
 } = require('../controllers/session');
 
 // upload session
@@ -18,9 +18,12 @@ router.get('/', getSessions);
 router.get('/mentor/', getMentorSessions);
 
 // get single session
-router.get('/:id', singleSession);
+router.get('/', singleSession);
 
 // delete single session
-router.delete('/:id', deleteSession);
+router.delete('/', deleteSession);
+
+// update a session
+router.post('/', modifySession);
 
 module.exports = router;

@@ -7,7 +7,7 @@ exports.setSession = async (req, res) => {
     const result = await cloudinary.uploader.upload(req.file.path);
     // Create new session
     const session = new Session({
-      email: req.body.email,
+      userID: req.query.userID,
       sessionTitle: req.body.sessionTitle,
       sessionDate: req.body.sessionDate,
       presenter: req.body.presenter,
@@ -78,7 +78,7 @@ exports.getMentorSessions = async (req, res) => {
 // retrieve single session
 exports.singleSession = async (req, res) => {
   try {
-    const session = await Session.findById(req.params.id);
+    const session = await Session.findById(req.query.id);
     res.json(session);
   } catch (err) {
     res.status(500).send({
@@ -92,7 +92,7 @@ exports.singleSession = async (req, res) => {
 exports.deleteSession = async (req, res) => {
   try {
     // Find session by id
-    const session = await Session.findById(req.params.id);
+    const session = await Session.findById(req.query.id);
     // Delete session from cloudinary
     await cloudinary.uploader.destroy(session.cloudinaryId);
     // Delete session from db
@@ -108,7 +108,7 @@ exports.deleteSession = async (req, res) => {
 
 exports.modifySession = async (req, res) => {
   try {
-    let session = await Session.findById(req.params.id);
+    let session = await Session.findById(req.query.id);
     // Delete session from cloudinary
     await cloudinary.uploader.destroy(session.cloudinaryId);
     // Upload session to cloudinary
@@ -124,7 +124,7 @@ exports.modifySession = async (req, res) => {
       endTime: req.body.endTime || session.endTime,
       modifiedAt: Date.now(),
     };
-    session = await Session.findByIdAndUpdate(req.params.id, data, {
+    session = await Session.findByIdAndUpdate(req.query.id, data, {
       new: true,
     });
     res.json(session);

@@ -79,7 +79,7 @@ exports.getFile = async (req, res) => {
 exports.deleteFile = async (req, res) => {
   try {
     // Find content by id
-    const content = await Content.findById(req.params.id);
+    const content = await Content.findById(req.query.id);
     // Delete content from cloudinary
     await cloudinary.uploader.destroy(content.cloudinaryId);
     // Delete content from db
@@ -97,7 +97,7 @@ exports.deleteFile = async (req, res) => {
 exports.singleContent = async (req, res) => {
   
   try {
-    const content = await Content.findById(req.params.id)
+    const content = await Content.findById(req.query.id)
     res.json(content)
   } catch (err) {
     res.status(500).send({
@@ -110,7 +110,7 @@ exports.singleContent = async (req, res) => {
 
 exports.modifyFile = async (req, res) => {
   try {
-    let content = await Content.findById(req.params.id);
+    let content = await Content.findById(req.query.id);
     // Delete content from cloudinary
     await cloudinary.uploader.destroy(content.cloudinaryId);
     // Upload content to cloudinary
@@ -125,7 +125,7 @@ exports.modifyFile = async (req, res) => {
       createdAt: Date.now(),
       modifiedAt: Date.now(),
     };
-    content = await Content.findByIdAndUpdate(req.params.id, data, {
+    content = await Content.findByIdAndUpdate(req.query.id, data, {
       new: true,
     });
     res.json(content);
