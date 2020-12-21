@@ -54,7 +54,7 @@ exports.getSessions = async (req, res) => {
 exports.getMentorSessions = async (req, res) => {
   try {
     const session = await Session.find(
-      { email: req.body.email },
+      { userID: req.query.userID },
       {
         sessionTitle: 1,
         sessionDate: 1,
@@ -75,13 +75,11 @@ exports.getMentorSessions = async (req, res) => {
   }
 };
 
-
-//retrieve single session
+// retrieve single session
 exports.singleSession = async (req, res) => {
-  
   try {
-    const session = await Session.findById(req.params.id)
-    res.json(session)
+    const session = await Session.findById(req.params.id);
+    res.json(session);
   } catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while retrieving this session',
@@ -89,7 +87,6 @@ exports.singleSession = async (req, res) => {
     console.log(err);
   }
 };
-
 
 // delete session route
 exports.deleteSession = async (req, res) => {
