@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const contentSchema = mongoose.Schema({
-  email: {
+  userID: {
     type: String,
     trim: true,
     required: true,
