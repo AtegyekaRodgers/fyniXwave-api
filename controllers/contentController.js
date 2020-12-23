@@ -29,7 +29,7 @@ exports.uploadFile = async (req, res) => {
 exports.mentorFiles = async (req, res) => {
   try {
     const content = await Content.find(
-      { email: req.body.email },
+      { userID: req.query.userID },
       {
         title: 1,
         author: 1,
@@ -93,12 +93,11 @@ exports.deleteFile = async (req, res) => {
   }
 };
 
-//retrieve single content
+// retrieve single content
 exports.singleContent = async (req, res) => {
-  
   try {
-    const content = await Content.findById(req.query.id)
-    res.json(content)
+    const content = await Content.findById(req.query.id);
+    res.json(content);
   } catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while retrieving this content',
@@ -106,7 +105,6 @@ exports.singleContent = async (req, res) => {
     console.log(err);
   }
 };
-  
 
 exports.modifyFile = async (req, res) => {
   try {
@@ -136,4 +134,3 @@ exports.modifyFile = async (req, res) => {
     console.log(err);
   }
 };
-
