@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/user', user);
 app.use('/auth', auth);
-app.use('/content', content);
+app.use('/contents', content);
 app.use('/sessions', session);
 
 // Making database connection to delv

@@ -16,12 +16,12 @@ router.get('/', getSessions);
 router.post('/mentor', getMentorSessions);
 
 //get single session
-router.get('/', singleSession);
+router.get('/session', singleSession);
 
 //delete single session
-router.delete('/', deleteSession);
+router.delete('/delete', deleteSession);
 
 //update a session
-router.post('/', modifySession);
+router.post('/update', modifySession);
 
 module.exports = router;

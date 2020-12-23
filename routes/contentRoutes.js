@@ -14,12 +14,13 @@ router.get('/', getFile);
 
 // Get mentor's content
 router.post('/mentor', mentorFiles);
+
 //retrieve single content
-router.get('/', singleContent);
+router.get('/content', singleContent);
 //delete content
-router.delete('/', deleteFile);
+router.delete('/delete', deleteFile);
 
 //update content
-router.put('/', modifyFile);
+router.put('/update', modifyFile);
 
 module.exports = router;
