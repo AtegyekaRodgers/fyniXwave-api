@@ -15,14 +15,14 @@ router.post('/', upload.single('content'), uploadFile);// content name to be pro
 router.get('/', getFile);
 
 // Get mentor's content
-router.post('/mentor', mentorFiles);
+router.get('/mentor', mentorFiles);
 
-//retrieve single content
+// retrieve single content
 router.get('/content', singleContent);
-//delete content
+// delete content
 router.delete('/delete', deleteFile);
 
-//update content
+// update content
 router.put('/update', modifyFile);
 
 module.exports = router;

@@ -17,13 +17,13 @@ router.get('/', getSessions);
 // get all individual mentor's sessions
 router.get('/mentor/', getMentorSessions);
 
-//get single session
+// get single session
 router.get('/session', singleSession);
 
-//delete single session
+// delete single session
 router.delete('/delete', deleteSession);
 
-//update a session
+// update a session
 router.post('/update', modifySession);
 
 module.exports = router;
