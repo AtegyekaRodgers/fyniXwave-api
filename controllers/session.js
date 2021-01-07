@@ -16,6 +16,7 @@ exports.setSession = async (req, res) => {
       description: req.body.description,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
+      createdAt: Date.now(),
       modifiedAt: Date.now(),
     });
     // Save session

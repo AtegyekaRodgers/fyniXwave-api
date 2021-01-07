@@ -7,8 +7,8 @@ module.exports = multer({
   fileFilter: (req, file, cb) => {
     // file validation
     const ext = path.extname(file.originalname);
-    if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png' && ext !== '.pdf' && ext !== '.WEBM' && ext !== '.MPG' && ext !== '.MP2' && ext !== '.MPEG' && ext !== '.MPE' && ext !== '.MPV' && ext !== '.OGG' 
-    && ext !== '.MP4' && ext !== '.M4P' && ext !== '.M4V' && ext !== '.AVI' && ext !== '.WMV' && ext !== '.MOV' && ext !== '.FLV') {
+    if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png' && ext !== '.pdf'  && ext !== '.Doc'  && ext !== '.Docx' && ext !== '.WEBM' && ext !== '.MPG' && ext !== '.MP2' && ext !== '.MPEG' && ext !== '.MPE' && ext !== '.MPV' && ext !== '.OGG' 
+    && ext !== '.mp4' && ext !== '.M4P' && ext !== '.M4V' && ext !== '.AVI' && ext !== '.WMV' && ext !== '.MOV' && ext !== '.FLV') {
       cb(new Error('File type is not supported'), false);
       return;
     }
