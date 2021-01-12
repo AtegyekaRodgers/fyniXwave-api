@@ -9,6 +9,8 @@ const {
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
+let token; // will hold the headers bearer token on login
+
 describe('auth tests', () => {
   before((done) => {
     // Connecting to mock database
@@ -47,8 +49,6 @@ describe('auth tests', () => {
       })
       .catch((err) => done(err));
   });
-
-  let token; // will hold the headers bearer token on login
 
   // User logs in
   it('user logs in', (done) => {
@@ -114,6 +114,7 @@ describe('auth tests', () => {
       .then((res) => {
         const { body, status } = res;
         // Checking for needed returns
+        token = res.body.token;
         expect(body).to.contain.property('token');
         expect(body).to.contain.property('user');
         expect(status).to.equal(200);
@@ -137,3 +138,5 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
 });
+
+module.exports = token;
