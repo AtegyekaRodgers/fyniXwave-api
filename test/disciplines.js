@@ -30,13 +30,13 @@ describe('disciplines tests', () => {
       .catch((err) => done(err));
   });
   // Creates disciplines
-  it.skip('creates disciplines', (done) => {
+  it('creates disciplines', (done) => {
     request(app)
       .post('/disciplines/')
       .send({
         discipline: 'Programming',
       })
-      .set('Authorization', `Bearer ${token}`)
+    //   .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         console.log(res.body);
         expect(res.body.message).to.equal('Successfully created discipline');
@@ -51,7 +51,7 @@ describe('disciplines tests', () => {
   it('gets disciplines', (done) => {
     request(app)
       .get('/disciplines/')
-      .set('Authorization', `Bearer ${token}`)
+    //   .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         console.log(res.body);
         expect(res.status).to.equal(200);
@@ -64,7 +64,7 @@ describe('disciplines tests', () => {
   it('gets specific discipline', (done) => {
     request(app)
       .get(`/disciplines/${disciplineId}`)
-      .set('Authorization', `Bearer ${token}`)
+    //   .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         console.log(res.body);
         expect(res.status).to.equal(200);
