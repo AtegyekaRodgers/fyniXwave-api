@@ -11,13 +11,12 @@ describe('disciplines tests', () => {
   let token;
   let disciplineId;
   before((done) => {
-    dbConnect()
-      .catch((err) => done(err));
+    dbConnect().catch((err) => done(err));
     request(app)
       .post('/auth/login')
       .send({
-        email: 'mentor@delv.ac.ug',
-        password: '*******',
+        email: 'auth@delv.ac.ug',
+        password: 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
@@ -47,6 +46,7 @@ describe('disciplines tests', () => {
       })
       .catch((err) => done(err));
   });
+
   // Gets disciplines
   it('gets disciplines', (done) => {
     request(app)
@@ -59,6 +59,7 @@ describe('disciplines tests', () => {
       })
       .catch((err) => done(err));
   });
+
   // Gets specific discipline
   it('gets specific discipline', (done) => {
     request(app)
