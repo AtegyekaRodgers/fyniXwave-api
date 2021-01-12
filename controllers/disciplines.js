@@ -8,7 +8,7 @@ Disciplines.create = async (req, res) => {
     // Saving discipline
     const discipline = new Disciplines(req.body);
     const saved = await discipline.save();
-    res.status(201).json({ message: 'Successly created discipline', saved });
+    res.status(201).json({ message: 'Successfully created discipline', saved });
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while creating new discipline',
