@@ -52,8 +52,8 @@ describe('disciplines tests', () => {
       .get('/disciplines/')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('Success');
+        expect(res.status).to.equal(200);
         done();
       })
       .catch((err) => done(err));
@@ -64,8 +64,8 @@ describe('disciplines tests', () => {
       .get(`/disciplines/${disciplineId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        expect(res.status).to.equal(200);
         expect(res.body.message).to.equal('Success');
+        expect(res.status).to.equal(200);
         done();
       })
       .catch((err) => done(err));
