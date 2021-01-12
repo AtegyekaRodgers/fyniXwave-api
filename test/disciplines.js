@@ -39,7 +39,6 @@ describe('disciplines tests', () => {
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        console.log(res.body);
         expect(res.status).to.equal(201);
         disciplineId = res.body._id;
         done();
