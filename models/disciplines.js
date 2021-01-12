@@ -11,14 +11,7 @@ const disciplinesSchema = new Schema({
     unique: true,
     uniqueCaseInsensitive: true,
   },
-  keywords: [
-    {
-      name: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  keywords: [{ type: String }],
 });
 
 disciplinesSchema.plugin(uniqueValidator);
