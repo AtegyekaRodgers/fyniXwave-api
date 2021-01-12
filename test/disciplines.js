@@ -1,6 +1,8 @@
 const { expect } = require('chai');
 const request = require('supertest');
-const { before, after, describe, it } = require('mocha');
+const {
+  before, after, describe, it,
+} = require('mocha');
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
@@ -18,6 +20,8 @@ describe('disciplines tests', () => {
       })
       .then((res) => {
         token = res.body.token;
+        expect(res.body).to.contain.property('token');
+        expect(res.body).to.contain.property('user');
         done();
       })
       .catch((err) => done(err));
@@ -34,9 +38,9 @@ describe('disciplines tests', () => {
       .send({
         discipline: 'Programming',
       })
-      //   .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        console.log(token);
+        console.log();
         console.log(res.body);
         expect(res.body.message).to.equal('Successfully created discipline');
         expect(res.status).to.equal(201);
@@ -50,7 +54,7 @@ describe('disciplines tests', () => {
   it('gets disciplines', (done) => {
     request(app)
       .get('/disciplines/')
-      //   .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         console.log(res.body);
         expect(res.status).to.equal(200);
@@ -63,7 +67,7 @@ describe('disciplines tests', () => {
   it('gets specific discipline', (done) => {
     request(app)
       .get(`/disciplines/${disciplineId}`)
-      //   .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         console.log(res.body);
         expect(res.status).to.equal(200);
