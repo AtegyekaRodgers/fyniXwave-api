@@ -36,6 +36,7 @@ exports.getSessions = async (req, res) => {
         sessionTitle: 1,
         sessionDate: 1,
         presenter: 1,
+        cloudinaryFileLink: 1,
         cloudinaryId: 1,
         description: 1,
         startTime: 1,
