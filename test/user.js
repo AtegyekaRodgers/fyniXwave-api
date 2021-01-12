@@ -23,7 +23,8 @@ describe('user tests', () => {
   });
   // Creates user
   it('create users', (done) => {
-    request(app).post('/user/')
+    request(app)
+      .post('/user/')
       .send({
         firstname: 'FName',
         lastname: 'LName',
@@ -37,6 +38,31 @@ describe('user tests', () => {
         const { body, status } = res;
         expect(body).to.contain.property('message');
         expect(status).to.equal(201);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  // login to get tokens
+  const { token } = (done) => {
+    request(app)
+      .post('/auth/login')
+      .send({
+        email: 'mentor@delv.ac.ug',
+        password: '*******',
+      })
+      .then(() => done())
+      .catch((err) => done(err));
+  };
+  // Adds fields of interest
+  it('create users', (done) => {
+    request(app)
+      .post('/user/interests/')
+      .send(['Social Media', 'Programming', 'Business'])
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.body.message).to.equal('User interests added');
+        expect(res.status).to.equal(204);
         done();
       })
       .catch((err) => done(err));
