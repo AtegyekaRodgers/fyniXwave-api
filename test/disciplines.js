@@ -21,7 +21,6 @@ describe('disciplines tests', () => {
       .then((res) => {
         token = res.body.token;
         expect(res.body).to.contain.property('token');
-        expect(res.body).to.contain.property('user');
         done();
       })
       .catch((err) => done(err));
@@ -40,8 +39,6 @@ describe('disciplines tests', () => {
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        console.log(token);
-        console.log(res.body);
         expect(res.body.message).to.equal('Successfully created discipline');
         expect(res.status).to.equal(201);
         disciplineId = res.body._id;
@@ -56,7 +53,6 @@ describe('disciplines tests', () => {
       .get('/disciplines/')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        console.log(res.body);
         expect(res.status).to.equal(200);
         done();
       })
