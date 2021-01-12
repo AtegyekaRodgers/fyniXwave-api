@@ -12,7 +12,6 @@ describe('disciplines tests', () => {
   let disciplineId = null;
   before((done) => {
     dbConnect()
-      .then(() => done())
       .catch((err) => done(err));
     request(app)
       .post('/auth/login')
