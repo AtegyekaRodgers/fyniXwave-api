@@ -15,8 +15,8 @@ describe('disciplines tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
-        password: 'newPassword',
+        email: 'mentor@delv.ac.ug',
+        password: '*******',
       })
       .then((res) => {
         token = res.body.token;
@@ -53,7 +53,6 @@ describe('disciplines tests', () => {
       .get('/disciplines/')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        expect(res.body.message).to.equal('Success');
         expect(res.status).to.equal(200);
         done();
       })
@@ -66,7 +65,6 @@ describe('disciplines tests', () => {
       .get(`/disciplines/${disciplineId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        expect(res.body.message).to.equal('Success');
         expect(res.status).to.equal(200);
         done();
       })
