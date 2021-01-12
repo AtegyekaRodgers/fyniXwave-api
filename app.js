@@ -3,7 +3,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { dbConnect } = require('./config/db');
-require('./models/user');
 
 const app = express();
 app.use(cors());
@@ -17,6 +16,7 @@ const user = require('./routes/user');
 const auth = require('./routes/auth');
 const content = require('./routes/contentRoutes');
 const session = require('./routes/session');
+const disciplines = require('./routes/disciplines');
 
 // require routes
 // const uploadContentRoutes = require('./routes/contentRoutes');
@@ -30,6 +30,7 @@ app.use('/user', user);
 app.use('/auth', auth);
 app.use('/contents', content);
 app.use('/sessions', session);
+app.use('/disciplines', disciplines);
 
 // Making database connection to delv
 try {
