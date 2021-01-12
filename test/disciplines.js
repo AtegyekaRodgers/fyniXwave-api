@@ -40,7 +40,7 @@ describe('disciplines tests', () => {
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        console.log();
+        console.log(token);
         console.log(res.body);
         expect(res.body.message).to.equal('Successfully created discipline');
         expect(res.status).to.equal(201);
