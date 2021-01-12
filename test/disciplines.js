@@ -6,7 +6,6 @@ const {
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
-const tokent = require('./auth');
 
 describe('disciplines tests', () => {
   let token;
@@ -37,7 +36,7 @@ describe('disciplines tests', () => {
       .send({
         discipline: 'Programming',
       })
-      .set('Authorization', `Bearer ${tokent}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         console.log(res.body);
         expect(res.body.message).to.equal('Successfully created discipline');
@@ -52,7 +51,7 @@ describe('disciplines tests', () => {
   it('gets disciplines', (done) => {
     request(app)
       .get('/disciplines/')
-      .set('Authorization', `Bearer ${tokent}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
         done();
@@ -64,7 +63,7 @@ describe('disciplines tests', () => {
   it('gets specific discipline', (done) => {
     request(app)
       .get(`/disciplines/${disciplineId}`)
-      .set('Authorization', `Bearer ${tokent}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
         done();

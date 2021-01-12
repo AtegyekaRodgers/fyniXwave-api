@@ -138,5 +138,3 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
 });
-
-module.exports = token;

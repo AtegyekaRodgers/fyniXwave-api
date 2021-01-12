@@ -100,7 +100,7 @@ auth.authorize = async (req, res, next) => {
     req.token = token;
 
     try {
-      const tokenValid = await jwt.verify(token, `${secret}`);
+      const tokenValid = jwt.verify(token, `${secret}`);
       if (!tokenValid) {
         res.status(401).json({
           user: null,
