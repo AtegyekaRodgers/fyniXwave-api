@@ -15,8 +15,8 @@ describe('disciplines tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'mentor@delv.ac.ug',
-        password: '*******',
+        email: 'auth@delv.ac.ug',
+        newPassword: 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
