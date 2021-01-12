@@ -53,6 +53,7 @@ describe('disciplines tests', () => {
       .get('/disciplines/')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
+        console.log(res.body);
         expect(res.status).to.equal(200);
         done();
       })
@@ -65,6 +66,7 @@ describe('disciplines tests', () => {
       .get(`/disciplines/${disciplineId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
+        console.log(res.body);
         expect(res.status).to.equal(200);
         done();
       })
