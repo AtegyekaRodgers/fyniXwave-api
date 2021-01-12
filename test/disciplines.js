@@ -8,8 +8,8 @@ const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
 describe('disciplines tests', () => {
-//   let token = null;
-  let disciplineId = null;
+  let token;
+  let disciplineId;
   before((done) => {
     dbConnect()
       .catch((err) => done(err));
@@ -19,8 +19,8 @@ describe('disciplines tests', () => {
         email: 'mentor@delv.ac.ug',
         password: '*******',
       })
-      .then(() => {
-        // token = res.body.token;
+      .then((res) => {
+        token = res.body.token;
         done();
       })
       .catch((err) => done(err));
@@ -37,7 +37,7 @@ describe('disciplines tests', () => {
       .send({
         discipline: 'Programming',
       })
-    //   .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         console.log(res.body);
         expect(res.body.message).to.equal('Successfully created discipline');
@@ -51,7 +51,7 @@ describe('disciplines tests', () => {
   it('gets disciplines', (done) => {
     request(app)
       .get('/disciplines/')
-    //   .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.body.message).to.equal('Success');
         expect(res.status).to.equal(200);
@@ -63,7 +63,7 @@ describe('disciplines tests', () => {
   it('gets specific discipline', (done) => {
     request(app)
       .get(`/disciplines/${disciplineId}`)
-    //   .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.body.message).to.equal('Success');
         expect(res.status).to.equal(200);
