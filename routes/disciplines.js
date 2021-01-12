@@ -11,6 +11,6 @@ router.post('/', auth.authorize, Disciplines.create);
 router.get('/', auth.authorize, Disciplines.read);
 
 // Create discipline
-router.get('/id', auth.authorize, Disciplines.readOne);
+router.get('/:id', auth.authorize, Disciplines.readOne);
 
 module.exports = router;

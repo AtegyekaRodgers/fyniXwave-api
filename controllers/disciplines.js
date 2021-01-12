@@ -29,8 +29,8 @@ Disciplines.read = async (req, res) => {
 
 Disciplines.readOne = async (req, res) => {
   try {
-    const { id } = req.body;
-    const discipline = await Disciplines.find({ _id: id });
+    const { id } = req.params;
+    const discipline = await Disciplines.findById(id);
     res.status(200).json(discipline);
   } catch (err) {
     res.status(500).json({
