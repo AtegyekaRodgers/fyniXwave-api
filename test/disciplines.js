@@ -30,7 +30,7 @@ describe('disciplines tests', () => {
       .catch((err) => done(err));
   });
   // Creates disciplines
-  it('creates disciplines', (done) => {
+  it.skip('creates disciplines', (done) => {
     request(app)
       .post('/disciplines/')
       .send({
