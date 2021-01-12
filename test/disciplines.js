@@ -53,7 +53,7 @@ describe('disciplines tests', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.message).to.be('Success');
+        expect(res.body.message).to.equal('Success');
         done();
       })
       .catch((err) => done(err));
