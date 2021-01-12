@@ -1,28 +1,30 @@
 const { expect } = require('chai');
 const request = require('supertest');
-const { before, after, describe, it } = require('mocha');
+const {
+  before, after, describe, it,
+} = require('mocha');
 
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
 describe('disciplines tests', () => {
-  const token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJpZCI6IjVmZDg1MGQwODA0MTlmMDAxNzI0NzVjMCIsImlhdCI6MTYwOTgyOTE5NywiZXhwIjoxNjEyNDIxMTk3fQkSoO41VDZclh4whQtZyae1UTPcIQhA6uTdFM4TA4Q00;
+  let token = null;
   let disciplineId = null;
   before((done) => {
     dbConnect()
       .then(() => done())
       .catch((err) => done(err));
-    // request(app)
-    //   .post('/auth/login')
-    //   .send({
-    //     email: 'mentor@delv.ac.ug',
-    //     password: '*******',
-    //   })
-    //   .then((res) => {
-    //     token = res.body.token;
-    //     done();
-    //   })
-    //   .catch((err) => done(err));
+    request(app)
+      .post('/auth/login')
+      .send({
+        email: 'mentor@delv.ac.ug',
+        password: '*******',
+      })
+      .then((res) => {
+        token = res.body.token;
+        done();
+      })
+      .catch((err) => done(err));
   });
   after((done) => {
     dbClose()
@@ -39,6 +41,7 @@ describe('disciplines tests', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(201);
+        console.log(res.body.message);
         disciplineId = res.body._id;
         done();
       })
