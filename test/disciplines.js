@@ -39,9 +39,9 @@ describe('disciplines tests', () => {
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        console.log(res.body.message);
-        disciplineId = res.body._id;
+        expect(res.body.message).to.be('Successly created discipline');
         expect(res.status).to.equal(201);
+        disciplineId = res.body._id;
         done();
       })
       .catch((err) => done(err));
@@ -53,6 +53,7 @@ describe('disciplines tests', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
+        expect(res.body.message).to.be('Success');
         done();
       })
       .catch((err) => done(err));
@@ -64,6 +65,7 @@ describe('disciplines tests', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
+        expect(res.body.message).to.be('Success');
         done();
       })
       .catch((err) => done(err));
