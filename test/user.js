@@ -43,28 +43,29 @@ describe('user tests', () => {
       .catch((err) => done(err));
   });
 
-  // login to get details
-  const { user, token, message } = (done) => {
+  // login to get tokens
+  const { token } = (done) => {
     request(app)
       .post('/auth/login')
       .send({
-        password: '*******',
         email: 'mentor@delv.ac.ug',
+        password: '*******',
       })
       .then(() => done())
       .catch((err) => done(err));
   };
-  console.log({ user, token, message });
+  console.log(token);
   // Adds fields of interest
-//   it('adds fields of interest', (done) => {
-//     request(app)
-//       .post(`/user/interests/?id=${user._id}`)
-//       .send('5ffefcd99327cdc1330fa69f, 5ffefc79747ae9c0b3152cc2, 5ffefccd9327cdc1330fa69e')
-//       .set('Authorization', `Bearer ${token}`)
-//       .then((res) => {
-//         expect(res.status).to.equal(204);
-//         done();
-//       })
-//       .catch((err) => done(err));
-//   });
+  it('create users', (done) => {
+    request(app)
+      .post('/user/interests/')
+      .send(['Social Media', 'Programming', 'Business'])
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.body.message).to.equal('User interests added');
+        expect(res.status).to.equal(204);
+        done();
+      })
+      .catch((err) => done(err));
+  });
 });
