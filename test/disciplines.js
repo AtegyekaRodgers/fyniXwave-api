@@ -36,6 +36,7 @@ describe('disciplines tests', () => {
       .post('/disciplines/')
       .send({
         discipline: 'Programming',
+        tags: 'code, syntax, debug, IDE, javascript',
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
