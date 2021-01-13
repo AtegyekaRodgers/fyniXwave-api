@@ -44,17 +44,16 @@ describe('user tests', () => {
   });
 
   // login to get tokens
-  const response = (done) => {
+  const { user, token } = (done) => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'mentor@delv.ac.ug',
         password: '*******',
+        email: 'mentor@delv.ac.ug',
       })
       .then(() => done())
       .catch((err) => done(err));
   };
-  const { user, token } = response;
   console.log({ user, token });
   // Adds fields of interest
   it('adds fields of interest', (done) => {
