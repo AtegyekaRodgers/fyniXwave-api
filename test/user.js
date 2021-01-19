@@ -43,10 +43,10 @@ describe('user tests', () => {
       .catch((err) => done(err));
   });
 
+  // Getting created user's token and ID
   let user;
   let token;
-  // Created user logs in
-  before((done) => {
+  it((done) => {
     request(app)
       .post('/auth/login')
       .send({
