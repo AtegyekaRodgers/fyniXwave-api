@@ -5,6 +5,7 @@ exports.setSession = async (req, res) => {
   try {
     // Upload session to cloudinary
     const result = await cloudinary.uploader.upload(req.file.path);
+    const tags = req.body.tags.split(',').map(String);
     // Create new session
     const session = new Session({
       userID: req.body.userID,
@@ -14,6 +15,7 @@ exports.setSession = async (req, res) => {
       cloudinaryFileLink: result.secure_url,
       cloudinaryId: result.public_id,
       description: req.body.description,
+      tags,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
       createdAt: Date.now(),
