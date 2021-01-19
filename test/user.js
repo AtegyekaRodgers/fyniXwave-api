@@ -46,7 +46,7 @@ describe('user tests', () => {
   let user;
   let token;
   // Getting created user's data
-  it((done) => {
+  it('getting users token and details', (done) => {
     request(app)
       .post('/auth/login')
       .send({
