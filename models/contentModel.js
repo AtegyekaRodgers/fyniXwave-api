@@ -18,6 +18,12 @@ const contentSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
+  tags: [
+    {
+      type: String,
+      trim: true,
+    },
+  ],
   category: {
     type: String,
     trim: true,

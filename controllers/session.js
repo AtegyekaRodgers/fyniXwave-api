@@ -5,6 +5,7 @@ exports.setSession = async (req, res) => {
   try {
     // Upload session to cloudinary
     const result = await cloudinary.uploader.upload(req.file.path);
+    // Generating an array of tags
     const tags = req.body.tags.split(',').map(String);
     // Create new session
     const session = new Session({

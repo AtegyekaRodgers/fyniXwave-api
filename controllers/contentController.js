@@ -5,12 +5,15 @@ exports.uploadFile = async (req, res) => {
   try {
     // Upload files to cloudinary
     const result = await cloudinary.uploader.upload(req.file.path);
+    // Generating an array of tags
+    const tags = req.body.tags.split(',').map(String);
     // Create new content
     const content = new Content({
       userID: req.body.userID,
       title: req.body.title,
       author: req.body.author,
       description: req.body.description,
+      tags,
       category: req.body.category,
       cloudinaryFileLink: result.secure_url,
       cloudinaryId: result.public_id,
