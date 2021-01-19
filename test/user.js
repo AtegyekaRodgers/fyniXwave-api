@@ -63,9 +63,9 @@ describe('user tests', () => {
         done(err);
       });
   };
-  logIn();
   //   Adds fields of interest
   it('adds fields of interest', (done) => {
+    console.log(logIn());
     request(app)
       .post(`/user/interests/?id=${user._id}`)
       .send(
