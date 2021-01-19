@@ -57,7 +57,7 @@ describe('user tests', () => {
         done(err);
       });
   };
-  const { user, token } = logIn().body;
+  const { user, token } = logIn();
   //   Adds fields of interest
   it('adds fields of interest', (done) => {
     request(app)
