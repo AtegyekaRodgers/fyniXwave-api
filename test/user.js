@@ -70,9 +70,9 @@ describe('user tests', () => {
   it('adds fields of interest', (done) => {
     request(app)
       .put(`/user/interests/?id=${user._id}`)
-      .send(
-        '5ffefcd99327cdc1330fa69f, 5ffefc79747ae9c0b3152cc2, 5ffefccd9327cdc1330fa69e',
-      )
+      .send({
+        interests: '5ffefcd99327cdc1330fa69f, 5ffefc79747ae9c0b3152cc2, 5ffefccd9327cdc1330fa69e',
+      })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.body.message).to.equal('User interests added successfully');
