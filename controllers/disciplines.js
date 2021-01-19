@@ -5,13 +5,40 @@ const Disciplines = mongoose.model('Disciplines');
 
 Disciplines.create = async (req, res) => {
   try {
-    // Saving discipline
-    const discipline = new Disciplines(req.body);
-    const saved = await discipline.save();
-    res.status(201).json(saved);
+    // Creating discipline
+    const discipline = new Disciplines({
+      discipline: req.body.discipline,
+      keywords: req.body.discipline,
+    });
+    const created = await discipline.save();
+    res.status(201).json(created);
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while creating new discipline',
+    });
+  }
+};
+
+Disciplines.addTags = async (req, res) => {
+  try {
+    const tags = req.body.tags.split(',').map(String);
+    await Disciplines.findByIdAndUpdate(
+      req.query.id,
+      {
+        $addToSet: {
+          keywords: {
+            $each: tags,
+          },
+        },
+      },
+      { useFindAndModify: false },
+    );
+    res.status(204).json({
+      message: 'tags added successfully',
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err.message || 'An error occured while adding interests',
     });
   }
 };

@@ -44,7 +44,7 @@ describe('user tests', () => {
   });
 
   // login to get details
-  const { user, token, message } = (done) => {
+  const logIn = (done) => {
     request(app)
       .post('/auth/login')
       .send({
@@ -57,7 +57,7 @@ describe('user tests', () => {
         done(err);
       });
   };
-  console.log({ user, token, message });
+  const { user, token } = logIn().body;
   //   Adds fields of interest
   it('adds fields of interest', (done) => {
     request(app)

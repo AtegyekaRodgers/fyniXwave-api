@@ -13,7 +13,9 @@ const disciplinesSchema = new Schema({
   keywords: [
     {
       type: String,
-    //   unique: true,
+      trim: true,
+      unique: true,
+      uniqueCaseInsensitive: true,
     },
   ],
 });

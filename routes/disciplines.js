@@ -7,10 +7,13 @@ const router = express.Router();
 // Create discipline
 router.post('/', auth.authorize, Disciplines.create);
 
-// Create discipline
+// Add tags to a discipline
+router.put('/', auth.authorize, Disciplines.addTags);
+
+// Get all disciplines
 router.get('/', auth.authorize, Disciplines.read);
 
-// Create discipline
+// Get a discipline
 router.get('/:id', auth.authorize, Disciplines.readOne);
 
 module.exports = router;

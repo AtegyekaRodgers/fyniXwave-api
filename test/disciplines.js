@@ -36,12 +36,26 @@ describe('disciplines tests', () => {
       .post('/disciplines/')
       .send({
         discipline: 'Programming',
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        disciplineId = res.body._id;
+        expect(res.status).to.equal(201);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  // Add tags to discipline
+  it('adds tags to discipline', (done) => {
+    request(app)
+      .put(`/disciplines/?id=${disciplineId}`)
+      .send({
         tags: 'code, syntax, debug, IDE, javascript',
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        expect(res.status).to.equal(201);
-        disciplineId = res.body._id;
+        expect(res.status).to.equal(204);
         done();
       })
       .catch((err) => done(err));
