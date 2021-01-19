@@ -75,7 +75,6 @@ describe('user tests', () => {
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        expect(res.body.message).to.equal('User interests added successfully');
         expect(res.status).to.equal(204);
         done();
       })
