@@ -45,27 +45,29 @@ describe('user tests', () => {
 
   let user;
   let token;
-  // login to get details
-  const logIn = (done) => {
+  // Created user logs in
+  it('created user logs in', (done) => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'mentor@delv.ac.ug',
         password: '*******',
+        email: 'mentor@delv.ac.ug',
       })
       .then((res) => {
-        user = res.body.user;
+        const { body, status } = res;
+        // Checking for needed returns
         token = res.body.token;
+        user = res.body.user;
+        expect(body).to.contain.property('token');
+        expect(body).to.contain.property('user');
+        expect(status).to.equal(200);
         done();
       })
-      .catch((err) => {
-        console.log(err);
-        done(err);
-      });
-  };
+      .catch((err) => done(err));
+  });
+
   //   Adds fields of interest
   it('adds fields of interest', (done) => {
-    console.log(logIn());
     request(app)
       .post(`/user/interests/?id=${user._id}`)
       .send(
