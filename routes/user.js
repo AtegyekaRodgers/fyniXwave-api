@@ -11,7 +11,7 @@ router.post('/', User.create);
 router.get('/', auth.authorize, User.readAll);
 
 // Add user interests
-router.post('/interests', auth.authorize, User.addInterests);
+router.put('/interests', auth.authorize, User.addInterests);
 
 // // Retrieve a single user with userId
 // router.get('/:userId', user.readOne);
