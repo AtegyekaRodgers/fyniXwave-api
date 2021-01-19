@@ -43,6 +43,8 @@ describe('user tests', () => {
       .catch((err) => done(err));
   });
 
+  let user;
+  let token;
   // login to get details
   const logIn = (done) => {
     request(app)
@@ -51,14 +53,17 @@ describe('user tests', () => {
         email: 'mentor@delv.ac.ug',
         password: '*******',
       })
-      .then(() => done())
+      .then((res) => {
+        user = res.body.user;
+        token = res.body.token;
+        done();
+      })
       .catch((err) => {
         console.log(err);
         done(err);
       });
   };
-  const { body } = logIn();
-  const { user, token } = body;
+  logIn();
   //   Adds fields of interest
   it('adds fields of interest', (done) => {
     request(app)
