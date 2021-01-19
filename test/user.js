@@ -46,7 +46,7 @@ describe('user tests', () => {
   let user;
   let token;
   // Created user logs in
-  it('created user logs in', (done) => {
+  before((done) => {
     request(app)
       .post('/auth/login')
       .send({
@@ -54,13 +54,8 @@ describe('user tests', () => {
         email: 'mentor@delv.ac.ug',
       })
       .then((res) => {
-        const { body, status } = res;
-        // Checking for needed returns
         token = res.body.token;
         user = res.body.user;
-        expect(body).to.contain.property('token');
-        expect(body).to.contain.property('user');
-        expect(status).to.equal(200);
         done();
       })
       .catch((err) => done(err));
