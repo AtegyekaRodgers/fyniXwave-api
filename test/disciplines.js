@@ -36,6 +36,7 @@ describe('disciplines tests', () => {
       .post('/disciplines/')
       .send({
         discipline: 'Programming',
+        keywords: 'programming, C, error, syntax-error',
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
@@ -46,12 +47,12 @@ describe('disciplines tests', () => {
       .catch((err) => done(err));
   });
 
-  // Add tags to discipline
-  it('adds tags to discipline', (done) => {
+  // Add keywords to discipline
+  it('adds keywords to discipline', (done) => {
     request(app)
       .put(`/disciplines/?id=${disciplineId}`)
       .send({
-        tags: 'code, syntax, debug, IDE, javascript',
+        keywords: 'code, syntax, debug, IDE, javascript',
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {

@@ -5,10 +5,12 @@ const Disciplines = mongoose.model('Disciplines');
 
 Disciplines.create = async (req, res) => {
   try {
+    // Generating an array of tags
+    const keywords = req.body.keywords.split(',').map(String);
     // Creating discipline
     const discipline = new Disciplines({
       discipline: req.body.discipline,
-      keywords: req.body.discipline,
+      keywords,
     });
     const created = await discipline.save();
     res.status(201).json(created);
@@ -19,15 +21,15 @@ Disciplines.create = async (req, res) => {
   }
 };
 
-Disciplines.addTags = async (req, res) => {
+Disciplines.addKeywords = async (req, res) => {
   try {
-    const tags = req.body.tags.split(',').map(String);
+    const keywords = req.body.keywords.split(',').map(String);
     await Disciplines.findByIdAndUpdate(
       req.query.id,
       {
         $addToSet: {
           keywords: {
-            $each: tags,
+            $each: keywords,
           },
         },
       },

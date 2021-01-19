@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', auth.authorize, Disciplines.create);
 
 // Add tags to a discipline
-router.put('/', auth.authorize, Disciplines.addTags);
+router.put('/', auth.authorize, Disciplines.addKeywords);
 
 // Get all disciplines
 router.get('/', auth.authorize, Disciplines.read);
