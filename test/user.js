@@ -56,6 +56,7 @@ describe('user tests', () => {
       .then((res) => {
         token = res.body.token;
         user = res.body.user;
+        expect(res.status).to.equal(200);
         done();
       })
       .catch((err) => done(err));
