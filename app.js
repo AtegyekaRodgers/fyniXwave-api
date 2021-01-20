@@ -11,15 +11,17 @@ app.use(bodyParser.json());
 // parse requests of content-type
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const index = require('./routes/index');
 const user = require('./routes/user');
 const auth = require('./routes/auth');
 const content = require('./routes/contentRoutes');
 const session = require('./routes/session');
 const disciplines = require('./routes/disciplines');
 
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Welcome to delv api' });
+});
+
 // Routes
-app.use('/', index);
 app.use('/user', user);
 app.use('/auth', auth);
 app.use('/contents', content);
