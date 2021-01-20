@@ -5,7 +5,6 @@ const secret = require('../config/jwt');
 require('../models/user');
 
 const User = mongoose.model('User');
-
 const auth = () => true;
 
 auth.login = async (req, res) => {
