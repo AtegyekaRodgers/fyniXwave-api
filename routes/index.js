@@ -3,10 +3,10 @@ const { index } = require('../controllers/index');
 
 const router = express.Router();
 
-// Initial route
-router.get('/', index.defaultFeed);
+// Default feed
+router.get('/', index.feed);
 
-// Retrieve a single user with userId
-router.get('/:userId', index.userFeed);
+// Searching
+router.get('/search', index.search);
 
 module.exports = router;

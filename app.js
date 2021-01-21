@@ -16,17 +16,22 @@ const auth = require('./routes/auth');
 const content = require('./routes/contentRoutes');
 const session = require('./routes/session');
 const disciplines = require('./routes/disciplines');
-
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Welcome to delv api' });
-});
+const index = require('./routes/index');
 
 // Routes
 app.use('/user', user);
 app.use('/auth', auth);
+app.use('/user', user);
 app.use('/contents', content);
 app.use('/sessions', session);
 app.use('/disciplines', disciplines);
+// Routes for users without accounts
+app.use('/', index);
+
+// For non existent requests
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'Resource not found' });
+});
 
 // Making database connection to delv
 try {
