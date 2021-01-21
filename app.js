@@ -13,12 +13,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const user = require('./routes/user');
 const auth = require('./routes/auth');
+const home = require('./routes/home');
+const index = require('./routes/index');
 const content = require('./routes/contentRoutes');
 const session = require('./routes/session');
 const disciplines = require('./routes/disciplines');
-const index = require('./routes/index');
 
 // Routes
+app.use('/home', home);
 app.use('/user', user);
 app.use('/auth', auth);
 app.use('/user', user);
