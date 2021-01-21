@@ -4,8 +4,12 @@ const { auth } = require('../controllers/auth');
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.status(200).json({ message: 'Welcome to delv api' });
+});
+
 // User feed
-router.get('/:id', auth.authorize, home.feed);
+router.post('/', auth.authorize, home.feed);
 
 // // Dashboard
 // router.get('/dashboard', auth.authorize, index.dashboard);
