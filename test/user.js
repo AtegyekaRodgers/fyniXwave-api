@@ -67,7 +67,7 @@ describe('user tests', () => {
     request(app)
       .put(`/user/interests/?id=${user._id}`)
       .send({
-        interests: '5ffefcd99327cdc1330fa69f, 5ffefc79747ae9c0b3152cc2, 5ffefccd9327cdc1330fa69e',
+        interests: 'law,social media,sales',
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {

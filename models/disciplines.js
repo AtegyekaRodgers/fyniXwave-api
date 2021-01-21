@@ -6,7 +6,6 @@ const { Schema } = mongoose;
 const disciplinesSchema = new Schema({
   discipline: {
     type: String,
-    trim: true,
     unique: true,
     uniqueCaseInsensitive: true,
   },
