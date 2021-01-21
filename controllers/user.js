@@ -36,7 +36,7 @@ User.readAll = async (req, res) => {
 User.addInterests = async (req, res) => {
   try {
     const interests = req.body.interests.split(',').map(String);
-    await User.findByIdAndUpdate(
+    const updated = await User.findByIdAndUpdate(
       req.query.id,
       {
         $addToSet: {
@@ -47,9 +47,7 @@ User.addInterests = async (req, res) => {
       },
       { useFindAndModify: false },
     );
-    res.status(204).json({
-      message: 'User interests added successfully',
-    });
+    res.status(200).json(updated);
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while adding interests',

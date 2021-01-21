@@ -71,7 +71,7 @@ describe('user tests', () => {
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        expect(res.status).to.equal(204);
+        expect(res.status).to.equal(200);
         done();
       })
       .catch((err) => done(err));
