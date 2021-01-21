@@ -7,6 +7,7 @@ Disciplines.create = async (req, res) => {
   try {
     // Generating an array of tags
     const keywords = req.body.keywords.split(',').map(String);
+    keywords.push(req.body.discipline);
     // Creating discipline
     const discipline = new Disciplines({
       discipline: req.body.discipline,
