@@ -2,17 +2,19 @@ const mongoose = require('mongoose');
 const Content = require('../models/contentModel');
 const Session = require('../models/session');
 require('../models/disciplines');
+require('../models/user');
 
+const User = mongoose.model('User');
 const Disciplines = mongoose.model('Disciplines');
 
 const home = () => true;
 
-// Gets user tags based on user interests
-const interestsToTags = async (interests) => {
+// Maps user interests into tags
+const interestsToTags = async (interestsToMap) => {
   try {
     const interestsArray = await Disciplines.find(
       {
-        $and: [{ discipline: { $in: interests } }],
+        $and: [{ discipline: { $in: interestsToMap } }],
       },
       { keywords: 1 },
     );
@@ -24,14 +26,28 @@ const interestsToTags = async (interests) => {
   } catch (err) {
     return {
       message:
-        err.message || 'An error occured while searching users interests',
+        err.message
+        || 'An error occured while searching users tags of interest',
     };
   }
 };
 
-// When user not logged in
+// Gets user's interests as an array
+const userInterests = async (userID) => {
+  try {
+    const interestsArray = await User.findById(userID, { interests: 1 });
+    return interestsArray;
+  } catch (err) {
+    return {
+      message: err.message || 'An error occured while getting users interests',
+    };
+  }
+};
+
+// When user logged in
 home.feed = async (req, res) => {
-  const tags = await interestsToTags(req.body.interests);
+  const { interests } = await userInterests(req.userID);
+  const tags = await interestsToTags(interests);
   try {
     const content = await Content.find(
       {
@@ -61,7 +77,6 @@ home.feed = async (req, res) => {
         description: 1,
         startTime: 1,
         endTime: 1,
-        tags: 1,
       },
     ).sort({ startDate: -1 });
     res.status(200).json({ sessions, content });
