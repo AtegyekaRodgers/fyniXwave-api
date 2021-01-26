@@ -10,6 +10,9 @@ router.post('/', User.create);
 // Retrieve all Customers
 router.get('/', auth.authorize, User.readAll);
 
+// Add user interests
+router.put('/interests', auth.authorize, User.addInterests);
+
 // // Retrieve a single user with userId
 // router.get('/:userId', user.readOne);
 

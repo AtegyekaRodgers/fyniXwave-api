@@ -1,33 +1,39 @@
 const express = require('express');
-const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { dbConnect } = require('./config/db');
-require('./models/user');
 
 const app = express();
+
 app.use(cors());
 // parse requests of content-type: application/json
 app.use(bodyParser.json());
-
 // parse requests of content-type
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const user = require('./routes/user');
 const auth = require('./routes/auth');
-const uploadFile = require('./routes/contentRoutes');
-
-// require routes
-// const uploadContentRoutes = require('./routes/contentRoutes');
-
-app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Welcome to delv api' });
-});
+const home = require('./routes/home');
+const index = require('./routes/index');
+const content = require('./routes/contentRoutes');
+const session = require('./routes/session');
+const disciplines = require('./routes/disciplines');
 
 // Routes
+app.use('/home', home);
 app.use('/user', user);
 app.use('/auth', auth);
-app.use('/uploadcontent', uploadFile);
+app.use('/user', user);
+app.use('/contents', content);
+app.use('/sessions', session);
+app.use('/disciplines', disciplines);
+// Routes for users without accounts
+app.use('/', index);
+
+// For non existent requests
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'Resource not found' });
+});
 
 // Making database connection to delv
 try {
@@ -36,11 +42,6 @@ try {
 } catch (error) {
   console.error(`Connection error: ${error.message}`);
 }
-
-// path
-app.use('/public/content', express.static(path.join(__dirname, 'public/content')));
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 const port = process.env.PORT || 3000;
 

@@ -23,20 +23,55 @@ describe('user tests', () => {
   });
   // Creates user
   it('create users', (done) => {
-    request(app).post('/user/')
+    request(app)
+      .post('/user/')
       .send({
         firstname: 'FName',
         lastname: 'LName',
         username: 'Username',
         password: '*******',
         email: 'mentor@delv.ac.ug',
-        phonenumber: '256-771-123456',
+        country: 'Uganda',
         usercategory: 'mentor',
       })
       .then((res) => {
         const { body, status } = res;
         expect(body).to.contain.property('message');
         expect(status).to.equal(201);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  let user;
+  let token;
+  // Getting created user's data
+  it('getting users token and details', (done) => {
+    request(app)
+      .post('/auth/login')
+      .send({
+        password: '*******',
+        email: 'mentor@delv.ac.ug',
+      })
+      .then((res) => {
+        token = res.body.token;
+        user = res.body.user;
+        expect(res.status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  //   Adds fields of interest
+  it('adds fields of interest', (done) => {
+    request(app)
+      .put(`/user/interests/?id=${user._id}`)
+      .send({
+        interests: 'law,social media,sales',
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.status).to.equal(200);
         done();
       })
       .catch((err) => done(err));

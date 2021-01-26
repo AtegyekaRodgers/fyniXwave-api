@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const contentSchema = mongoose.Schema({
+  userID: {
+    type: String,
+    trim: true,
+    required: true,
+  },
   title: {
     type: String,
     trim: true,
@@ -10,6 +15,16 @@ const contentSchema = mongoose.Schema({
     trim: true,
   },
   description: {
+    type: String,
+    trim: true,
+  },
+  tags: [
+    {
+      type: String,
+      trim: true,
+    },
+  ],
+  category: {
     type: String,
     trim: true,
   },

@@ -13,7 +13,21 @@ const storage = multer.storage({
 
 // file validation
 const fileFilter = (req, file, cb) => {
-  if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png" && ext !== ".jpg" && ext !== ".pdf" && ext !== ".xls" && ext !== ".xlsx" && ext !== ".doc" && ext !== ".docx" && ext !== ".ppt" && ext !== ".pptx" && ext !== ".odt" && ext !== ".ods") {
+  if (
+    ext !== '.jpg'
+    && ext !== '.jpeg'
+    && ext !== '.png'
+    && ext !== '.jpg'
+    && ext !== '.pdf'
+    && ext !== '.xls'
+    && ext !== '.xlsx'
+    && ext !== '.doc'
+    && ext !== '.docx'
+    && ext !== '.ppt'
+    && ext !== '.pptx'
+    && ext !== '.odt'
+    && ext !== '.ods'
+  ) {
     cb(null, true);
   } else {
     // not mime type file

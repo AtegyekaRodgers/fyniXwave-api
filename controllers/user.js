@@ -33,6 +33,28 @@ User.readAll = async (req, res) => {
   }
 };
 
+User.addInterests = async (req, res) => {
+  try {
+    const interests = req.body.interests.split(',').map(String);
+    const updated = await User.findByIdAndUpdate(
+      req.query.id,
+      {
+        $addToSet: {
+          interests: {
+            $each: interests,
+          },
+        },
+      },
+      { useFindAndModify: false },
+    );
+    res.status(200).json(updated);
+  } catch (err) {
+    res.status(500).json({
+      message: err.message || 'An error occured while adding interests',
+    });
+  }
+};
+
 module.exports = {
   User,
 };

@@ -9,6 +9,8 @@ const {
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
+let token; // will hold the headers bearer token on login
+
 describe('auth tests', () => {
   before((done) => {
     // Connecting to mock database
@@ -24,7 +26,7 @@ describe('auth tests', () => {
         username: 'myUsername',
         password: 'myPassword',
         email: 'auth@delv.ac.ug',
-        phonenumber: '256-999-123456',
+        country: 'Uganda',
         usercategory: 'mentor',
       })
       .catch((err) => done(err));
@@ -36,7 +38,17 @@ describe('auth tests', () => {
       .catch((err) => done(err));
   });
 
-  let token; // will hold the headers bearer token on login
+  // auth.authorize (deny access) works
+  it('auth.authorize (deny access) works', (done) => {
+    request(app)
+      .get('/user/')
+      .then((res) => {
+        const { status } = res;
+        expect(status).to.equal(403);
+        done();
+      })
+      .catch((err) => done(err));
+  });
 
   // User logs in
   it('user logs in', (done) => {
@@ -102,6 +114,7 @@ describe('auth tests', () => {
       .then((res) => {
         const { body, status } = res;
         // Checking for needed returns
+        token = res.body.token;
         expect(body).to.contain.property('token');
         expect(body).to.contain.property('user');
         expect(status).to.equal(200);
@@ -120,18 +133,6 @@ describe('auth tests', () => {
         expect(body.user).to.deep.equal(null);
         expect(body.token).to.deep.equal(null);
         expect(status).to.equal(200);
-        done();
-      })
-      .catch((err) => done(err));
-  });
-
-  // auth.authorize (deny access) works
-  it('auth.authorize (deny access) works', (done) => {
-    request(app)
-      .get('/user/')
-      .then((res) => {
-        const { status } = res;
-        expect(status).to.equal(403);
         done();
       })
       .catch((err) => done(err));

@@ -5,7 +5,6 @@ const secret = require('../config/jwt');
 require('../models/user');
 
 const User = mongoose.model('User');
-
 const auth = () => true;
 
 auth.login = async (req, res) => {
@@ -31,7 +30,7 @@ auth.login = async (req, res) => {
         });
       }
     } else {
-      res.status(400).json({
+      res.status(500).json({
         err: 'User account not found',
       });
     }
@@ -100,13 +99,14 @@ auth.authorize = async (req, res, next) => {
     req.token = token;
 
     try {
-      const tokenValid = await jwt.verify(token, `${secret}`);
+      const tokenValid = jwt.verify(token, `${secret}`);
       if (!tokenValid) {
         res.status(401).json({
           user: null,
           message: 'Authentication failed',
         });
       }
+      req.userID = tokenValid.id;
       next();
     } catch (err) {
       res.status(500).json({
