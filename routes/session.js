@@ -11,6 +11,7 @@ const {
   singleSession,
   deleteSession,
   modifySession,
+  getSimilarSessions,
 } = require('../controllers/session');
 const { auth } = require('../controllers/auth');
 
@@ -31,5 +32,8 @@ router.delete('/delete', auth.authorize, deleteSession);
 
 // update a session
 router.post('/update', auth.authorize, modifySession);
+
+// Get similar sessions
+router.get('/similarSessions/:sessionId', getSimilarSessions);
 
 module.exports = router;
