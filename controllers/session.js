@@ -98,6 +98,11 @@ exports.deleteSession = async (req, res) => {
   try {
     // Find session by id
     const session = await Session.findById(req.query.id);
+    if (session.userID !== req.userID) {
+      res.status(403).send({
+        message: 'Sessions can only be deleted by the owner',
+      });
+    }
     // Delete session from cloudinary
     await cloudinary.uploader.destroy(session.cloudinaryId);
     // Delete session from db
@@ -114,6 +119,11 @@ exports.deleteSession = async (req, res) => {
 exports.modifySession = async (req, res) => {
   try {
     let session = await Session.findById(req.query.id);
+    if (session.userID !== req.userID) {
+      res.status(403).send({
+        message: 'Sessions can only be modified by the owner',
+      });
+    }
     // Delete session from cloudinary
     await cloudinary.uploader.destroy(session.cloudinaryId);
     // Upload session to cloudinary
@@ -134,9 +144,9 @@ exports.modifySession = async (req, res) => {
     });
     res.json(session);
   } catch (err) {
+    console.log(err);
     res.status(500).send({
       message: err.message || 'An error occured while updating session',
     });
-    console.log(err);
   }
 };
