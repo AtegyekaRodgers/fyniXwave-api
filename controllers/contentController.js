@@ -4,7 +4,13 @@ const Content = require('../models/contentModel');
 exports.uploadFile = async (req, res) => {
   try {
     // Upload files to cloudinary
-    const result = await cloudinary.uploader.upload(req.file.path);
+    const result = await cloudinary.uploader.upload(
+      req.file.path,
+      { resource_type: 'auto' },
+      (error) => {
+        if (error) console.log(error);
+      },
+    );
     // Generating an array of tags
     const tags = req.body.tags.split(',').map(String);
     // Create new content
