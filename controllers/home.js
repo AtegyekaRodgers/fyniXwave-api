@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Content = require('../models/contentModel');
+const { searchContentByTags } = require('./contentController');
 const Session = require('../models/session');
 require('../models/disciplines');
 require('../models/user');
@@ -9,61 +9,31 @@ const Disciplines = mongoose.model('Disciplines');
 
 const home = () => true;
 
-// Maps user interests into tags
-const interestsToTags = async (interestsToMap) => {
+// This gets disciplines followed by the user and respective keywords
+const followedDisciplines = async (userID) => {
   try {
-    const interestsArray = await Disciplines.find(
-      {
-        $and: [{ discipline: { $in: interestsToMap } }],
-      },
-      { keywords: 1 },
-    );
-    const tags = [];
-    for (let index = 0; index < interestsArray.length; index += 1) {
-      tags.push(...interestsArray[index].keywords);
-    }
-    return tags;
+    const { interests } = await User.findById(userID, { interests: 1 });
+    const userDisciplines = await Disciplines.find({
+      $and: [{ discipline: { $in: interests } }],
+    });
+    return userDisciplines;
   } catch (err) {
     return {
       message:
         err.message
-        || 'An error occured while searching users tags of interest',
+        || 'An error occured while getting user followed disciplines',
     };
   }
 };
 
-// Gets user's interests as an array
-const userInterests = async (userID) => {
-  try {
-    const interestsArray = await User.findById(userID, { interests: 1 });
-    return interestsArray;
-  } catch (err) {
-    return {
-      message: err.message || 'An error occured while getting users interests',
-    };
-  }
-};
-
-// When user logged in
 home.feed = async (req, res) => {
-  const { interests } = await userInterests(req.userID);
-  const tags = await interestsToTags(interests);
+  const disciplinesArray = await followedDisciplines(req.userID);
+  const tags = [];
+  for (let index = 0; index < disciplinesArray.length; index += 1) {
+    tags.push(...disciplinesArray[index].keywords);
+  }
   try {
-    const content = await Content.find(
-      {
-        $and: [{ tags: { $in: tags } }],
-      },
-      {
-        title: 1,
-        author: 1,
-        description: 1,
-        category: 1,
-        cloudinaryFileLink: 1,
-        cloudinaryId: 1,
-        createdAt: 1,
-        modifiedAt: 1,
-      },
-    ).sort({ createdAt: -1 });
+    const content = await searchContentByTags(tags);
     const sessions = await Session.find(
       {
         $and: [{ tags: { $in: tags } }],
@@ -79,7 +49,7 @@ home.feed = async (req, res) => {
         endTime: 1,
       },
     ).sort({ startDate: -1 });
-    res.status(200).json({ sessions, content });
+    res.status(200).json({ content, sessions });
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while searching',
