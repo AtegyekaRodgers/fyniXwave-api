@@ -99,7 +99,7 @@ exports.deleteSession = async (req, res) => {
     // Find session by id
     const session = await Session.findById(req.query.id);
     if (session.userID !== req.userID) {
-      res.status(403).send({
+      res.status(403).json({
         message: 'Sessions can only be deleted by the owner',
       });
     }
@@ -120,7 +120,7 @@ exports.modifySession = async (req, res) => {
   try {
     let session = await Session.findById(req.query.id);
     if (session.userID !== req.userID) {
-      res.status(403).send({
+      res.status(403).json({
         message: 'Sessions can only be modified by the owner',
       });
     }

@@ -90,6 +90,11 @@ exports.deleteFile = async (req, res) => {
   try {
     // Find content by id
     const content = await Content.findById(req.query.id);
+    if (content.userID !== req.userID) {
+      res.status(403).json({
+        message: 'Content can only be deleted by the owner',
+      });
+    }
     // Delete content from cloudinary
     await cloudinary.uploader.destroy(content.cloudinaryId);
     // Delete content from db
@@ -119,6 +124,11 @@ exports.singleContent = async (req, res) => {
 exports.modifyFile = async (req, res) => {
   try {
     let content = await Content.findById(req.query.id);
+    if (content.userID !== req.userID) {
+      res.status(403).json({
+        message: 'Content can only be modified by the owner',
+      });
+    }
     // Delete content from cloudinary
     await cloudinary.uploader.destroy(content.cloudinaryId);
     // Upload content to cloudinary
