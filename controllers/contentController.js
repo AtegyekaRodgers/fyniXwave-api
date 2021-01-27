@@ -15,7 +15,7 @@ exports.uploadFile = async (req, res) => {
     const tags = req.body.tags.split(',').map(String);
     // Create new content
     const content = new Content({
-      userID: req.body.userID,
+      userID: req.userID,
       title: req.body.title,
       author: req.body.author,
       description: req.body.description,
@@ -38,7 +38,7 @@ exports.uploadFile = async (req, res) => {
 exports.mentorFiles = async (req, res) => {
   try {
     const content = await Content.find(
-      { userID: req.query.userID },
+      { userID: req.userID },
       {
         title: 1,
         author: 1,
@@ -90,6 +90,11 @@ exports.deleteFile = async (req, res) => {
   try {
     // Find content by id
     const content = await Content.findById(req.query.id);
+    if (content.userID !== req.userID) {
+      res.status(403).json({
+        message: 'Content can only be deleted by the owner',
+      });
+    }
     // Delete content from cloudinary
     await cloudinary.uploader.destroy(content.cloudinaryId);
     // Delete content from db
@@ -119,6 +124,11 @@ exports.singleContent = async (req, res) => {
 exports.modifyFile = async (req, res) => {
   try {
     let content = await Content.findById(req.query.id);
+    if (content.userID !== req.userID) {
+      res.status(403).json({
+        message: 'Content can only be modified by the owner',
+      });
+    }
     // Delete content from cloudinary
     await cloudinary.uploader.destroy(content.cloudinaryId);
     // Upload content to cloudinary
