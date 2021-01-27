@@ -1,8 +1,4 @@
-// dependencies
 const express = require('express');
-
-const router = express.Router();
-
 const upload = require('../config/multer');
 const {
   getFile,
@@ -13,9 +9,12 @@ const {
   modifyFile,
   getRelatedContent,
 } = require('../controllers/contentController');
+const { auth } = require('../controllers/auth');
+
+const router = express.Router();
 
 // upload content post route
-router.post('/', upload.single('content'), uploadFile);
+router.post('/', auth.authorize, upload.single('content'), uploadFile);
 
 // Get all content
 router.get('/', getFile);
@@ -27,10 +26,10 @@ router.get('/mentor', mentorFiles);
 router.get('/content', singleContent);
 
 // delete content
-router.delete('/delete', deleteFile);
+router.delete('/delete', auth.authorize, deleteFile);
 
 // update content
-router.put('/update', modifyFile);
+router.put('/update', auth.authorize, modifyFile);
 
 // Get related content
 router.get('/relatedContent/:contentId', getRelatedContent);
