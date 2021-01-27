@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 });
 
 // User feed
-router.post('/', auth.authorize, home.feed);
+router.get('/feed', auth.authorize, home.feed);
 
 // // Dashboard
 // router.get('/dashboard', auth.authorize, index.dashboard);

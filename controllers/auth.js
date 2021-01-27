@@ -106,6 +106,7 @@ auth.authorize = async (req, res, next) => {
           message: 'Authentication failed',
         });
       }
+      req.userID = tokenValid.id;
       next();
     } catch (err) {
       res.status(500).json({

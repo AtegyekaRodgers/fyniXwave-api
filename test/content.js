@@ -7,7 +7,7 @@ const {
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe('home tests', () => {
+describe.skip('content tests', () => {
   let token;
   before((done) => {
     dbConnect().catch((err) => done(err));
@@ -30,10 +30,10 @@ describe('home tests', () => {
       .catch((err) => done(err));
   });
 
-  // Gives user feed
-  it('gives user feed', (done) => {
+  // Gets related content
+  it('Gets related content', (done) => {
     request(app)
-      .get('/home')
+      .get('/contents/relatedContent/600e8c7b9e7efb6374fd0bb7')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
