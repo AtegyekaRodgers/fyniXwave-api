@@ -177,7 +177,7 @@ exports.searchSessionsByTags = async (tags) => {
 
 exports.getSimilarSessions = async (req, res) => {
   try {
-    const { tags } = await Session.findById(req.params.contentId, {
+    const { tags } = await Session.findById(req.params.sessionId, {
       tags: 1,
     });
     const similarSessions = await this.searchSessionsByTags(tags);
