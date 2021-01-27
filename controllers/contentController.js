@@ -15,7 +15,7 @@ exports.uploadFile = async (req, res) => {
     const tags = req.body.tags.split(',').map(String);
     // Create new content
     const content = new Content({
-      userID: req.body.userID,
+      userID: req.userID,
       title: req.body.title,
       author: req.body.author,
       description: req.body.description,
@@ -38,7 +38,7 @@ exports.uploadFile = async (req, res) => {
 exports.mentorFiles = async (req, res) => {
   try {
     const content = await Content.find(
-      { userID: req.query.userID },
+      { userID: req.userID },
       {
         title: 1,
         author: 1,

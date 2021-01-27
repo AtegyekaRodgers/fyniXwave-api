@@ -9,7 +9,7 @@ exports.setSession = async (req, res) => {
     const tags = req.body.tags.split(',').map(String);
     // Create new session
     const session = new Session({
-      userID: req.body.userID,
+      userID: req.userID,
       sessionTitle: req.body.sessionTitle,
       sessionDate: req.body.sessionDate,
       presenter: req.body.presenter,
@@ -59,7 +59,7 @@ exports.getSessions = async (req, res) => {
 exports.getMentorSessions = async (req, res) => {
   try {
     const session = await Session.find(
-      { userID: req.query.userID },
+      { userID: req.userID },
       {
         sessionTitle: 1,
         sessionDate: 1,
