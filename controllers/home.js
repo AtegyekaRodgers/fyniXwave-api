@@ -27,12 +27,12 @@ const followedDisciplines = async (userID) => {
 };
 
 home.feed = async (req, res) => {
-  const disciplinesArray = await followedDisciplines(req.userID);
-  const tags = [];
-  for (let index = 0; index < disciplinesArray.length; index += 1) {
-    tags.push(...disciplinesArray[index].keywords);
-  }
   try {
+    const disciplinesArray = await followedDisciplines(req.userID);
+    const tags = [];
+    for (let index = 0; index < disciplinesArray.length; index += 1) {
+      tags.push(...disciplinesArray[index].keywords);
+    }
     const content = await searchContentByTags(tags);
     const sessions = await searchSessionsByTags(tags);
     res.status(200).json({ content, sessions });
