@@ -140,3 +140,42 @@ exports.modifySession = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.searchSessionsByTags = async (tags) => {
+  try {
+    const contents = await Session.find(
+      {
+        $and: [{ tags: { $in: tags } }],
+      },
+      {
+        sessionTitle: 1,
+        sessionDate: 1,
+        presenter: 1,
+        cloudinaryFileLink: 1,
+        cloudinaryId: 1,
+        description: 1,
+        startTime: 1,
+        endTime: 1,
+      },
+    ).sort({ startDate: -1 });
+    return contents;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+exports.getSimilarSessions = async (req, res) => {
+  try {
+    const { tags } = await Session.findById(req.params.sessionId, {
+      tags: 1,
+    });
+    const similarSessions = await this.searchSessionsByTags(tags);
+    res.status(200).json(similarSessions);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({
+      message: err.message || 'Error getting related content',
+    });
+  }
+};

@@ -11,9 +11,6 @@ router.get('/', (req, res) => {
 // User feed
 router.get('/feed', auth.authorize, home.feed);
 
-// Related content
-// router.get('/relatedContent', auth.authorize, home.dashboard);
-
 // // Dashboard
 // router.get('/dashboard', auth.authorize, index.dashboard);
 

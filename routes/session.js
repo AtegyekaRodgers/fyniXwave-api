@@ -5,11 +5,18 @@ const router = express.Router();
 
 const upload = require('../config/multer');
 const {
-  setSession, getSessions, getMentorSessions, singleSession, deleteSession, modifySession,
+  setSession,
+  getSessions,
+  getMentorSessions,
+  singleSession,
+  deleteSession,
+  modifySession,
+  getSimilarSessions,
 } = require('../controllers/session');
+const { auth } = require('../controllers/auth');
 
 // upload session
-router.post('/', upload.single('photo'), setSession);// photo name to be provided from frontend
+router.post('/', auth.authorize, upload.single('photo'), setSession); // photo name to be provided from frontend
 
 // get all sessions
 router.get('/', getSessions);
@@ -21,9 +28,12 @@ router.get('/mentor/', getMentorSessions);
 router.get('/session', singleSession);
 
 // delete single session
-router.delete('/delete', deleteSession);
+router.delete('/delete', auth.authorize, deleteSession);
 
 // update a session
-router.post('/update', modifySession);
+router.post('/update', auth.authorize, modifySession);
+
+// Get similar sessions
+router.get('/similarSessions/:sessionId', getSimilarSessions);
 
 module.exports = router;
