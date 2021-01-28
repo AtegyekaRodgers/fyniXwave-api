@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { searchContentByTags } = require('./contentController');
-const Session = require('../models/session');
+const { searchSessionsByTags } = require('./session');
 require('../models/disciplines');
 require('../models/user');
 
@@ -27,28 +27,14 @@ const followedDisciplines = async (userID) => {
 };
 
 home.feed = async (req, res) => {
-  const disciplinesArray = await followedDisciplines(req.userID);
-  const tags = [];
-  for (let index = 0; index < disciplinesArray.length; index += 1) {
-    tags.push(...disciplinesArray[index].keywords);
-  }
   try {
+    const disciplinesArray = await followedDisciplines(req.userID);
+    const tags = [];
+    for (let index = 0; index < disciplinesArray.length; index += 1) {
+      tags.push(...disciplinesArray[index].keywords);
+    }
     const content = await searchContentByTags(tags);
-    const sessions = await Session.find(
-      {
-        $and: [{ tags: { $in: tags } }],
-      },
-      {
-        sessionTitle: 1,
-        sessionDate: 1,
-        presenter: 1,
-        cloudinaryFileLink: 1,
-        cloudinaryId: 1,
-        description: 1,
-        startTime: 1,
-        endTime: 1,
-      },
-    ).sort({ startDate: -1 });
+    const sessions = await searchSessionsByTags(tags);
     res.status(200).json({ content, sessions });
   } catch (err) {
     res.status(500).json({
