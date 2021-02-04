@@ -14,12 +14,12 @@ router.get('/', auth.authorize, User.readAll);
 router.put('/interests', auth.authorize, User.addInterests);
 
 // // Retrieve a single user with userId
-// router.get('/:userId', user.readOne);
+// router.get('/:userId', User.readOne);
 
 // // Update a user with UserId
-// router.put('/:userId', user.update);
+// router.put('/:userId', User.update);
 
 // // Delete a user with userId
-// router.delete('/:userId', user.delete);
+// router.delete('/:userId', User.delete);
 
 module.exports = router;
