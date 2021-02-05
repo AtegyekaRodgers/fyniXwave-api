@@ -6,7 +6,8 @@ const { Schema } = mongoose;
 const institutionSchema = new Schema({
   institutionName: { type: String, unique: true, uniqueCaseInsensitive: true},
   location: { type: Schema.Types.ObjectId, ref: "InsLocation" },
-  alumniGroup: { type: Schema.Types.ObjectId, ref: "AlumniGroup" }, 
+  alumniGroup: { type: Schema.Types.ObjectId, ref: "AlumniGroup" },
+  profilePicture: { type: String, required: false }
 });
 
 institutionSchema.plugin(uniqueValidator);

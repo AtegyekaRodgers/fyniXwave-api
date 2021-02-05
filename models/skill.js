@@ -6,9 +6,10 @@ const { Schema } = mongoose;
 
 //to create a schema
 const skillSchema = new Schema({
-    skillName: String,
-    field: String,
-    specialization: String
+    skillName: {type: String, trim: true, required: [true, 'skillName is required']},
+    discipline: {type: String, trim: true},
+    specialization: String,
+    profilePicture: { type: String, required: false }
 });
 
 skillSchema.plugin(uniqueValidator);

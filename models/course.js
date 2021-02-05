@@ -8,8 +8,9 @@ const { Schema } = mongoose;
 const courseSchema = new Schema({
     courseName: String,
     courseCode: String,
-    field: String, 
-    specialization: String
+    discipline: String, 
+    specialization: String,
+    profilePicture: { type: String, required: false }
 });
 
 courseSchema.plugin(uniqueValidator);

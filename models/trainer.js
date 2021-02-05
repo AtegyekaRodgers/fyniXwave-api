@@ -6,10 +6,11 @@ const { Schema } = mongoose;
 
 //to create a schema
 const trainerSchema = new Schema({
-    skillName: String,
-    field: String,
+    trainerName: String,
+    discipline: String,
     specialization: String,
-    userId: { type: Schema.Types.ObjectId, ref: "User" }
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    profilePicture: { type: String, required: false }
 });
 
 trainerSchema.plugin(uniqueValidator);
