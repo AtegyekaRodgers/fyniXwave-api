@@ -17,7 +17,12 @@ const home = require('./routes/home');
 const index = require('./routes/index');
 const content = require('./routes/contentRoutes');
 const session = require('./routes/session');
-const disciplines = require('./routes/disciplines');
+const disciplines = require('./routes/disciplines'); 
+const institution = require('./routes/institution');
+const course = require('./routes/course');
+const trainer = require('./routes/trainer');
+const skill = require('./routes/skill');
+const learner = require('./routes/learner');
 
 // Routes
 app.use('/home', home);
@@ -27,6 +32,11 @@ app.use('/user', user);
 app.use('/contents', content);
 app.use('/sessions', session);
 app.use('/disciplines', disciplines);
+app.use('/institution', institution);
+app.use('/course', course);
+app.use('/trainer', trainer);
+app.use('/skill', skill);
+app.use('/learner', learner);
 // Routes for users without accounts
 app.use('/', index);
 

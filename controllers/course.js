@@ -13,8 +13,8 @@ Course.create = async (req, res) => {
     courseCode: "...",
     discipline: "...",
     specialization: "...",
-    offeredBy: "...",
-    trainedBy: "...",
+    institution: "...",
+    trainers: ["...", "...", "..."],
     skills: ["...", "...", "..."]
 } 
 */
@@ -29,19 +29,23 @@ Course.create = async (req, res) => {
     };
     const course = new Course( cours );
     await course.save(); 
-    if(req.body.offeredBy){  
+    if(req.body.institution){  
         //creation request has told me which institution offers this course, so attach it.
-        var ok = course.attachInstitution(req.body.offeredBy);
+        var ok = course.attachInstitution(req.body.institution);
     }
-    if(req.body.trainedBy){  
-        //creation request has told me which institution offers this course, so attach it.
-         var ok = course.attachTrainer(req.body.trainedBy);
+    if(req.body.trainers){  
+        //req.body.trainers should be an array of strings (the skills)
+        let trainersArray = req.body.trainers;
+        trainersArray.forEach((key, trainer)=>{
+             //trainer must be an id of an existing/registered trainer.
+             var ok = course.attachTrainer(trainer);
+        });
     }
     if(req.body.skills){
         //req.body.skills should be an array of strings (the skills)
         let skillsArray = req.body.skills;
         skillsArray.forEach((key, skill)=>{
-            //TODO: retrieve skill id using skill name
+            //TODO: retrieve skill id using skill name, create it if it's not found.
             let skill_id = "the retrieved id here"; 
             var ok = course.attachSkill(skill_id);
         });

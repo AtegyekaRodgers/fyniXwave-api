@@ -50,12 +50,10 @@ const userSchema = new Schema({
     trim: true,
     required: [true, 'password is required'],
   },
-  usercategory: {
-    type: String,
-    trim: true,
-    required: [true, 'user category is required'],
-    enum: ['institution', 'mentor', 'student', 'learner', 'employee', 'graduate'],
-  },
+  usercategory: [{type: String, trim: true, required: [true, 'user category is required'], 
+                  enum: ['institution', 'mentor', 'trainer', 'student', 'learner', 'employee', 'graduate']
+                 }
+                ],
   interests: [
     {
       type: String,

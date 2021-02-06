@@ -10,8 +10,9 @@ User.create = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashedPassword;
-
-    // Saving user
+    
+    req.body.usercategory = [req.body.usercategory];
+    // Saving user 
     const user = new User(req.body);
     await user.save();
     res.status(201).json({ message: 'user successfully created' });
