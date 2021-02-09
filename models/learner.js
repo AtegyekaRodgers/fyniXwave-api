@@ -17,9 +17,9 @@ const learnerSchema = new Schema({
     admissionDate: Date,
     fieldOfStudy: String,
     levelOfEducation: String,
-    gradStatus: { type: String, enum: ["current", "completed", "returned", "retained"] }
-    userId: { type: Schema.Types.ObjectId, ref: "User" }
-    discipline: { type: Schema.Types.ObjectId, ref: "Disciplines" }
+    gradStatus: { type: String, enum: ["current", "completed", "returned", "retained"] },
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    discipline: { type: Schema.Types.ObjectId, ref: "Disciplines" },
     profilePicture: { type: String, required: false }
 });
 

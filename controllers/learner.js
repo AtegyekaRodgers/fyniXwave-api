@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const User = require('../models/user');
-const Trainer = require('../models/trainer');
+const Discipline = require('../models/discipline');
 const Course = require('../models/course');
+const Learner = require('../models/learner');
 const Skill = require('../models/skill');
-
-const Affiliation = require('../controllers/affiliation');
-const CourseTrainer = require('../controllers/course_trainer');
-const TrainerSkill = require('../controllers/trainer_skill');
+ 
+const CourseLearner = require('../controllers/course_learner');
+const LearnerSkill = require('../controllers/learner_skill');
 
 // Creating a new trainer profile
-Trainer.create = async (req, res) => { 
+Learner.create = async (req, res) => { 
 /* req.body = 
 {
     email: "...",
@@ -25,7 +25,8 @@ Trainer.create = async (req, res) => {
     specialization: "...",
     institution: "...",
     courses: ["...", "...", "..."],
-    skills: ["...", "...", "..."]
+    skills: ["...", "...", "..."],
+    classes: ["...", "...", "..."]
 } 
 
 res.body = {
@@ -43,7 +44,7 @@ res.body = {
     .select("_id").count()
     .limit(1)
     .exec(function(err, datta){
-        if(err){ console.log("trainer controller: Failed to check for existance of user"); return 0; }
+        if(err){ console.log("learner controller: Failed to check for existance of user"); return 0; }
         else if(datta){
           usr_id = datta._id;
         }
@@ -51,14 +52,14 @@ res.body = {
     
     if(count > 0){ 
         // usr exists,
-        // add 'trainer' to the set of usercategory of existing user
-        let categories = ["trainer"];
+        // add 'learner' to the set of usercategory of existing user
+        let categories = ["learner"];
         const updated = User.findByIdAndUpdate(
           usr_id, { $addToSet: { usercategory: { $each: categories } } }, { useFindAndModify: false }
         );
     }
     
-    if(count < 1){ 
+    if(count < 1){
     // usr does not exist, create a new one.
         // Hashing the password:
         const salt = await bcrypt.genSalt(10);
@@ -72,26 +73,26 @@ res.body = {
             lastname: req.body.lastname,
             username: req.body.username,
             password: req.body.password,
-            usercategory: ["trainer"]
+            usercategory: ["learner"]
         };
         const newUser = new User( usr );
         await newUser.save();
         usr_id = newUser._id;
     }
       
-    // saving the trainer profile
-    let trnr = {
-        trainerName: req.body.firstname + req.body.lastname,
+    // saving the learner profile
+    let lrnr = {
+        learnerName: req.body.firstname + req.body.lastname,
         discipline: req.body.discipline, 
         specialization: req.body.specialization,
         userId: usr_id
     };
-    const trainer = new Trainer( trnr );
-    await trainer.save(); 
+    const learner = new Learner( lrnr );
+    await learner.save(); 
     
-    if(req.body.institution){  
-        //creation request has told me which institution this trainer belongs to, so create an affiliation.
-        var ok = trainer.attachInstitution(req.body.institution);
+    if(req.body.institution){
+        //creation request has told me which institution this learner belongs to, so create a learner-skill relationship.
+        var ok = learner.attachInstitution(req.body.institution);
     } 
     if(req.body.courses){
         //req.body.courses should be an array of strings (the courses this trainer handles)
@@ -136,7 +137,7 @@ res.body = {
         });
     }
      
-    res.status(201).json({ message: 'Trainer profile successfully created' });
+    res.status(201).json({ message: 'Learner profile successfully created' });
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while creating new trainer profile',
@@ -144,15 +145,15 @@ res.body = {
   }
 };
 
-// Create trainer-institution affiliation.
-Trainer.attachInstitution = async (institution_id) => {
+// Create learner-institution relationship.
+Learner.attachInstitution = async (institution_id) => {
     //grab this trainer's id
-    let trainer_id = this._id;
+    let learner_id = this._id;
     
-    //create a new institution-trainer relationship  
-    let relationship = {institution: institution_id, affiliate: trainer_id, affiliateType: "trainer"};
+    //create a new institution-learner relationship  
+    let relationship = {institution: institution_id, learner:learner_id};
     
-    let returned = Affiliation.create(relationship);
+    let returned = LearnerSkill.create(relationship);
     if(returned.error){ 
         console.log(returned.error);
         return false;
@@ -164,14 +165,14 @@ Trainer.attachInstitution = async (institution_id) => {
 };
 
 // attach courses .
-Trainer.attachCourse = async (course_id) => {
+Learner.attachCourse = async (course_id) => {
     //grab this trainer's id
-    let trainer_id = this._id;
+    let learner_id = this._id;
     
-    //create a new trainer-skill relationship  
-    let relationship = {trainer: trainer_id, course: course_id};
+    //create a new learner-skill relationship  
+    let relationship = {learner: learner_id, course: course_id};
     
-    let returned = CourseTrainer.create(relationship);
+    let returned = CourseLearner.create(relationship);
     if(returned.error){ 
         console.log(returned.error);
         return false;
@@ -183,14 +184,14 @@ Trainer.attachCourse = async (course_id) => {
 };
 
 // attach skills .
-Trainer.attachSkill = async (skill_id) => {
+Learner.attachSkill = async (skill_id) => {
     //grab this trainer's id
-    let trainer_id = this._id;
+    let learner_id = this._id;
     
     //create a new trainer-skill relationship  
-    let relationship = {trainer: trainer_id, skill: skill_id};
+    let relationship = {learner: learner_id, skill: skill_id};
     
-    let returned = TrainerSkill.create(relationship);
+    let returned = LearnerSkill.create(relationship);
     if(returned.error){ 
         console.log(returned.error);
         return false;
@@ -202,17 +203,17 @@ Trainer.attachSkill = async (skill_id) => {
 };
 
 // Adding or updating profile picture for an trainer
-Trainer.updateProfilePicture = async (req, res) => {
+Learner.updateProfilePicture = async (req, res) => {
    try {
    // uploading profile picture to cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, { resource_type: 'auto' }, (error) => {
         if (error) console.log(error);
     });
     
-    let trainer = await Trainer.findById(req.query.id);
-    const updated = await Trainer.findByIdAndUpdate(
+    let learner = await Learner.findById(req.query.id);
+    const updated = await Learner.findByIdAndUpdate(
       {_id: req.query.id },
-      { profilePicture: result.secure_url || trainer.profilePicture },
+      { profilePicture: result.secure_url || learner.profilePicture },
       { useFindAndModify: false },
     );
     res.status(200).json({newlink: updated.profilePicture}); //return the link to the new profile picture
@@ -223,11 +224,11 @@ Trainer.updateProfilePicture = async (req, res) => {
   }
 };
 
-// Retrieve all trainers
-Trainer.readAll = async (req, res) => {
+// Retrieve all learners
+Learner.readAll = async (req, res) => {
   try {
-    const trainers = await Trainer.find();
-    res.status(200).json(trainers);
+    const learners = await Learner.find();
+    res.status(200).json(learners);
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while retrieving trainers',
@@ -236,19 +237,19 @@ Trainer.readAll = async (req, res) => {
 };
 
 // Retrieve single trainer
-Trainer.readOne = async (req, res) => {
+Learner.readOne = async (req, res) => {
   try {
-    const trainer = await Trainer.findById(req.query.id);
-    res.json(trainer);
+    const learner = await Learner.findById(req.query.id);
+    res.json(learner);
   } catch (err) {
     res.status(500).send({
-      message: err.message || 'An error occured while retrieving this trainer',
+      message: err.message || 'An error occured while retrieving this learner',
     });
     console.log(err);
   }
 };
 
-module.exports = { Trainer };
+module.exports = { Learner };
 
 
 
