@@ -12,7 +12,6 @@ const TrainerSkill = require('../controllers/trainer_skill');
 
 // Creating a new trainer profile
 Trainer.create = async (req, res) => { 
-
 /* req.body = 
 {
     email: "...",
@@ -37,7 +36,7 @@ res.body = {
     //first create a parent user entity for this trainer, or identify if already exists.
     //retrieve the possibly existing user
     let usr_id;
-    const count = await User.findOne()
+    const count = User.findOne()
     .where('email').equals(req.body.email)
     .where('firstname').equals(req.body.firstname)
     .where('lastname').equals(req.body.lastname)
@@ -54,7 +53,7 @@ res.body = {
         // usr exists,
         // add 'trainer' to the set of usercategory of existing user
         let categories = ["trainer"];
-        const updated = await User.findByIdAndUpdate(
+        const updated = User.findByIdAndUpdate(
           usr_id, { $addToSet: { usercategory: { $each: categories } } }, { useFindAndModify: false }
         );
     }
@@ -100,7 +99,7 @@ res.body = {
         coursesArray.forEach((key, course)=>{
             //retrieve course id using course name, create it if it's not found.
             let course_id = "";
-            const result = await Course.findOne()
+            const result = Course.findOne()
             .where('courseName').equals(course) 
             .exec(function(err, datta){
                       if(err){
@@ -121,7 +120,7 @@ res.body = {
         skillsArray.forEach((key, skill)=>{
             //retrieve skill id using skill name, create it if it's not found. 
             let skill_id = "";
-            const result = await Course.findOne()
+            const result = Course.findOne()
             .where('courseName').equals(course) 
             .exec(function(err, datta){
                       if(err){

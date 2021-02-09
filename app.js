@@ -36,7 +36,7 @@ app.use('/institution', institution);
 app.use('/course', course);
 app.use('/trainer', trainer);
 app.use('/skill', skill);
-app.use('/learner', learner);
+//app.use('/learner', learner);
 // Routes for users without accounts
 app.use('/', index);
 

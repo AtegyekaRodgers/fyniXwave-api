@@ -1,3 +1,4 @@
+/*
 const express = require('express');
 const { Learner } = require('../controllers/learner');
 const { auth } = require('../controllers/auth');
@@ -20,3 +21,5 @@ router.get('/:id', Learner.readOne);
 // router.delete('/:id', Learner.delete);
 
 module.exports = router;
+
+*/

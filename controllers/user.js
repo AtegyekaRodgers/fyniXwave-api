@@ -59,3 +59,6 @@ User.addInterests = async (req, res) => {
 module.exports = {
   User,
 };
+
+
+
