@@ -9,6 +9,7 @@ const Skill = require('../models/skill');
  
 const CourseLearner = require('../controllers/course_learner');
 const LearnerSkill = require('../controllers/learner_skill');
+const LearnerClasss = require('../controllers/learner_classs');
 
 // Creating a new trainer profile
 Learner.create = async (req, res) => { 
@@ -104,7 +105,7 @@ res.body = {
             .where('courseName').equals(course) 
             .exec(function(err, datta){
                       if(err){
-                        console.log("trainer controller: Failed to retrieve course id using course name");
+                        console.log("learner controller: Failed to retrieve course id using course name");
                         return {error: err };
                       }else if(datta){
                         course_id = datta._id;
@@ -112,7 +113,7 @@ res.body = {
                       }
                   }
             );
-            var ok = trainer.attachCourse(course_id);
+            var ok = learner.attachCourse(course_id);
         });
     }
     if(req.body.skills){
@@ -122,10 +123,10 @@ res.body = {
             //retrieve skill id using skill name, create it if it's not found. 
             let skill_id = "";
             const result = Skill.findOne()
-            .where('courseName').equals(course) 
+            .where('skillName').equals(skill) 
             .exec(function(err, datta){
                       if(err){
-                        console.log("trainer controller: Failed to retrieve course id using course name"); 
+                        console.log("learner controller: Failed to retrieve skill id using skill name"); 
                         return {error: err };
                       }else if(datta){
                         skill_id = datta._id;
@@ -133,7 +134,28 @@ res.body = {
                       }
                   }
             );
-            var ok = course.attachSkill(skill_id);
+            var ok = learner.attachSkill(skill_id);
+        });
+    }
+    if(req.body.classes){
+        //req.body.classes should be an array of strings (the classes)
+        let classesArray = req.body.classes;
+        classesArray.forEach((key, classs)=>{
+            //retrieve classs id using classs name. 
+            let classs_id = "";
+            const result = Classs.findOne()
+            .where('classsName').equals(classs) 
+            .exec(function(err, datta){
+                      if(err){
+                        console.log("learner controller: Failed to retrieve classs id using classs name"); 
+                        return {error: err };
+                      }else if(datta){
+                        classs_id = datta._id;
+                        return datta;
+                      }
+                  }
+            );
+            var ok = learner.attachClasss(classs_id);
         });
     }
      
@@ -183,6 +205,25 @@ Learner.attachCourse = async (course_id) => {
     }
 };
 
+// Create learner-classs relationship.
+Learner.attachClasss = async (classs_id) => {
+    //grab this learner's id
+    let learner_id = this._id;
+    
+    //create a new institution-learner relationship  
+    let relationship = {classs: classs_id, learner:learner_id};
+    
+    let returned = LearnerClasss.create(relationship);
+    if(returned.error){
+        console.log(returned.error);
+        return false;
+    }
+    if(returned.success){
+        console.log(returned.success);
+        return true;
+    }
+};
+
 // attach skills .
 Learner.attachSkill = async (skill_id) => {
     //grab this trainer's id
@@ -192,7 +233,7 @@ Learner.attachSkill = async (skill_id) => {
     let relationship = {learner: learner_id, skill: skill_id};
     
     let returned = LearnerSkill.create(relationship);
-    if(returned.error){ 
+    if(returned.error){
         console.log(returned.error);
         return false;
     }

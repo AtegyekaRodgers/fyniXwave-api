@@ -4,6 +4,15 @@ const Skill = require('../models/skill');
 
 // Creating a new skill record
 Skill.create = async (req, res) => {
+  /* req.body = 
+    {
+       skillName: "...",
+       discipline: "...",
+       specialization: "...",
+       profilePicture: "..."
+    }
+    */ 
+  
   try { 
     // saving the profile
     const skill = new Skill(req.body);

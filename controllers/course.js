@@ -19,7 +19,7 @@ Course.create = async (req, res) => {
 } 
 */
 
-  try { 
+  try {
     // saving the profile
     let cours = {
         courseName: req.body.courseName,
@@ -45,8 +45,20 @@ Course.create = async (req, res) => {
         //req.body.skills should be an array of strings (the skills)
         let skillsArray = req.body.skills;
         skillsArray.forEach((key, skill)=>{
-            //TODO: retrieve skill id using skill name, create it if it's not found.
-            let skill_id = "the retrieved id here"; 
+            //retrieve skill id using skill name, create it if it's not found. 
+            let skill_id = "";
+            const result = Skill.findOne()
+            .where('skillName').equals(skill) 
+            .exec(function(err, datta){
+                      if(err){
+                        console.log("course controller: Failed to retrieve skill id using skill name"); 
+                        return {error: err };
+                      }else if(datta){
+                        skill_id = datta._id;
+                        return datta;
+                      }
+                  }
+            );
             var ok = course.attachSkill(skill_id);
         });
     }

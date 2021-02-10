@@ -4,6 +4,14 @@ const Institution = require('../models/institution');
 
 // Creating a new institution profile
 Institution.create = async (req, res) => {
+    /* req.body = 
+    {
+       institutionName: "...",
+       location: "...",
+       alumniGroup: "..." //key 
+    }
+    */ 
+  
   try { 
     // saving the profile
     const institution = new Institution(req.body);
