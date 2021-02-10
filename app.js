@@ -23,6 +23,7 @@ const course = require('./routes/course');
 const trainer = require('./routes/trainer');
 const skill = require('./routes/skill');
 const learner = require('./routes/learner');
+const classs = require('./routes/classs');
 
 // Routes
 app.use('/home', home);
@@ -36,7 +37,8 @@ app.use('/institution', institution);
 app.use('/course', course);
 app.use('/trainer', trainer);
 app.use('/skill', skill);
-//app.use('/learner', learner);
+app.use('/learner', learner);
+app.use('/classs', classs);
 // Routes for users without accounts
 app.use('/', index);
 

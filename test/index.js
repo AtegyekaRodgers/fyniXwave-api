@@ -1,7 +1,5 @@
 const { expect } = require('chai');
-const {
-  before, after, describe, it,
-} = require('mocha');
+const { before, after, describe, it } = require('mocha');
 const request = require('supertest');
 
 const app = require('../app');

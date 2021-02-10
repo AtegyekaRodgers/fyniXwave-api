@@ -4,6 +4,9 @@ const { auth } = require('../controllers/auth');
 
 const router = express.Router();
 
+//Add or replace a profile picture
+router.post('/profilepic', Course.create);
+
 // Create a new course
 router.post('/', Course.create);
 

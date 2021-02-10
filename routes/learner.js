@@ -1,9 +1,12 @@
-/*
+
 const express = require('express');
 const { Learner } = require('../controllers/learner');
 const { auth } = require('../controllers/auth');
 
 const router = express.Router();
+
+//Add or replace a profile picture
+router.post('/profilepic', Learner.create);
 
 // Create a new learner
 router.post('/', Learner.create);
@@ -22,4 +25,4 @@ router.get('/:id', Learner.readOne);
 
 module.exports = router;
 
-*/
+

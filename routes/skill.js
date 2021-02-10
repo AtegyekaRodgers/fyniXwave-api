@@ -4,6 +4,9 @@ const { auth } = require('../controllers/auth');
 
 const router = express.Router();
 
+//Add or replace a profile picture
+router.post('/profilepic', Skill.create);
+
 // Create a new skill
 router.post('/', Skill.create);
 
