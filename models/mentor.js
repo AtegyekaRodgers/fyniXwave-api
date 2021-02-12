@@ -9,7 +9,9 @@ const mentorSchema = new Schema({
     mentorName: String,
     field: String,
     specialization: String
-    userId: { type: Schema.Types.ObjectId, ref: "User" }
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    profilePicture: { type: String },
+    cloudinaryId: { type: String }
 });
 
 mentorSchema.plugin(uniqueValidator);

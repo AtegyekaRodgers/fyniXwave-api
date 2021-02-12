@@ -10,7 +10,8 @@ const courseSchema = new Schema({
     courseCode: String,
     discipline: String, 
     specialization: String,
-    profilePicture: { type: String, required: false }
+    profilePicture: { type: String, required: false },
+    cloudinaryId: { type: String }
 });
 
 courseSchema.plugin(uniqueValidator);

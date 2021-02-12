@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const User = require('../models/user');
-const Discipline = require('../models/discipline');
 const Course = require('../models/course');
 const Learner = require('../models/learner');
 const Skill = require('../models/skill');
@@ -254,7 +253,7 @@ Learner.updateProfilePicture = async (req, res) => {
     let learner = await Learner.findById(req.query.id);
     const updated = await Learner.findByIdAndUpdate(
       {_id: req.query.id },
-      { profilePicture: result.secure_url || learner.profilePicture },
+      { profilePicture: result.secure_url || learner.profilePicture, cloudinaryId: result.public_id },
       { useFindAndModify: false },
     );
     res.status(200).json({newlink: updated.profilePicture}); //return the link to the new profile picture

@@ -10,6 +10,8 @@ const jobSchema = new Schema({
     field: String,
     jobLink: String,
     jobSummary: String,
+    profilePicture: { type: String },
+    cloudinaryId: { type: String },
     datePosted: Date,
     deadline: Date
 });

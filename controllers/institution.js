@@ -12,7 +12,7 @@ Institution.create = async (req, res) => {
     }
     */ 
   
-  try { 
+  try {
     // saving the profile
     const institution = new Institution(req.body);
     await institution.save();
@@ -35,7 +35,7 @@ Institution.updateProfilePicture = async (req, res) => {
     let institution = await Institution.findById(req.query.id);
     const updated = await Institution.findByIdAndUpdate(
       {_id: req.query.id },
-      { profilePicture: result.secure_url || institution.profilePicture },
+      { profilePicture: result.secure_url || institution.profilePicture, cloudinaryId: result.public_id },
       { useFindAndModify: false },
     );
     res.status(200).json({newlink: updated.profilePicture}); //return the link to the new profile picture

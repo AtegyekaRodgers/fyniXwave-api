@@ -22,7 +22,7 @@ CourseLearner.readAll = async () => {
         if(err){ return  {error: err.message || 'Failed to retrieve all course-learner relationships'}; }
         return datta;
     });
-    return {data: datta};
+    return {data: data};
   } catch (err) {
     return {error: err.message || 'An error occured while retrieving course-learner relationships '};
   }
@@ -38,7 +38,7 @@ CourseLearner.readOne = async (relationship) => {
         if(err){ return  {error: err.message || 'Failed to retrieve a relationship btn learner and course'}; }
         return datta;
     });
-    return {data: datta};
+    return {data: data};
   } catch (err) {
     return {error: err.message || 'An error occured while retrieving this course-learner relationship'};
   }

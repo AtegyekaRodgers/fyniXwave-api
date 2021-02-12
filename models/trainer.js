@@ -10,7 +10,8 @@ const trainerSchema = new Schema({
     discipline: String,
     specialization: String,
     userId: { type: Schema.Types.ObjectId, ref: "User" },
-    profilePicture: { type: String, required: false }
+    profilePicture: { type: String, required: false }, 
+    cloudinaryId: { type: String }
 });
 
 trainerSchema.plugin(uniqueValidator);

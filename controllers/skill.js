@@ -36,7 +36,7 @@ Skill.updateProfilePicture = async (req, res) => {
     let skill = await Skill.findById(req.query.id);
     const updated = await Skill.findByIdAndUpdate(
       {_id: req.query.id },
-      { profilePicture: result.secure_url || skill.profilePicture },
+      { profilePicture: result.secure_url || skill.profilePicture, cloudinaryId: result.public_id },
       { useFindAndModify: false },
     );
     res.status(200).json({newlink: updated.profilePicture}); //return the link to the new profile picture

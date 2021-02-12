@@ -7,7 +7,8 @@ const institutionSchema = new Schema({
   institutionName: { type: String, unique: true, uniqueCaseInsensitive: true},
   location: { type: Schema.Types.ObjectId, ref: "InsLocation" },
   alumniGroup: { type: Schema.Types.ObjectId, ref: "AlumniGroup" },
-  profilePicture: { type: String, required: false }
+  profilePicture: { type: String, required: false }, 
+  cloudinaryId: { type: String }
 });
 
 institutionSchema.plugin(uniqueValidator);

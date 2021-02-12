@@ -12,6 +12,8 @@ const careerEventSchema = new Schema({
     venue: String,
     theme: String,
     sponsoredBy: [String],
+    profilePicture: { type: String },
+    cloudinaryId: { type: String },
     startDate: Date,
     endDate: Date
 });

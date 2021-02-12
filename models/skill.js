@@ -9,7 +9,8 @@ const skillSchema = new Schema({
     skillName: {type: String, trim: true, required: [true, 'skillName is required']},
     discipline: {type: String, trim: true},
     specialization: String,
-    profilePicture: { type: String, required: false }
+    profilePicture: { type: String, required: false }, 
+    cloudinaryId: { type: String }
 });
 
 skillSchema.plugin(uniqueValidator);

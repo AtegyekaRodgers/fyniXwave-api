@@ -6,9 +6,11 @@ const { Schema } = mongoose;
 
 //to create a schema
 const alumniGroupSchema = new Schema({
-    groupName: String,
-    started: Date,
-    parentInstituion: String
+    groupName: { type: String },
+    started: { type: Date },
+    parentInstituion: { type: String },
+    profilePicture: { type: String },
+    cloudinaryId: { type: String }
 });
 
 alumniGroupSchema.plugin(uniqueValidator);

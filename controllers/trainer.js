@@ -212,7 +212,7 @@ Trainer.updateProfilePicture = async (req, res) => {
     let trainer = await Trainer.findById(req.query.id);
     const updated = await Trainer.findByIdAndUpdate(
       {_id: req.query.id },
-      { profilePicture: result.secure_url || trainer.profilePicture },
+      { profilePicture: result.secure_url || trainer.profilePicture, cloudinaryId: result.public_id },
       { useFindAndModify: false },
     );
     res.status(200).json({newlink: updated.profilePicture}); //return the link to the new profile picture

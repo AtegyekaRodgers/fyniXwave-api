@@ -139,7 +139,7 @@ Course.updateProfilePicture = async (req, res) => {
     let course = await Course.findById(req.query.id);
     const updated = await Course.findByIdAndUpdate(
       {_id: req.query.id },
-      { profilePicture: result.secure_url || course.profilePicture },
+      { profilePicture: result.secure_url || course.profilePicture, cloudinaryId: result.public_id },
       { useFindAndModify: false },
     );
     res.status(200).json({newlink: updated.profilePicture}); //return the link to the new profile picture
