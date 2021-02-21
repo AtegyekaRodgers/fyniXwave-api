@@ -6,12 +6,13 @@ const { Schema } = mongoose;
 
 //to create a schema
 const courseSchema = new Schema({
-    courseName: String,
-    courseCode: String,
-    discipline: String, 
-    specialization: String,
+    courseName: { type: String },
+    courseCode: { type: String },
+    discipline: { type: String }, 
+    specialization: { type: String },
     profilePicture: { type: String, required: false },
-    cloudinaryId: { type: String }
+    cloudinaryId: { type: String },
+    accessibility: { type: String, enum: ["open", "paid"], default: "open" }
 });
 
 courseSchema.plugin(uniqueValidator);

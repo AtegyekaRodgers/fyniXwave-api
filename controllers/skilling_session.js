@@ -83,7 +83,7 @@ SkillingSession.readAllByInstitution = async (institution_id) => {
 };
 
 // Retrieve all skillingSessions for a specific classs
-SkillingSession.readAllByInstitution = async (classs_id) => {
+SkillingSession.readAllByClasss = async (classs_id) => {
   try {
     const data = await SkillingSession.find()
     .where('parentClasss').equals(classs_id) 
@@ -105,6 +105,19 @@ SkillingSession.readOne = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while retrieving this skillingSession',
+    });
+    console.log(err);
+  }
+};
+
+// uppdate one skillingSession
+SkillingSession.update = async (req, res) => {
+  try {
+    const skillingSession = await SkillingSession.findByIdAndUpdate( req.query.id, req.body );
+    res.json({ success: "Operation successful" });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'An error occured while updating this skillingSession',
     });
     console.log(err);
   }
