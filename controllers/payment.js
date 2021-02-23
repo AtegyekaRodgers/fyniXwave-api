@@ -21,9 +21,9 @@ Payment.create = async (req, res) => {
         }
     const paymentt = new Payment(paymentData);
     await paymentt.save();
-    return { success: 'Payment record successfully saved' };
+    res.status(200).send({ success: 'Payment record successfully saved' });
   } catch (err) {
-    return {error: err.message || 'An error occured while saving a new payment record'};
+    res.status(500).send({error: err.message || 'An error occured while saving a new payment record'});
   }
 };
 

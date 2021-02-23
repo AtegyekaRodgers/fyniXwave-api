@@ -115,11 +115,11 @@ SkillingSession.enrolLearner = async (req, res) => {
     let returned = LearnerSkillingSession.create(relationship);
     if(returned.error){
         console.log(returned.error);
-        res.status(200).send({ error: "Sory, enrollment operation failed."; });
+        res.status(500).send({ error: "Sory, enrollment operation failed."});
     }
     if(returned.success){
         console.log(returned.success);
-        res.status(200).send({ success: "Successfully enrolled for this session"; });
+        res.status(200).send({ success: "Successfully enrolled for this session"});
     }
   }catch (err) {
     res.status(500).json({
@@ -145,7 +145,7 @@ SkillingSession.readOne = async (req, res) => {
 SkillingSession.update = async (req, res) => {
   try {
     const skillingSession = await SkillingSession.findByIdAndUpdate( req.query.id, req.body );
-    res.json({ success: "Operation successful" });
+    res.status(200).json({ success: "Operation successful" });
   } catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while updating this skillingSession',

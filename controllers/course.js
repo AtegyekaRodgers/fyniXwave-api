@@ -193,11 +193,11 @@ Course.enrolLearner = async (req, res) => {
     let returned = CourseLearner.create(relationship);
     if(returned.error){
         console.log(returned.error);
-        res.status(200).send({ error: "Sory, enrollment operation failed."; });
+        res.status(200).send({ error: "Sory, enrollment operation failed." });
     }
     if(returned.success){
         console.log(returned.success);
-        res.status(200).send({ success: "Successfully enrolled for this course"; });
+        res.status(200).send({ success: "Successfully enrolled for this course" });
     }
   }catch (err) {
     res.status(500).json({
