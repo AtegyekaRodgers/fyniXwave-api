@@ -20,7 +20,7 @@ Activity.readAll = async (req, res) => {
     .where('user').equals(req.body.user_id);
     res.status(200).json(activities);
   } catch (err) {
-    return {error: err.message || 'An error occured while retrieving activityLogs '};
+    res.status(500).send({error: err.message || 'An error occured while retrieving activityLogs '});
   }
 };
 

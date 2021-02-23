@@ -26,6 +26,7 @@ const skill = require('./routes/skill');
 const learner = require('./routes/learner');
 const classs = require('./routes/classs');
 const activity = require('./routes/activity');
+const payment = require('./routes/payment');
 
 // Routes
 app.use('/home', home);
@@ -43,6 +44,7 @@ app.use('/skill', skill);
 app.use('/learner', learner);
 app.use('/classs', classs);
 app.use('/activity', activity);
+app.use('/payment', payment);
 // Routes for users without accounts
 app.use('/', index);
 
