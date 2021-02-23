@@ -10,7 +10,9 @@ const classsSchema = new Schema({
     parentCourse: { type: Schema.Types.ObjectId, ref: "Course" , required: false},
     parentInstitution: {type: String, required: true}, //_id for the parent institution, default institution is Delv
     profilePicture: { type: String },
-    cloudinaryId: { type: String }
+    cloudinaryId: { type: String },
+    startDate: { type: Date },
+    endDate: { type: Date }
 });
 
 classsSchema.plugin(uniqueValidator);

@@ -8,7 +8,9 @@ Classs.create = async (req, res) => {
 {
    classsName: "...",
    parentCourse: "..." //key
-   parentInstitution: "..." //key, required
+   parentInstitution: "...", //key, required
+   startDate: "17/8/2021",
+   endDate: "..."
 }
 */ 
   try {
@@ -97,6 +99,22 @@ Classs.readOne = async (req, res) => {
     res.status(500).send({
       message: err.message || 'An error occured while retrieving this classs',
     });
+    console.log(err);
+  }
+};
+
+//end the classs before its predefined endDate
+Classs.end = async (req, res) => {
+/* req.body = 
+{
+   class_id: "..."
+}
+*/ 
+  try {
+    const classs = await Classs.findByIdAndUpdate( req.query.class_id, { endDate: Date.now() } );
+    res.status(200).send({ success: "You have ended the class ("+classs.classsName+")" });
+  } catch (err) {
+    res.status(500).send({message: err.message || 'The class ('+classs.classsName+') could not be ended.'});
     console.log(err);
   }
 };

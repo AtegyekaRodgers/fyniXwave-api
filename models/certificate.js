@@ -4,7 +4,7 @@ const { Schema } = mongoose;
  
 const certificateSchema = new Schema({
     title: { type: String },
-    courses: [{ type: String }]
+    completed: [{ type: String }]
 });
  
 module.exports = mongoose.model("Certificate", certificateSchema);

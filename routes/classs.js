@@ -17,7 +17,11 @@ router.get('/', auth.authorize, Classs.readAll);
 // // Retrieve a single classs with this id
 router.get('/:id', Classs.readOne);
 
-// // Update a classs with id
+// end a classs before predefined endDate
+router.put('/end', Classs.end);
+
+
+// Update a classs with id
 // router.put('/:id', Classs.update);
 
 // // Delete a classs with id

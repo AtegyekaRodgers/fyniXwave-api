@@ -6,14 +6,14 @@ const Certificate = require('../models/certificate');
 Certificate.create = async (req, res) => {
     /* req.body = 
         {
-            title: "...",
-            courses: ["...", "...", "..."]
+          title: "...",
+          completed: ["...", "...", "..."]
         }
     */ 
   try {
     let certificateData = {
             title:     req.body.title,
-            courses:   req.body.courses
+            completed:   req.body.courses
         }
     const certificate = new Certificate(certificateData);
     await certificate.save();
