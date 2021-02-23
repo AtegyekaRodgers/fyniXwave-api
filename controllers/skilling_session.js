@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const SkillingSession = require('../models/skilling_session');
+let LearnerSkillingSession = require('../models/learner_skilling_session');
 
 // Creating a new skilling_session record
 SkillingSession.create = async (req, res) => {
@@ -94,6 +95,36 @@ SkillingSession.readAllByClasss = async (classs_id) => {
     return {data: data};
   } catch (err) {
     return {error: err.message || 'An error occured while retrieving skilling sessions for this class'};
+  }
+};
+
+// Enroll a learner to a session
+SkillingSession.enrolLearner = async (req, res) => {
+  /* req.body = 
+    { 
+        learner_id: "...",
+        session_id: "..."
+    } 
+  */ 
+  try {
+    let session_id = req.body.session_id;
+    let learner_id = req.body.learner_id;
+    
+    let relationship = {session: session_id, learner: learner_id};
+    
+    let returned = LearnerSkillingSession.create(relationship);
+    if(returned.error){
+        console.log(returned.error);
+        res.status(200).send({ error: "Sory, enrollment operation failed."; });
+    }
+    if(returned.success){
+        console.log(returned.success);
+        res.status(200).send({ success: "Successfully enrolled for this session"; });
+    }
+  }catch (err) {
+    res.status(500).json({
+       message: err.message || 'An error occured while trying to enroll learner to this session',
+    });
   }
 };
 

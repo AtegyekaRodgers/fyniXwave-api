@@ -1,4 +1,3 @@
-//to grab the things needed
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
@@ -7,13 +6,13 @@ const { Schema } = mongoose;
 //to create a schema
 const jobSchema = new Schema({
     jobName: { type: Schema.Types.ObjectId, ref: "Institution" },
-    field: String,
-    jobLink: String,
-    jobSummary: String,
+    discipline: { type: String },
+    jobLink: { type: String },
+    jobSummary: { type: String },
     profilePicture: { type: String },
     cloudinaryId: { type: String },
-    datePosted: Date,
-    deadline: Date
+    datePosted: { type: Date },
+    deadline: { type: Date }
 });
 
 jobSchema.plugin(uniqueValidator);

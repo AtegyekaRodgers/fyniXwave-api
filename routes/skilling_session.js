@@ -10,6 +10,9 @@ router.post('/profilepic', SkillingSession.create);
 // Create a new skillingSession
 router.post('/', SkillingSession.create);
 
+// Enroll a learner to this session
+router.post('/enroll', SkillingSession.enrolLearner);
+
 // Retrieve all skillingSessions
 router.get('/', auth.authorize, SkillingSession.readAll);
 

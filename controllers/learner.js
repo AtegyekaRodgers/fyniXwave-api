@@ -175,7 +175,7 @@ Learner.attachInstitution = async (institution_id) => {
     let relationship = {institution: institution_id, learner:learner_id};
     
     let returned = LearnerSkill.create(relationship);
-    if(returned.error){ 
+    if(returned.error){
         console.log(returned.error);
         return false;
     }
@@ -190,11 +190,11 @@ Learner.attachCourse = async (course_id) => {
     //grab this trainer's id
     let learner_id = this._id;
     
-    //create a new learner-skill relationship  
+    //create a new learner-skill relationship
     let relationship = {learner: learner_id, course: course_id};
     
     let returned = CourseLearner.create(relationship);
-    if(returned.error){ 
+    if(returned.error){
         console.log(returned.error);
         return false;
     }

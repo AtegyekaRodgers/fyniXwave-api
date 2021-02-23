@@ -10,6 +10,9 @@ router.post('/profilepic', Course.create);
 // Create a new course
 router.post('/', Course.create);
 
+// Register for a course
+router.post('/enroll', Course.enrolLearner);
+
 // Retrieve all courses
 router.get('/', auth.authorize, Course.readAll);
  

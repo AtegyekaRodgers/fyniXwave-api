@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const Course = require('../models/course');
 const InstitutionCourse = require('../controllers/institution_course');
 const CourseTrainer = require('../controllers/course_trainer');
+const CourseLearner = require('../controllers/course_learner'); 
 const CourseSkill = require('../controllers/course_skill');
 
 // Creating a new course profile
 Course.create = async (req, res) => {
 /* req.body = 
 {
-    courseName: "...", 
+    courseName: "...",
     courseCode: "...",
     discipline: "...",
     specialization: "...",
@@ -45,19 +46,19 @@ Course.create = async (req, res) => {
         //req.body.skills should be an array of strings (the skills)
         let skillsArray = req.body.skills;
         skillsArray.forEach((key, skill)=>{
-            //retrieve skill id using skill name, create it if it's not found. 
+            //retrieve skill id using skill name, create it if it's not found.
             let skill_id = "";
             const result = Skill.findOne()
-            .where('skillName').equals(skill) 
+            .where('skillName').equals(skill)
             .exec(function(err, datta){
-                      if(err){
-                        console.log("course controller: Failed to retrieve skill id using skill name"); 
-                        return {error: err };
-                      }else if(datta){
-                        skill_id = datta._id;
-                        return datta;
-                      }
+                  if(err){
+                    console.log("course controller: Failed to retrieve skill id using skill name"); 
+                    return {error: err };
+                  }else if(datta){
+                    skill_id = datta._id;
+                    return datta;
                   }
+               }
             );
             var ok = course.attachSkill(skill_id);
         });
@@ -77,10 +78,10 @@ Course.attachInstitution = async (institution_id) => {
     let course_id = this._id;
     
     //create a new institution-course relationship  
-    let relationship = {institution: institution_id, course: course_id};
+    let relationship = { institution: institution_id, course: course_id };
     
     let returned = InstitutionCourse.create(relationship);
-    if(returned.error){ 
+    if(returned.error){
         console.log(returned.error);
         return false;
     }
@@ -131,7 +132,7 @@ Course.attachSkill = async (skill_id) => {
 // Adding or updating profile picture for an course
 Course.updateProfilePicture = async (req, res) => {
    try {
-   // uploading profile picture to cloudinary
+    // uploading profile picture to cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, { resource_type: 'auto' }, (error) => {
         if (error) console.log(error);
     });
@@ -145,7 +146,7 @@ Course.updateProfilePicture = async (req, res) => {
     res.status(200).json({newlink: updated.profilePicture}); //return the link to the new profile picture
   } catch (err) {
     res.status(500).json({
-      message: err.message || 'An error occured while updating the profile picture',
+       message: err.message || 'An error occured while updating the profile picture',
     });
   }
 };
@@ -172,6 +173,36 @@ Course.readOne = async (req, res) => {
       message: err.message || 'An error occured while retrieving this course',
     });
     console.log(err);
+  }
+};
+
+// Enroll a learner to this course
+Course.enrolLearner = async (req, res) => {
+  /* req.body = 
+    { 
+        learner_id: "...",
+        course_id: "..."
+    } 
+  */ 
+  try {
+    let course_id = req.body.course_id;
+    let learner_id = req.body.learner_id;
+    
+    let relationship = {course: course_id, learner: learner_id};
+    
+    let returned = CourseLearner.create(relationship);
+    if(returned.error){
+        console.log(returned.error);
+        res.status(200).send({ error: "Sory, enrollment operation failed."; });
+    }
+    if(returned.success){
+        console.log(returned.success);
+        res.status(200).send({ success: "Successfully enrolled for this course"; });
+    }
+  }catch (err) {
+    res.status(500).json({
+       message: err.message || 'An error occured while trying to enroll learner to this course',
+    });
   }
 };
 
