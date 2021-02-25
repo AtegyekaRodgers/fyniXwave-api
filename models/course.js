@@ -7,7 +7,6 @@ const { Schema } = mongoose;
 //to create a schema
 const courseSchema = new Schema({
     courseName: { type: String },
-    courseCode: { type: String },
     discipline: { type: String }, 
     specialization: { type: String },
     profilePicture: { type: String, required: false },

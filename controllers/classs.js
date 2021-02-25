@@ -103,15 +103,61 @@ Classs.readOne = async (req, res) => {
   }
 };
 
+//Open this class
+Classs.open = async (req, res) => {
+  try {
+    let attendenceList = { date:Date.now(), session_id:req.body.session_id, members:[]};
+    const updatedClass = await Classs.findByIdAndUpdate( req.body.class_id, {$addToSet: {attendences: attendenceList}} );
+    //TODO: retrieve the index of the new entry in updatedClass.attendences
+    let newAttendenceListIndex = 0; //TODO: change this to the new index
+    res.status(200).send({ success: "The class is now open.", listIndex:newAttendenceListIndex });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || 'Failed to open this classs! please try again',
+    });
+    console.log(err);
+  }
+};
+
+//Attend this class
+Classs.attend = async (req, res) => {
+    //is this a paid course ?
+    try {
+        if(parentCourseOfClasssIsPaid){
+            //TODO: enforce payment
+            //if user/learner paid, allow continuing
+            
+            //else, return and send an error message to user letting them know that they must pay
+        }
+    
+        //describe the exact session that you want to attend 
+        let user_id = req.body.user_id;
+        let attendenceListIndex = req.body.list_index;
+        //TODO: retrieve the attendences
+        //TODO: pull out the exact attendence list
+        //TODO: push the user_id to the list
+        //TODO: write the list back to the array of attendence lists, replacing the old one
+        res.status(200).send({ success: "Signed on the attendence list." });
+      } catch (err) {
+        res.status(500).send({ message: err.message || 'Failed to sign on the attendence list of the class'});
+        console.log(err);
+      } 
+};
+
 //end the classs before its predefined endDate
 Classs.end = async (req, res) => {
 /* req.body = 
 {
-   class_id: "..."
+   class_id: "...",
+   parent_course_id: "..."
 }
 */ 
   try {
     const classs = await Classs.findByIdAndUpdate( req.query.class_id, { endDate: Date.now() } );
+    //TODO: count the total sessions/times this class was opened by getting the length of class attendence lists array
+    //TODO: take one member at a time and determine the percentage of their attendences/appearances out of the total
+    //TODO: if they attended atleast 75% of the total number of sessions held, then write this course to their 
+    //      list of completed courses so that they increase their chances of earning a trainning certificate.
     res.status(200).send({ success: "You have ended the class ("+classs.classsName+")" });
   } catch (err) {
     res.status(500).send({message: err.message || 'The class ('+classs.classsName+') could not be ended.'});

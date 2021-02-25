@@ -15,7 +15,7 @@ const skillingSessionSchema = mongoose.Schema({
     parentClasss: {type: String, required: false}, //will hold _id for the parent classs if applicable
     parentInstitution: {type: String, required: true}, //_id for the parent institution, default institution is Delv
     sessionAddressLink: { type: String }, //eg, Zoom meeting link 
-    modifiedAt: {type: Date, default: Date.now()},
+    modifiedAt: {type: Date},
   }, { timestamps: true});
 
 module.exports = mongoose.model('SkillingSession', skillingSessionSchema);

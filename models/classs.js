@@ -12,7 +12,8 @@ const classsSchema = new Schema({
     profilePicture: { type: String },
     cloudinaryId: { type: String },
     startDate: { type: Date },
-    endDate: { type: Date }
+    endDate: { type: Date },
+    attendences: [{ date: {type: Date}, session_id: {type:String}, members:[{ type: String}] }]
 });
 
 classsSchema.plugin(uniqueValidator);

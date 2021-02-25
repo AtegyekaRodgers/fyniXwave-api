@@ -17,15 +17,14 @@ Course.create = async (req, res) => {
     institution: "...",
     trainers: ["...", "...", "..."],
     skills: ["...", "...", "..."]
-} 
+}
 */
 
   try {
     // saving the profile
     let cours = {
         courseName: req.body.courseName,
-        courseCode: req.body.courseCode,
-        discipline: req.body.discipline, 
+        discipline: req.body.discipline,
         specialization: req.body.specialization,
     };
     const course = new Course( cours );

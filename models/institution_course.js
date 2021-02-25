@@ -7,7 +7,8 @@ const { Schema } = mongoose;
 //to create a schema
 const institutionCourseSchema = new Schema({
     institution: { type: Schema.Types.ObjectId, ref: "Institution"},
-    course: { type: Schema.Types.ObjectId, ref: "Course" }
+    course: { type: Schema.Types.ObjectId, ref: "Course" },
+    courseCode: { type: String }
 });
 
 institutionCourseSchema.plugin(uniqueValidator);

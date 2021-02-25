@@ -17,6 +17,12 @@ router.get('/', auth.authorize, Classs.readAll);
 // // Retrieve a single classs with this id
 router.get('/:id', Classs.readOne);
 
+// Open this class
+router.post('/open', Classs.open);
+
+// Attend this a session in an open class
+router.post('/attend', Classs.attend);
+
 // end a classs before predefined endDate
 router.put('/end', Classs.end);
 

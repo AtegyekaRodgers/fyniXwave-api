@@ -7,7 +7,10 @@ const { Schema } = mongoose;
 //to create a schema
 const institutionLearnerSchema = new Schema({
     institution: { type: Schema.Types.ObjectId, ref: "Institution"},
-    learner: { type: Schema.Types.ObjectId, ref: "Learner" }
+    learner: { type: Schema.Types.ObjectId, ref: "Learner" },
+    gradStatus: { type: String, enum: ["current", "completed", "returned", "retained"], default: "current"},
+    membershipID: { type: String},  //this can be: staffID, studentID, ..., etc 
+    regNo: { type: String}
 });
 
 institutionLearnerSchema.plugin(uniqueValidator);
