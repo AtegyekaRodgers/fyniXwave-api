@@ -207,7 +207,7 @@ Classs.end = async (req, res) => {
     membersArr.forEach((member)=>{
         let memberAttendencesCount = 0;
         attendeceListsArr.forEach((list)=>{
-            if(list.includes(member.learner);){
+            if(list.includes(member.learner)){
                 //the member attended this skilling-session and signed on the attendence list.
                 memberAttendencesCount++;
             }
