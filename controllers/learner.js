@@ -11,7 +11,7 @@ const LearnerSkill = require('../controllers/learner_skill');
 const LearnerClasss = require('../controllers/learner_classs');
 
 // Creating a new trainer profile
-Learner.create = async (req, res) => { 
+Learner.create = async (req, res) => {
 /* req.body = 
 {
     email: "...",
@@ -33,7 +33,7 @@ res.body = {
     message: '......'
 }
 */
-  try { 
+  try {
     //first create a parent user entity for this trainer, or identify if already exists.
     //retrieve the possibly existing user
     let usr_id;

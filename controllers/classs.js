@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const Classs = require('../models/classs');
+const Course = require('../models/course');
+const LearnerClasss = require('../models/learner_classs');
+const CourseLearner = require('../models/course_learner');
+const Learner = require('../models/learner');
 
 // Creating a new classs record
 Classs.create = async (req, res) => {
@@ -107,9 +111,18 @@ Classs.readOne = async (req, res) => {
 Classs.open = async (req, res) => {
   try {
     let attendenceList = { date:Date.now(), session_id:req.body.session_id, members:[]};
+    //retreive the current number of entries in attendences specifically for this class
+    let existingListsCount;
+    const classToOpen = Classs.findById(req.body.class_id).select("attendences")
+    .exec(function (err, arrayOfAttendenceLists) {
+        if (err) return next(err);
+        existingListsCount = arrayOfAttendenceLists.length;
+    });
     const updatedClass = await Classs.findByIdAndUpdate( req.body.class_id, {$addToSet: {attendences: attendenceList}} );
-    //TODO: retrieve the index of the new entry in updatedClass.attendences
-    let newAttendenceListIndex = 0; //TODO: change this to the new index
+    
+    //Index of the newly added/created attendence list is needed for attendees to reference when signing for class attendence.
+    let newAttendenceListIndex = existingListsCount;
+    //send it to client
     res.status(200).send({ success: "The class is now open.", listIndex:newAttendenceListIndex });
   } catch (err) {
     res.status(500).send({
@@ -121,22 +134,48 @@ Classs.open = async (req, res) => {
 
 //Attend this class
 Classs.attend = async (req, res) => {
-    //is this a paid course ?
+    /*req.body = 
+    {
+        class_id: "...",
+        parent_course_id: "...",
+        user_id: "...",
+        learner_id: "...",
+        list_index: "..."
+    }
+    */
     try {
-        if(parentCourseOfClasssIsPaid){
-            //TODO: enforce payment
+        let parentCourseAccessibility = Course.findById(req.body.parent_course_id)
+                                              .select("accessibility")
+                                              .exec((err, data)=>{return data;}); 
+        //is this a paid course ?
+        if(parentCourseAccessibility == "paid"){
+            //enforce payment 
+            const coursePayment = await CourseLearner.find({learner:req.body.learner_id, course:req.body.parent_course_id})
+                                                     .exec((err, coursepmt)=>{ return coursepmt; });
             //if user/learner paid, allow continuing
-            
-            //else, return and send an error message to user letting them know that they must pay
+            if(coursePayment.amountPaid <= 0){  
+                //the learner has not paid for this course.
+                //send an error message and return
+                res.send({error: 'This course is not free, please pay for it first.'});
+            }
         }
     
         //describe the exact session that you want to attend 
         let user_id = req.body.user_id;
         let attendenceListIndex = req.body.list_index;
-        //TODO: retrieve the attendences
-        //TODO: pull out the exact attendence list
-        //TODO: push the user_id to the list
-        //TODO: write the list back to the array of attendence lists, replacing the old one
+        // retrieve the attendences
+        const allAttendences = Classs.findById(req.body.class_id).select("attendences")
+        .exec(function (err, arrayOfAttendenceLists) {
+            if (err) return next(err);
+            return arrayOfAttendenceLists;
+        });
+        //push the user_id to the appropriate list, hence, the user signs onto the attendencelist
+        allAttendences[req.body.list_index].members.push(req.body.user_id); 
+        //write the list back to the array of attendence lists, replacing the old one
+        const updatedAttendenceLists = Classs.findByIdAndUpdate(req.body.class_id, {attendences:allAttendences});
+        //Alternatively:
+        //const allAttendences = Classs.findByIdAndUpdate(req.body.class_id, {attendences:[...attendences, attendences[req.body.list_index]:{...attendences[req.body.list_index], members:[...members, req.body.user_id]}]});                       
+        
         res.status(200).send({ success: "Signed on the attendence list." });
       } catch (err) {
         res.status(500).send({ message: err.message || 'Failed to sign on the attendence list of the class'});
@@ -154,10 +193,35 @@ Classs.end = async (req, res) => {
 */ 
   try {
     const classs = await Classs.findByIdAndUpdate( req.query.class_id, { endDate: Date.now() } );
-    //TODO: count the total sessions/times this class was opened by getting the length of class attendence lists array
-    //TODO: take one member at a time and determine the percentage of their attendences/appearances out of the total
-    //TODO: if they attended atleast 75% of the total number of sessions held, then write this course to their 
-    //      list of completed courses so that they increase their chances of earning a trainning certificate.
+    const attendeceListsArr = await Classs.findById( req.query.class_id).select("attendences").exec((err, listsArr)=>{
+        return listsArr;
+    });
+    //count the total sessions/times this class was opened by getting the length of class attendence lists array
+    let listcount = attendeceListsArr.length;
+    
+    //take one member at a time and determine the percentage of their attendences/appearances out of the total
+    const membersArr = await LearnerClasss.find({classs:req.query.class_id}).exec((err, mbersArr)=>{
+        if(err){ console.log(err); return []; }
+        return mbersArr;
+    }); 
+    membersArr.forEach((member)=>{
+        let memberAttendencesCount = 0;
+        attendeceListsArr.forEach((list)=>{
+            if(list.includes(member.learner);){
+                //the member attended this skilling-session and signed on the attendence list.
+                memberAttendencesCount++;
+            }
+        });
+        let percentageAttendence = (listcount > 0) ? (memberAttendencesCount/listcount)*100 : 0;
+        
+        //if member attended atleast 70% of the total number of sessions held,
+        if(percentageAttendence >= 70){
+            //write this course to the member's list of completed courses so that 
+            //they increase their chances of earning a training certificate.
+            const updatedLearner = Learner.findByIdAndUpdate( member.learner, {$addToSet: {completed: req.body.parent_course_id}} );
+        }
+    });
+    
     res.status(200).send({ success: "You have ended the class ("+classs.classsName+")" });
   } catch (err) {
     res.status(500).send({message: err.message || 'The class ('+classs.classsName+') could not be ended.'});

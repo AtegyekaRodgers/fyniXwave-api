@@ -7,7 +7,7 @@ Payment.create = async (req, res) => {
     /* req.body = 
         {
             user: "...",  //user _id
-            paidFor: "...", //enum[ "course", "career_session", "skilling_session", "skill" ]
+            paidFor: "...", //enum[ "course", "career_session"]
             item: "...",  //course_id, or session_id, or skill_id
             amountPaid: "..."
         }
