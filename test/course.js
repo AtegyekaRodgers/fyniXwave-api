@@ -10,7 +10,7 @@ describe('course tests', () => {
   let courseId;
   
   before((done) => {
-    dbConnect().catch((err) => done(err));
+    dbConnect().then(() => {}).catch((err) => done(err));
     request(app)
       .post('/auth/login')
       .send({
@@ -24,6 +24,7 @@ describe('course tests', () => {
       })
       .catch((err) => done(err)); 
   });
+  
   after((done) => {
     dbClose()
       .then(() => done())

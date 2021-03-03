@@ -11,7 +11,7 @@ describe('classs tests', () => {
   let classsId;
   
   before((done) => {
-    dbConnect().catch((err) => done(err));
+    dbConnect().then(() => {}).catch((err) => done(err));
     request(app)
       .post('/auth/login')
       .send({
