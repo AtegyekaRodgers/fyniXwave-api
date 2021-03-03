@@ -29,7 +29,40 @@ Course.create = async (req, res) => {
     };
     const course = new Course( cours );
     await course.save(); 
-     
+    if(req.body.institution){  
+        //creation request has told me which institution offers this course, so attach it.
+        var ok = course.attachInstitution(req.body.institution);
+    }
+    if(req.body.trainers){  
+        //req.body.trainers should be an array of strings (the skills)
+        let trainersArray = req.body.trainers;
+        trainersArray.forEach((key, trainer)=>{
+             //trainer must be an id of an existing/registered trainer.
+             var ok = course.attachTrainer(trainer);
+        });
+    }
+    if(req.body.skills){
+        //req.body.skills should be an array of strings (the skills)
+        let skillsArray = req.body.skills;
+        skillsArray.forEach((key, skill)=>{
+            //retrieve skill id using skill name, create it if it's not found.
+            let skill_id = "";
+            const result = Skill.findOne()
+            .where('skillName').equals(skill)
+            .exec(function(err, datta){
+                  if(err){
+                    console.log("course controller: Failed to retrieve skill id using skill name"); 
+                    return {error: err };
+                  }else if(datta){
+                    skill_id = datta._id;
+                    return datta;
+                  }
+               }
+            );
+            var ok = course.attachSkill(skill_id);
+        });
+    }
+    
     res.status(201).json({ message: 'Course profile successfully created' });
   } catch (err) {
     res.status(500).json({

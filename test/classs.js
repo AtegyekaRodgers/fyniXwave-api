@@ -24,16 +24,10 @@ describe('classs tests', () => {
         done(); 
       })
       .catch((err) => done(err));
-      //TODO: create a new course to be sure there is a record
-      request(app)
-      .get('/course')
-      .set('Authorization', `Bearer ${token}`)
-      .then((res) => {
-        parentCourseID = res.body[0]._id;
-        done();
-      })
-      .catch((err) => done(err));
+      
+      
   });
+  
   after((done) => {
     dbClose()
       .then(() => done())
