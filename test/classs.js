@@ -21,11 +21,44 @@ describe('classs tests', () => {
       .then((res) => {
         token = res.body.token;
         expect(res.body).to.contain.property('token');
-        done(); 
+        //done(); 
       })
       .catch((err) => done(err));
       
+      //TODO: create a new course to be sure there is a record
+      request(app)
+      .get('/course')
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        parentCourseID = res.body[0]._id;
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  before((done) => {
+    dbConnect().catch((err) => done(err));
+    request(app)
+      .post('/auth/login')
+      .send({
+        email: 'auth@delv.ac.ug',
+        password: 'newPassword',
+      })
+      .then((res) => {
+        token = res.body.token;
+        expect(res.body).to.contain.property('token'); 
+      })
+      .catch((err) => done(err));
       
+      //TODO: create a new course to be sure there is a record
+      request(app)
+      .get('/course')
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        parentCourseID = res.body[0]._id;
+        done();
+      })
+      .catch((err) => done(err));
   });
   
   after((done) => {
@@ -52,7 +85,7 @@ describe('classs tests', () => {
   });
 
   // Gets all---
-  it('gets all classses', (done) => {
+  it('get all classses', (done) => {
     request(app)
       .get('/classs/')
       .set('Authorization', `Bearer ${token}`)
@@ -64,7 +97,7 @@ describe('classs tests', () => {
   });
 
   // Gets one ---
-  it('gets specific classs', (done) => {
+  it('get specific classs', (done) => {
     request(app)
       .get(`/classs/${classsId}`)
       .set('Authorization', `Bearer ${token}`)

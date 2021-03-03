@@ -31,7 +31,7 @@ describe('course tests', () => {
   });
   
   //Creates---
-  it('creates an course entity', (done) => {
+  it('create a course entity', (done) => {
     request(app)
      .post('/course/')
      .send({
@@ -53,7 +53,7 @@ describe('course tests', () => {
   });
 
   // Gets all---
-  it('gets all courses', (done) => {
+  it('get all courses', (done) => {
     request(app)
       .get('/course/')
       .set('Authorization', `Bearer ${token}`)
@@ -65,7 +65,7 @@ describe('course tests', () => {
   });
 
   // Gets one ---
-  it('gets specific course', (done) => {
+  it('get a specific course', (done) => {
     request(app)
       .get(`/course/${courseId}`)
       .set('Authorization', `Bearer ${token}`)
