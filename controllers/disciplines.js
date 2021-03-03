@@ -4,6 +4,7 @@ require('../models/disciplines');
 const Disciplines = mongoose.model('Disciplines');
 
 Disciplines.create = async (req, res) => {
+  console.log("disciplines: create request");
   try {
     // Generating an array of tags
     const keywords = req.body.keywords.split(',').map(String);
@@ -47,6 +48,7 @@ Disciplines.addKeywords = async (req, res) => {
 };
 
 Disciplines.read = async (req, res) => {
+  console.log("disciplines: read request");
   try {
     const disciplines = await Disciplines.find();
     res.status(200).json(disciplines);

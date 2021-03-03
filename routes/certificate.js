@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/', Certificate.create);
 
 // Retrieve certificates
-router.get('/', auth.authorize, Certificate.readAll);
+router.get('/', Certificate.readAll);
 
 module.exports = router;
 

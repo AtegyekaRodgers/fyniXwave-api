@@ -6,9 +6,9 @@ const Institution = require('../models/institution');
 Institution.create = async (req, res) => {
     /* req.body = 
     {
-       institutionName: "...",
-       location: "...",
-       alumniGroup: "..." //key 
+        "institutionName": "Delv",
+        "location": "603f8538ab61df4327543280",
+        "alumniGroup": null
     }
     */ 
   

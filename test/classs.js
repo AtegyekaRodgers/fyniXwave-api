@@ -20,7 +20,8 @@ describe('classs tests', () => {
       })
       .then((res) => {
         token = res.body.token;
-        expect(res.body).to.contain.property('token'); 
+        expect(res.body).to.contain.property('token');
+        done(); 
       })
       .catch((err) => done(err));
       //TODO: create a new course to be sure there is a record

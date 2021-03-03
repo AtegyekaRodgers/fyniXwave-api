@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/', Payment.create);
 
 // Retrieve payment records
-router.get('/', auth.authorize, Payment.readAll);
+router.get('/', Payment.readAll);
 
 module.exports = router;
 

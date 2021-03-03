@@ -11,7 +11,7 @@ router.post('/profilepic', Skill.create);
 router.post('/', Skill.create);
 
 // Retrieve all skills
-router.get('/', auth.authorize, Skill.readAll);
+router.get('/', Skill.readAll);
  
 // // Retrieve a single skill with this id
 router.get('/:id', Skill.readOne);

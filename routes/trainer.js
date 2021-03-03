@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', Trainer.create);
 
 // Retrieve all trainers
-router.get('/', auth.authorize, Trainer.readAll);
+router.get('/', Trainer.readAll);
  
 // // Retrieve a single trainer with this id
 router.get('/:id', Trainer.readOne);

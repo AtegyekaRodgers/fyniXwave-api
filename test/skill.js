@@ -19,7 +19,8 @@ describe('skill tests', () => {
       })
       .then((res) => {
         token = res.body.token;
-        expect(res.body).to.contain.property('token'); 
+        expect(res.body).to.contain.property('token');
+        done();
       })
       .catch((err) => done(err)); 
   });

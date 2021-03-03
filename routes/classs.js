@@ -12,7 +12,7 @@ router.post('/profilepic', Classs.create);
 router.post('/', Classs.create);
 
 // Retrieve all classses
-router.get('/', auth.authorize, Classs.readAll);
+router.get('/', Classs.readAll);
  
 // // Retrieve a single classs with this id
 router.get('/:id', Classs.readOne);

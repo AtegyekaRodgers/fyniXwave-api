@@ -14,7 +14,7 @@ router.post('/', SkillingSession.create);
 router.post('/enroll', SkillingSession.enrolLearner);
 
 // Retrieve all skillingSessions
-router.get('/', auth.authorize, SkillingSession.readAll);
+router.get('/', SkillingSession.readAll);
 
 // Retrieve skillingSessions for a specific institution
 router.get('/institution', SkillingSession.readAllByInstitution);

@@ -21,6 +21,7 @@ Learner.create = async (req, res) => {
     lastname: "...",
     username: "...",
     password: "...",
+    interests: ["...", "..."],
     discipline: "...",
     specialization: "...",
     institution: "...",
@@ -41,8 +42,7 @@ res.body = {
     .where('email').equals(req.body.email)
     .where('firstname').equals(req.body.firstname)
     .where('lastname').equals(req.body.lastname)
-    .select("_id").count()
-    .limit(1)
+    .select("_id").countDocuments()
     .exec(function(err, datta){
         if(err){ console.log("learner controller: Failed to check for existance of user"); return 0; }
         else if(datta){
@@ -73,7 +73,8 @@ res.body = {
             lastname: req.body.lastname,
             username: req.body.username,
             password: req.body.password,
-            usercategory: ["learner"]
+            usercategory: ["learner"],
+            interests: req.body.interests
         };
         const newUser = new User( usr );
         await newUser.save();

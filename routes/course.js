@@ -14,7 +14,7 @@ router.post('/', Course.create);
 router.post('/enroll', Course.enrolLearner);
 
 // Retrieve all courses
-router.get('/', auth.authorize, Course.readAll);
+router.get('/', Course.readAll);
  
 // Retrieve a single course with this id
 router.get('/:id', Course.readOne);

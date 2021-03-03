@@ -19,10 +19,12 @@ describe('trainer tests', () => {
       })
       .then((res) => {
         token = res.body.token;
-        expect(res.body).to.contain.property('token'); 
+        expect(res.body).to.contain.property('token');
+        done();
       })
       .catch((err) => done(err)); 
   });
+  
   after((done) => {
     dbClose()
       .then(() => done())
@@ -30,7 +32,7 @@ describe('trainer tests', () => {
   });
   
   //Creates---
-  it('creates an trainer entity', (done) => {
+  it('create trainer entity', (done) => {
     request(app)
      .post('/trainer/')
      .send({

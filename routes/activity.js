@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/', Activity.create);
 
 // Retrieve activity logs
-router.get('/', auth.authorize, Activity.readAll);
+router.get('/', Activity.readAll);
 
 module.exports = router;
 

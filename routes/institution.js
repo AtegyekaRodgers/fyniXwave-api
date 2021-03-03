@@ -11,7 +11,7 @@ router.post('/profilepic', Institution.create);
 router.post('/', Institution.create);
 
 // Retrieve all Institutions
-router.get('/', auth.authorize, Institution.readAll);
+router.get('/', Institution.readAll);
  
 // // Retrieve a single institution with this id
 router.get('/:id', Institution.readOne);

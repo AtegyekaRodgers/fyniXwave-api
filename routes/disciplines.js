@@ -5,15 +5,15 @@ const { auth } = require('../controllers/auth');
 const router = express.Router();
 
 // Create discipline
-router.post('/', auth.authorize, Disciplines.create);
+router.post('/', Disciplines.create);
 
 // Add tags to a discipline
-router.put('/', auth.authorize, Disciplines.addKeywords);
+router.put('/', Disciplines.addKeywords);
 
 // Get all disciplines
-router.get('/', auth.authorize, Disciplines.read);
+router.get('/', Disciplines.read);
 
 // Get a discipline
-router.get('/:id', auth.authorize, Disciplines.readOne);
+router.get('/:id', Disciplines.readOne);
 
 module.exports = router;

@@ -12,7 +12,7 @@ router.post('/profilepic', Learner.create);
 router.post('/', Learner.create);
 
 // Retrieve all learners
-router.get('/', auth.authorize, Learner.readAll);
+router.get('/', Learner.readAll);
  
 // // Retrieve a single learner with this id
 router.get('/:id', Learner.readOne);
