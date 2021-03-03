@@ -30,7 +30,7 @@ describe('classs tests', () => {
       .get('/course')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        parentCourseID = res.body[0]._id;
+        parentCourseID = res.body[0] ? res.body[0]._id : null;
         done();
       })
       .catch((err) => done(err));
@@ -55,7 +55,7 @@ describe('classs tests', () => {
       .get('/course')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        parentCourseID = res.body[0]._id;
+        parentCourseID = res.body[0] ? res.body[0]._id : null;
         done();
       })
       .catch((err) => done(err));

@@ -55,7 +55,7 @@ describe('course tests', () => {
   // Gets all---
   it('get all courses', (done) => {
     request(app)
-      .get('/course/')
+      .get('/course')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
