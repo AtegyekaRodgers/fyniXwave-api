@@ -14,8 +14,8 @@ describe('trainer tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
-        password: 'newPassword',
+        "email": 'auth@delv.ac.ug',
+        "password": 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
@@ -36,18 +36,18 @@ describe('trainer tests', () => {
     request(app)
      .post('/trainer/')
      .send({
-        email: "atrodgers7@gmail.com",
-        phone: "+256781224508",
-        country: "Uganda",
-        firstname: "Ategyeka",
-        lastname: "Rodgers",
-        username: "atrodgers7@gmail.com",
-        password: "mypaxwad",
-        discipline: "IT",
-        specialization: "Software engineering",
-        institution: "Makerere",
-        courses: ["Systems analysis and design", "Golang", "React"],
-        skills: ["Backend", "APIs development", "Systems modeling"]
+        "email": "atrodgers7@gmail.com",
+        "phone": "+256781224508",
+        "country": "Uganda",
+        "firstname": "Ategyeka",
+        "lastname": "Rodgers",
+        "username": "atrodgers7@gmail.com",
+        "password": "mypaxwad",
+        "discipline": "IT",
+        "specialization": "Software engineering",
+        "institution": "Makerere",
+        "courses": ["Systems analysis and design", "Golang", "React"],
+        "skills": ["Backend", "APIs development", "Systems modeling"]
     })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
