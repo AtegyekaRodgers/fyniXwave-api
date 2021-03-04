@@ -46,7 +46,7 @@ describe('trainer tests', () => {
         "discipline": "IT",
         "specialization": "Software engineering",
         "userId": "603f47b30659d72147b9506a",
-        "institution": "Makerere",
+        "institution": "603f8a84efc9d14364393f0a",
         "courses": ["Systems analysis and design", "Golang", "React"],
         "skills": ["Backend", "APIs development", "Systems modeling"]
     })
