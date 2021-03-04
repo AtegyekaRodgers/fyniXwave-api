@@ -10,7 +10,7 @@ describe('course tests', () => {
   let courseId;
   
   before((done) => {
-    dbConnect().then(() => {}).catch((err) => done(err));
+    dbConnect().then(() => {}).catch((err) => {if (err) throw err; done(); });
     request(app)
       .post('/auth/login')
       .send({
@@ -22,13 +22,13 @@ describe('course tests', () => {
         expect(res.body).to.contain.property('token');
         done();
       })
-      .catch((err) => done(err)); 
+      .catch((err) => {if (err) throw err; done(); }); 
   });
   
   after((done) => {
     dbClose()
       .then(() => done())
-      .catch((err) => done(err));
+      .catch((err) => {if (err) throw err; done(); });
   });
   
   //Creates---
