@@ -14,8 +14,8 @@ describe('institution tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
-        password: 'newPassword',
+        "email": 'auth@delv.ac.ug',
+        "password": 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
@@ -31,14 +31,14 @@ describe('institution tests', () => {
   });
   
   //Creates---
-  it('creates an institution entity', (done) => {
+  it('create an institution entity', (done) => {
     request(app)
-     .post('/institution/')
+     .post('/institution')
      .send({
-       institutionName: "Makerere",
-       location: "Wandegeya",
-       alumniGroup: "9858574ea5a4" 
-    })
+        "institutionName": "Delv",
+        "location": "603f8538ab61df4327543280",
+        "alumniGroup": null
+     })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         institutionId = res.body._id;
@@ -49,9 +49,9 @@ describe('institution tests', () => {
   });
 
   // Gets all---
-  it('gets all institutions', (done) => {
+  it('get all institutions', (done) => {
     request(app)
-      .get('/institution/')
+      .get('/institution')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -61,7 +61,7 @@ describe('institution tests', () => {
   });
 
   // Gets one ---
-  it('gets specific institution', (done) => {
+  it('get specific institution', (done) => {
     request(app)
       .get(`/institution/${institutionId}`)
       .set('Authorization', `Bearer ${token}`)

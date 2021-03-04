@@ -15,8 +15,8 @@ describe('classs tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
-        password: 'newPassword',
+        "email": 'auth@delv.ac.ug',
+        "password": 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
@@ -41,8 +41,8 @@ describe('classs tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
-        password: 'newPassword',
+        "email": 'auth@delv.ac.ug',
+        "password": 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
@@ -72,8 +72,8 @@ describe('classs tests', () => {
     request(app)
      .post('/classs/')
      .send({
-         classsName: "Evening class",
-         parentCourse: parentCourseID
+         "classsName": "Evening class",
+         "parentCourse": parentCourseID
      })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {

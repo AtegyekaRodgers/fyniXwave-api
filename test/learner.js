@@ -14,8 +14,8 @@ describe('learner tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
-        password: 'newPassword',
+        "email": 'auth@delv.ac.ug',
+        "password": 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
@@ -31,23 +31,23 @@ describe('learner tests', () => {
   });
   
   //Creates---
-  it('creates an learner entity', (done) => {
+  it('create a learner entity', (done) => {
     request(app)
-     .post('/learner/')
+     .post('/learner')
      .send({
-        email: "kabagambe@yahoo.com",
-        phone: "+256706123303",
-        country: "Uganda",
-        firstname: "Kabagambe",
-        lastname: "Kened",
-        username: "kabagambe@yahoo.com",
-        password: "kenedpass",
-        discipline: "IT",
-        specialization: "Software engineering",
-        institution: "Makerere",
-        courses: ["Systems analysis and design", "Golang", "React"],
-        skills: ["PHP", "Laravel", "CSS"],
-        classes: ["Evening class"]
+        "email": "kabagambe@yahoo.com",
+        "phone": "+256706123303",
+        "country": "Uganda",
+        "firstname": "Kabagambe",
+        "lastname": "Kened",
+        "username": "kabagambe@yahoo.com",
+        "password": "kenedpass",
+        "discipline": "IT",
+        "specialization": "Software engineering",
+        "institution": "Makerere",
+        "courses": ["Systems analysis and design", "Golang", "React"],
+        "skills": ["PHP", "Laravel", "CSS"],
+        "classes": ["Evening class"]
     })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
@@ -59,9 +59,9 @@ describe('learner tests', () => {
   });
 
   // Gets all---
-  it('gets all learners', (done) => {
+  it('get all learners', (done) => {
     request(app)
-      .get('/learner/')
+      .get('/learner')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -71,7 +71,7 @@ describe('learner tests', () => {
   });
 
   // Gets one ---
-  it('gets specific learner', (done) => {
+  it('get specific learner', (done) => {
     request(app)
       .get(`/learner/${learnerId}`)
       .set('Authorization', `Bearer ${token}`)

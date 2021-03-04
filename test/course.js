@@ -14,8 +14,8 @@ describe('course tests', () => {
     request(app)
       .post('/auth/login')
       .send({
-        email: 'auth@delv.ac.ug',
-        password: 'newPassword',
+        "email": 'auth@delv.ac.ug',
+        "password": 'newPassword',
       })
       .then((res) => {
         token = res.body.token;
@@ -34,15 +34,16 @@ describe('course tests', () => {
   //Creates---
   it('create a course entity', (done) => {
     request(app)
-     .post('/course/')
+     .post('/course')
      .send({
-        courseName: "Systems analysis and design", 
-        courseCode: "BSE1201",
-        discipline: "IT",
-        specialization: "Software engineering",
-        institution: "Makerere",
-        trainers: [],
-        skills: []
+        "courseName": "Systems analysis and design", 
+        "courseCode": "BSE1201",
+        "discipline": "IT",
+        "specialization": "Software engineering",
+        "institution": "Makerere",
+        "trainers": [],
+        "skills": [],
+        "accessibility": "open"
      })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {

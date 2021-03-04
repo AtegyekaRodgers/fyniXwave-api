@@ -45,6 +45,7 @@ describe('trainer tests', () => {
         "password": "mypaxwad",
         "discipline": "IT",
         "specialization": "Software engineering",
+        "userId": "603f47b30659d72147b9506a",
         "institution": "Makerere",
         "courses": ["Systems analysis and design", "Golang", "React"],
         "skills": ["Backend", "APIs development", "Systems modeling"]
