@@ -5,7 +5,7 @@ const { auth } = require('../controllers/auth');
 const router = express.Router();
 
 //Add or replace a profile picture
-router.post('/profilepic', Institution.create);
+router.post('/profilepic', Institution.updateProfilePicture);
 
 // Create a new institution
 router.post('/', Institution.create);

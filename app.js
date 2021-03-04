@@ -20,7 +20,7 @@ const session = require('./routes/session');
 const skillingSession = require('./routes/skilling_session');
 const disciplines = require('./routes/disciplines'); 
 const institution = require('./routes/institution');
-const location = require('./routes/inslocation');
+const location = require('./routes/inslocation'); 
 const course = require('./routes/course');
 const trainer = require('./routes/trainer');
 const skill = require('./routes/skill');
@@ -29,6 +29,10 @@ const classs = require('./routes/classs');
 const activity = require('./routes/activity');
 const payment = require('./routes/payment');
 const certificate = require('./routes/certificate');
+const alumniGroup = require('./routes/alumni_group');
+const discussiongroup = require('./routes/discussiongroup');
+const discussionmeeting = require('./routes/discussionmeeting');
+const job = require('./routes/job');
 
 // Routes
 app.use('/home', home);
@@ -40,7 +44,7 @@ app.use('/sessions', session);
 app.use('/skilling_sessions', skillingSession);
 app.use('/disciplines', disciplines);
 app.use('/institution', institution);
-app.use('/location', location);
+app.use('/location', location); 
 app.use('/course', course);
 app.use('/trainer', trainer);
 app.use('/skill', skill);
@@ -48,7 +52,11 @@ app.use('/learner', learner);
 app.use('/classs', classs);
 app.use('/activity', activity);
 app.use('/payment', payment);
-app.use('/certificate', certificate);
+app.use('/certificate', certificate); 
+app.use('/alumni', alumniGroup);
+app.use('/discussiongroup', discussiongroup);
+app.use('/discussionmeeting', discussionmeeting);
+app.use('/job', job);
 
 // Routes for users without accounts
 app.use('/', index);
