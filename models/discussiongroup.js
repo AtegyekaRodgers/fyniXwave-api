@@ -7,7 +7,7 @@ const { Schema } = mongoose;
 //to create a schema
 const discussionGroupSchema = new Schema({
     groupName: String,
-    member: { type: enum: [{ type: Schema.Types.ObjectId, ref: "Mentor"}, { type: Schema.Types.ObjectId, ref: "Trainer"}, { type: Schema.Types.ObjectId, ref: "Student"}, { type: Schema.Types.ObjectId, ref: "User"}] }    
+    member: { type: String } //keys
 });
 
 discussionGroupSchema.plugin(uniqueValidator);

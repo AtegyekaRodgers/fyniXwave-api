@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const DiscussionMeeting = require('../models/discussionMeeting');
+const DiscussionMeeting = require('../models/discussionmeeting');
 
 // Creating a new discussionMeeting profile
 DiscussionMeeting.create = async (req, res) => {

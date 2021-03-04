@@ -31,7 +31,7 @@ describe('skill tests', () => {
   });
   
   //Creates---
-  it('creates an skill entity', (done) => {
+  it('create a skill entity', (done) => {
     request(app)
      .post('/skill/')
      .send({
@@ -50,7 +50,7 @@ describe('skill tests', () => {
   });
 
   // Gets all---
-  it('gets all skills', (done) => {
+  it('get all skills', (done) => {
     request(app)
       .get('/skill/')
       .set('Authorization', `Bearer ${token}`)
@@ -62,7 +62,7 @@ describe('skill tests', () => {
   });
 
   // Gets one ---
-  it('gets specific skill', (done) => {
+  it('get specific skill', (done) => {
     request(app)
       .get(`/skill/${skillId}`)
       .set('Authorization', `Bearer ${token}`)
