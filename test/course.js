@@ -40,7 +40,7 @@ describe('course tests', () => {
         "courseCode": "BSE1201",
         "discipline": "IT",
         "specialization": "Software engineering",
-        "institution": "Makerere",
+        "institution": "603f8a84efc9d14364393f0a",
         "trainers": [],
         "skills": [],
         "accessibility": "open"

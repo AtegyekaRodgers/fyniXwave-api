@@ -7,7 +7,7 @@ InstitutionCourse.create = async (relationship) => {
   try { 
     // saving the relationship
     const institutionCourse = new InstitutionCourse(relationship); 
-    //eg. relationship = { institution: "5db6b26730f133b65dbbe459", course: "23b65dbbe45db6b27530f13a"} 
+    //eg. relationship = { institution: "5db6b26730f133b65dbbe459", course: "23b65dbbe45db6b27530f13a", courseCode: "BSE2098"} 
     await institutionCourse.save();
     return { success: 'InstitutionCourse profile successfully created' };
   } catch (err) {

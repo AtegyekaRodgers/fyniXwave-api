@@ -28,42 +28,44 @@ Course.create = async (req, res) => {
         specialization: req.body.specialization,
     };
     const course = new Course( cours );
-    await course.save(); 
-    if(req.body.institution){  
-        //creation request has told me which institution offers this course, so attach it.
-        var ok = course.attachInstitution(req.body.institution);
-    }
-    if(req.body.trainers){  
-        //req.body.trainers should be an array of strings (the skills)
-        let trainersArray = req.body.trainers;
-        trainersArray.forEach((key, trainer)=>{
-             //trainer must be an id of an existing/registered trainer.
-             var ok = course.attachTrainer(trainer);
-        });
-    }
-    if(req.body.skills){
-        //req.body.skills should be an array of strings (the skills)
-        let skillsArray = req.body.skills;
-        skillsArray.forEach((key, skill)=>{
-            //retrieve skill id using skill name, create it if it's not found.
-            let skill_id = "";
-            const result = Skill.findOne()
-            .where('skillName').equals(skill)
-            .exec(function(err, datta){
-                  if(err){
-                    console.log("course controller: Failed to retrieve skill id using skill name"); 
-                    return {error: err };
-                  }else if(datta){
-                    skill_id = datta._id;
-                    return datta;
-                  }
-               }
-            );
-            var ok = course.attachSkill(skill_id);
-        });
-    }
-    
+    await course.save((err,crs) => {
+        var newCourseId = crs._id;
+        if(req.body.institution){  
+            //creation request has told me which institution offers this course, so attach it.
+            var ok = crs.attachInstitution({institution_id:req.body.institution, courseCode:req.body.courseCode });
+        }
+        if(req.body.trainers){  
+            //req.body.trainers should be an array of strings (the skills)
+            let trainersArray = req.body.trainers;
+            trainersArray.forEach((key, trainer)=>{
+                 //trainer must be an id of an existing/registered trainer.
+                 var ok = crs.attachTrainer(trainer);
+            });
+        }
+        if(req.body.skills){
+            //req.body.skills should be an array of strings (the skills)
+            let skillsArray = req.body.skills;
+            skillsArray.forEach((key, skill)=>{
+                //retrieve skill id using skill name, create it if it's not found.
+                let skill_id = "";
+                const result = Skill.findOne()
+                .where('skillName').equals(skill)
+                .exec(function(err, datta){
+                      if(err){
+                        console.log("course controller: Failed to retrieve skill id using skill name"); 
+                        return {error: err };
+                      }else if(datta){
+                        skill_id = datta._id;
+                        return datta;
+                      }
+                });
+                var ok = crs.attachSkill(skill_id);
+            });
+        }
+    });
+     
     res.status(201).json({ message: 'Course profile successfully created' });
+    
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while creating new course profile',
@@ -72,12 +74,12 @@ Course.create = async (req, res) => {
 };
 
 // Attach institution that offers this course.
-Course.attachInstitution = async (institution_id) => {
+Course.attachInstitution = async (params) => {
     //grab this course's id
     let course_id = this._id;
     
     //create a new institution-course relationship  
-    let relationship = { institution: institution_id, course: course_id };
+    let relationship = { institution: params.institution_id, course: course_id, courseCode:params.courseCode };
     
     let returned = InstitutionCourse.create(relationship);
     if(returned.error){
