@@ -40,7 +40,7 @@ res.body = {
     .where('email').equals(req.body.email)
     .where('firstname').equals(req.body.firstname)
     .where('lastname').equals(req.body.lastname)
-    .select("_id").count()
+    .select("_id").countDocuments()
     .limit(1)
     .exec(function(err, datta){
         if(err){ console.log("trainer controller: Failed to check for existance of user"); return 0; }
