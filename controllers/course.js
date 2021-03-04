@@ -1,10 +1,89 @@
 const mongoose = require('mongoose');
 
 const Course = require('../models/course');
-const InstitutionCourse = require('../controllers/institution_course');
-const CourseTrainer = require('../controllers/course_trainer');
-const CourseLearner = require('../controllers/course_learner'); 
-const CourseSkill = require('../controllers/course_skill');
+const {InstitutionCourse} = require('./institution_course.js');
+const {CourseTrainer} = require('./course_trainer');
+const {CourseLearner} = require('./course_learner'); 
+const {CourseSkill} = require('./course_skill');
+
+// Attach institution that offers this course.
+Course.attachInstitution = async (params, cback) => {
+    try {
+        //grab this course's id
+        let course_id = params.id;
+        
+        //create a new institution-course relationship  
+        let relationship = { institution: params.institution_id, course: course_id, courseCode:params.courseCode };
+         
+        let feedBackCB = (returned) => {
+            if(returned && returned.error){
+                console.log("Course.attachInstitution: InstitutionCourse.create(relationship) returned error=",returned.error);
+                cback(false);
+            }
+            if(returned && returned.success){
+                console.log("Course.attachInstitution: InstitutionCourse.create(relationship) returned success=", returned.success);
+                cback(true);
+            }
+        }
+        InstitutionCourse.create(relationship, feedBackCB);
+    }catch (err) {
+        console.log("Course.attachInstitution: !! Error =", err);
+        cback(false);
+    }
+};
+
+// attach a trainer to this course.
+Course.attachTrainer = async (params, cback) => {
+    try {
+        //grab this course's id
+        let course_id = params.id;
+        
+        //create a new course-trainer relationship  
+        let relationship = {course: params.course_id, trainer: params.trainer_id};
+         
+        let feedBackCB = (returned) => {
+            if(returned.error){ 
+                console.log("Course.attachTrainer: CourseTrainer.create(relationship) returned error=",returned.error);
+                cback(false);
+            }
+            if(returned.success){
+                console.log("Course.attachTrainer: CourseTrainer.create(relationship) returned success=",returned.success);
+                cback(true);
+            }
+        }
+        CourseTrainer.create(relationship, feedBackCB);
+    }catch (err) {
+        console.log("Course.attachTrainer: !! Error =", err);
+        cback(false);
+    }
+};
+
+// attach skills acquired from this course.
+Course.attachSkill = async (params, cback) => {
+    try {
+        //grab this course's id
+        let course_id = params.id;
+        
+        //create a new course-trainer relationship  
+        let relationship = {course: params.course_id, skill: params.skill_id};
+         
+        let feedBackCB = (returned) => {
+            if(returned.error){ 
+                console.log("Course.attachSkill: CourseSkill.create(relationship) returned error=",returned.error);
+                cback(false);
+            }
+            if(returned.success){
+                console.log("Course.attachSkill: CourseSkill.create(relationship) returned success=", returned.success);
+                cback(true);
+            }
+        }
+        CourseSkill.create(relationship, feedBackCB);
+    }catch (err) {
+        console.log("Course.attachSkill: !! Error =", err);
+        cback(false);
+    }
+};
+
 
 // Creating a new course profile
 Course.create = async (req, res) => {
@@ -29,17 +108,18 @@ Course.create = async (req, res) => {
     };
     const course = new Course( cours );
     await course.save((err,crs) => {
+        let feedbackCB = (fdback) => { return fdback; };
         var newCourseId = crs._id;
         if(req.body.institution){  
             //creation request has told me which institution offers this course, so attach it.
-            var ok = crs.attachInstitution({institution_id:req.body.institution, courseCode:req.body.courseCode });
+            Course.attachInstitution({id:newCourseId, institution_id:req.body.institution, courseCode:req.body.courseCode }, feedbackCB);    
         }
         if(req.body.trainers){  
             //req.body.trainers should be an array of strings (the skills)
             let trainersArray = req.body.trainers;
             trainersArray.forEach((key, trainer)=>{
                  //trainer must be an id of an existing/registered trainer.
-                 var ok = crs.attachTrainer(trainer);
+                 Course.attachTrainer({id:newCourseId, trainer_id:trainer}, feedbackCB);
             });
         }
         if(req.body.skills){
@@ -59,7 +139,9 @@ Course.create = async (req, res) => {
                         return datta;
                       }
                 });
-                var ok = crs.attachSkill(skill_id);
+                if(skill_id!=""){
+                    Course.attachSkill({id:newCourseId, skill_id}, feedbackCB);
+                }
             });
         }
     });
@@ -71,63 +153,6 @@ Course.create = async (req, res) => {
       message: err.message || 'An error occured while creating new course profile',
     });
   }
-};
-
-// Attach institution that offers this course.
-Course.attachInstitution = async (params) => {
-    //grab this course's id
-    let course_id = this._id;
-    
-    //create a new institution-course relationship  
-    let relationship = { institution: params.institution_id, course: course_id, courseCode:params.courseCode };
-    
-    let returned = InstitutionCourse.create(relationship);
-    if(returned.error){
-        console.log(returned.error);
-        return false;
-    }
-    if(returned.success){
-        console.log(returned.success);
-        return true;
-    }
-};
-
-// attach a trainer to this course.
-Course.attachTrainer = async (trainer_id) => {
-    //grab this course's id
-    let course_id = this._id;
-    
-    //create a new course-trainer relationship  
-    let relationship = {course: course_id, trainer: trainer_id};
-    
-    let returned = CourseTrainer.create(relationship);
-    if(returned.error){ 
-        console.log(returned.error);
-        return false;
-    }
-    if(returned.success){
-        console.log(returned.success);
-        return true;
-    }
-};
-
-// attach skills acquired from this course.
-Course.attachSkill = async (skill_id) => {
-    //grab this course's id
-    let course_id = this._id;
-    
-    //create a new course-trainer relationship  
-    let relationship = {course: course_id, skill: skill_id};
-    
-    let returned = CourseSkill.create(relationship);
-    if(returned.error){ 
-        console.log(returned.error);
-        return false;
-    }
-    if(returned.success){
-        console.log(returned.success);
-        return true;
-    }
 };
 
 // Adding or updating profile picture for an course

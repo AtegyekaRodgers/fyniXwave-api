@@ -3,15 +3,27 @@ const mongoose = require('mongoose');
 const TrainerSkill = require('../models/trainer_skill');
 
 // Creating a new trainer-skill relationship
-TrainerSkill.create = async (relationship) => {
-  try { 
+TrainerSkill.create = async (relationship, cback) => {
+  try {
     // saving the relationship
     const trainerSkill = new TrainerSkill(relationship); 
-    //eg. relationship = { trainer: "5db6b26730f133b65dbbe459", skill: "23b65dbbe45db6b27530f13a"} 
-    await trainerSkill.save();
-    return { success: 'TrainerSkill profile successfully created' };
-  } catch (err) {
-    return {error: err.message || 'An error occured while creating new trainer-skill relationship'};
+    //eg. relationship = { trainer: "5db6b26730f133b65dbbe459", skill: "23b65dbbe45db6b27530f13a"}
+    let feedback = null;
+    await trainerSkill.save((err, crskill) => {
+        if(err){
+            console.log("await TrainerSkill.save(...):  error = ", err);    
+            feedback = {error: err.message || 'Failed to create new course-trainer relationship'};
+            cback(feedback);
+            return;
+        } 
+        console.log("await TrainerSkill.save(...): success, crskill = ", crskill);
+        feedback = {success: 'Trainer-Skill relationship successfully created'};
+        cback(feedback); 
+    }); 
+  }catch (err) {
+    console.log("TrainerSkill.create: .catch error ", err);
+    let feedback = {error: err.message || 'An error occured while creating new trainer-skill relationship'};
+    cback(feedback);
   }
 }; 
 

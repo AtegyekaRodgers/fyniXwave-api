@@ -8,7 +8,7 @@ const { Schema } = mongoose;
 const affiliationSchema = new Schema({
     institution: { type: Schema.Types.ObjectId, ref: "Institution" },
     affiliateType: { type: String, enum: ["mentor", "trainer"]},
-    affiliate: { type: String, enum: [{ type: Schema.Types.ObjectId, ref: "Mentor" }, { type: Schema.Types.ObjectId, ref: "Trainer" }] }     
+    affiliate: { type: String }     
 });
 
 affiliationSchema.plugin(uniqueValidator);
