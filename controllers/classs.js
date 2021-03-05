@@ -8,14 +8,17 @@ const Learner = require('../models/learner');
 
 // Creating a new classs record
 Classs.create = async (req, res) => {
-/* req.body = 
-{
-   classsName: "...",
-   parentCourse: "..." //key
-   parentInstitution: "...", //key, required
-   startDate: "17/8/2021",
-   endDate: "..."
-}
+/*  let days = 20;
+    let endDate = new Date(Date.now() + (days * 24*60*60*1000));
+
+    req.body = 
+    {
+       "classsName": "Class of 2021",
+       "parentCourse": "...",
+       "parentInstitution": "603f8a84efc9d14364393f0a",
+       "startDate": Date.now(),
+       "endDate": endDate
+    }
 */ 
   try {
     // saving the profile
@@ -29,7 +32,7 @@ Classs.create = async (req, res) => {
   }
 };
 
-// Adding or updating profile picture for an classs
+// Adding or updating profile picture for a classs
 Classs.updateProfilePicture = async (req, res) => {
    try {
    // uploading profile picture to cloudinary

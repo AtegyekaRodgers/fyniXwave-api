@@ -3,15 +3,27 @@ const mongoose = require('mongoose');
 const LearnerSkill = require('../models/learner_skill');
 
 // Creating a new learner-skill relationship
-LearnerSkill.create = async (relationship) => {
-  try { 
+LearnerSkill.create = async (relationship, cback) => {
+  try {
     // saving the relationship
     const learnerSkill = new LearnerSkill(relationship); 
     //eg. relationship = { skill: "5db6b26730f133b65dbbe459", learner: "23b65dbbe45db6b27530f13a"} 
-    await learnerSkill.save();
-    return { success: 'LearnerSkill profile successfully created' };
+    let feedback = null;
+    await learnerSkill.save((err,lrnrskill) => {
+        if(err){ 
+            console.log("await learnerSkill.save(...):  error = ", err);    
+            feedback = {error: err.message || 'Failed to create new learner-skill relationship'};
+            cback(feedback);
+            return;
+        } 
+        console.log("await learnerSkill.save(...): success, lrnrskill = ", lrnrskill);
+        feedback = {success: 'Learner-skill relationship successfully created'};
+        cback(feedback); 
+    }); 
   } catch (err) {
-    return {error: err.message || 'An error occured while creating new learner-skill relationship'};
+    console.log("LearnerSkill.create: .catch error ", err);
+    let feedback = {error: err.message || 'An error occured while creating new learner-skill relationship'};
+    cback(feedback);
   }
 }; 
 

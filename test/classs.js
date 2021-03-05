@@ -34,32 +34,7 @@ describe('classs tests', () => {
         done();
       })
       .catch((err) => done(err));
-  });
-  
-  before((done) => {
-    dbConnect().catch((err) => done(err));
-    request(app)
-      .post('/auth/login')
-      .send({
-        "email": 'auth@delv.ac.ug',
-        "password": 'newPassword',
-      })
-      .then((res) => {
-        token = res.body.token;
-        expect(res.body).to.contain.property('token'); 
-      })
-      .catch((err) => done(err));
-      
-      //TODO: create a new course to be sure there is a record
-      request(app)
-      .get('/course')
-      .set('Authorization', `Bearer ${token}`)
-      .then((res) => {
-        parentCourseID = res.body[0] ? res.body[0]._id : null;
-        done();
-      })
-      .catch((err) => done(err));
-  });
+  }); 
   
   after((done) => {
     dbClose()
@@ -68,12 +43,17 @@ describe('classs tests', () => {
   });
   
   //Creates---
-  it('creates a classs entity', (done) => {
+  it('creating a classs entity', (done) => {
+    let days = 20;
+    let endDate = new Date(Date.now() + (days * 24*60*60*1000));
     request(app)
-     .post('/classs/')
+     .post('/classs')
      .send({
-         "classsName": "Evening class",
-         "parentCourse": parentCourseID
+         "classsName": "Class of 2021",
+         "parentCourse": parentCourseID,
+         "parentInstitution": "603f8a84efc9d14364393f0a",
+         "startDate": Date.now(),
+         "endDate": endDate
      })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
@@ -85,9 +65,9 @@ describe('classs tests', () => {
   });
 
   // Gets all---
-  it('get all classses', (done) => {
+  it('retrieving all classses', (done) => {
     request(app)
-      .get('/classs/')
+      .get('/classs')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -97,7 +77,7 @@ describe('classs tests', () => {
   });
 
   // Gets one ---
-  it('get specific classs', (done) => {
+  it('retrieving a specific classs', (done) => {
     request(app)
       .get(`/classs/${classsId}`)
       .set('Authorization', `Bearer ${token}`)

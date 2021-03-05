@@ -234,7 +234,7 @@ res.body = {
   }
 };
 
-// Adding or updating profile picture for an trainer
+// Adding or updating profile picture for a trainer
 Trainer.updateProfilePicture = async (req, res) => {
    try {
    // uploading profile picture to cloudinary

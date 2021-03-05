@@ -6,9 +6,114 @@ const Course = require('../models/course');
 const Learner = require('../models/learner');
 const Skill = require('../models/skill');
  
-const CourseLearner = require('../controllers/course_learner');
-const LearnerSkill = require('../controllers/learner_skill');
-const LearnerClasss = require('../controllers/learner_classs');
+const InstitutionLearner = require('./institution_learner');
+const CourseLearner = require('./course_learner');
+const LearnerSkill = require('./learner_skill');
+const LearnerClasss = require('./learner_classs');
+
+// Create institution-learner relationship.
+Learner.attachInstitution = async (params, cback) => {
+    try {
+        //grab this learner's id
+        let learner_id = params.id;
+        
+        //create a new institution-learner relationship  
+        let relationship = {institution: params.institution_id, learner:learner_id};
+        
+        let feedBackCB = (returned) => {
+            if(returned.error){
+                console.log("Learner.attachInstitution: InstitutionLearner.create(relationship) returned error =", returned.error);
+                cback(false);
+            }
+            if(returned.success){
+                console.log("Learner.attachInstitution: InstitutionLearner.create(relationship) returned success=", returned.success);
+                cback(true);
+            }
+        }
+        InstitutionLearner.create(relationship, feedBackCB);
+    }catch (err) {
+        console.log("Learner.attachInstitution: !! Error =", err);
+        cback(false);
+    }
+};
+
+// attach courses .
+Learner.attachCourse = async (params, cback) => {
+    try {
+        //grab this learner's id
+        let learner_id = params.id;
+        
+        //create a new learner-course relationship
+        let relationship = {learner: learner_id, course: params.course_id};
+        
+        let feedBackCB = (returned) => {
+            if(returned.error){
+                console.log("Learner.attachCourse: CourseLearner.create(relationship) returned error =", returned.error);
+                cback(false);
+            }
+            if(returned.success){
+                console.log("Learner.attachCourse: CourseLearner.create(relationship) returned success=", returned.success);
+                cback(true);
+            }
+        }
+        CourseLearner.create(relationship, feedBackCB);
+    }catch (err) {
+        console.log("Learner.attachCourse: !! Error =", err);
+        cback(false);
+    }
+};
+
+// Create learner-classs relationship.
+Learner.attachClasss = async (params, cback) => {
+    try {
+        //grab this learner's id
+        let learner_id = params.id;
+        
+        //create a new learner-classs relationship
+        let relationship = {classs: params.classs_id, learner:learner_id};
+        
+        let feedBackCB = (returned) => {
+            if(returned.error){
+                console.log("Learner.attachClasss: LearnerClasss.create(relationship) returned error =", returned.error);
+                cback(false);
+            }
+            if(returned.success){
+                console.log("Learner.attachClasss: LearnerClasss.create(relationship) returned success=", returned.success);
+                cback(true);
+            }
+        }
+        LearnerClasss.create(relationship, feedBackCB);
+    }catch (err) {
+        console.log("Learner.attachClasss: !! Error =", err);
+        cback(false);
+    }
+};
+
+// attach skills .
+Learner.attachSkill = async (params, cback) => {
+    try {
+        //grab this learner's id
+        let learner_id = params.id;
+        
+        //create a new learner-skill relationship
+        let relationship = {learner: learner_id, skill: params.skill_id};
+        
+        let feedBackCB = (returned) => {
+            if(returned.error){
+                console.log("Learner.attachSkill: LearnerSkill.create(relationship) returned error =", returned.error);
+                cback(false);
+            }
+            if(returned.success){
+                console.log("Learner.attachSkill: LearnerSkill.create(relationship) returned success=", returned.success);
+                cback(true);
+            }
+        }
+        LearnerSkill.create(relationship, feedBackCB);
+    }catch (err) {
+        console.log("Learner.attachSkill: !! Error =", err);
+        cback(false);
+    }
+};
 
 // Creating a new trainer profile
 Learner.create = async (req, res) => {
@@ -38,48 +143,52 @@ res.body = {
     //first create a parent user entity for this trainer, or identify if already exists.
     //retrieve the possibly existing user
     let usr_id;
-    const count = User.findOne()
+    let count = 0;
+    const result = User.findOne()
     .where('email').equals(req.body.email)
     .where('firstname').equals(req.body.firstname)
     .where('lastname').equals(req.body.lastname)
-    .select("_id").countDocuments()
+    .select("_id")
     .exec(function(err, datta){
-        if(err){ console.log("learner controller: Failed to check for existance of user"); return 0; }
+        if(err){ console.log("trainer controller: Failed to check for existance of user"); return 0; }
         else if(datta){
-          usr_id = datta._id;
+         usr_id = datta._id;
+         if(usr_id){count = 1;}
+         console.log("count = ", count);
+         if(count > 0){
+            // usr exists,
+            // add 'trainer' to the set of usercategory of existing user
+            let categories = ["learner"];
+            const updated = User.findByIdAndUpdate(
+              usr_id, { $addToSet: { usercategory: { $each: categories } } }, { useFindAndModify: false }
+            );
+         }
+        
+         if(count < 1){ 
+         // usr does not exist, create a new one.
+            // Hashing the password:
+            const salt = bcrypt.genSalt(10);
+            const hashedPassword = bcrypt.hash(req.body.password, salt);
+            req.body.password = hashedPassword;
+         
+             let usr = {
+                email: req.body.email,
+                country: req.body.country,
+                firstname: req.body.firstname, 
+                lastname: req.body.lastname,
+                username: req.body.username,
+                password: req.body.password,
+                usercategory: ["learner"]
+            };
+            const newUser = new User( usr );
+            newUser.save((err, usrr)=>{
+                if(err){ console.log("newUser.save: !!Error = ",err); }
+                usr_id = usrr._id; 
+            }); 
+         }
+          
         }
     });
-    
-    if(count > 0){ 
-        // usr exists,
-        // add 'learner' to the set of usercategory of existing user
-        let categories = ["learner"];
-        const updated = User.findByIdAndUpdate(
-          usr_id, { $addToSet: { usercategory: { $each: categories } } }, { useFindAndModify: false }
-        );
-    }
-    
-    if(count < 1){
-    // usr does not exist, create a new one.
-        // Hashing the password:
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        req.body.password = hashedPassword;
-     
-         let usr = {
-            email: req.body.email,
-            country: req.body.country,
-            firstname: req.body.firstname, 
-            lastname: req.body.lastname,
-            username: req.body.username,
-            password: req.body.password,
-            usercategory: ["learner"],
-            interests: req.body.interests
-        };
-        const newUser = new User( usr );
-        await newUser.save();
-        usr_id = newUser._id;
-    }
       
     // saving the learner profile
     let lrnr = {
@@ -89,75 +198,84 @@ res.body = {
         userId: usr_id
     };
     const learner = new Learner( lrnr );
-    await learner.save(); 
-    
-    if(req.body.institution){
-        //creation request has told me which institution this learner belongs to, so create a learner-skill relationship.
-        var ok = learner.attachInstitution(req.body.institution);
-    } 
-    if(req.body.courses){
-        //req.body.courses should be an array of strings (the courses this trainer handles)
-        let coursesArray = req.body.courses;
-        coursesArray.forEach((key, course)=>{
-            //retrieve course id using course name, create it if it's not found.
-            let course_id = "";
-            const result = Course.findOne()
-            .where('courseName').equals(course) 
-            .exec(function(err, datta){
-                      if(err){
-                        console.log("learner controller: Failed to retrieve course id using course name");
-                        return {error: err };
-                      }else if(datta){
-                        course_id = datta._id;
-                        return datta;
+    await learner.save((err, lrnr) => {
+        let feedbackCB = (fdback) => { return fdback; };
+        var newLearnerId = lrnr._id;
+        if(req.body.institution){  
+            //creation request has told me which institution this learner belongs to.
+            Trainer.attachInstitution({id:newLearnerId, institution_id:req.body.institution}, feedbackCB);
+        }
+        if(req.body.courses){
+            //req.body.courses should be an array of strings 
+            let coursesArray = req.body.courses;
+            coursesArray.forEach((key, course)=>{
+                //retrieve course id using course name, create it if it's not found.
+                let course_id = "";
+                const result = Course.findOne()
+                .where('courseName').equals(course) 
+                .exec(function(err, datta){
+                          if(err){
+                            console.log("leearner controller: Failed to retrieve course id using course name");
+                            return {error: err };
+                          }else if(datta){
+                            course_id = datta._id;
+                            return datta;
+                          }
                       }
-                  }
-            );
-            var ok = learner.attachCourse(course_id);
-        });
-    }
-    if(req.body.skills){
-        //req.body.skills should be an array of strings (the skills)
-        let skillsArray = req.body.skills;
-        skillsArray.forEach((key, skill)=>{
-            //retrieve skill id using skill name, create it if it's not found. 
-            let skill_id = "";
-            const result = Skill.findOne()
-            .where('skillName').equals(skill) 
-            .exec(function(err, datta){
-                      if(err){
-                        console.log("learner controller: Failed to retrieve skill id using skill name"); 
-                        return {error: err };
-                      }else if(datta){
-                        skill_id = datta._id;
-                        return datta;
+                );
+                if(course_id!=""){
+                    Trainer.attachCourse({id:newLearnerId, course_id}, feedbackCB);
+                }
+            });
+        }
+        if(req.body.skills){
+            //req.body.skills should be an array of strings (the skills)
+            let skillsArray = req.body.skills;
+            skillsArray.forEach((key, skill)=>{
+                //retrieve skill id using skill name, create it if it's not found. 
+                let skill_id = "";
+                const result = Skill.findOne()
+                .where('skillName').equals(skill) 
+                .exec(function(err, datta){
+                          if(err){
+                            console.log("learner controller: Failed to retrieve course id using course name"); 
+                            return {error: err };
+                          }else if(datta){
+                            skill_id = datta._id;
+                            console.log("learner, Skill.findOne: skill_id =", skill_id);
+                          }
                       }
-                  }
-            );
-            var ok = learner.attachSkill(skill_id);
-        });
-    }
-    if(req.body.classes){
-        //req.body.classes should be an array of strings (the classes)
-        let classesArray = req.body.classes;
-        classesArray.forEach((key, classs)=>{
-            //retrieve classs id using classs name. 
-            let classs_id = "";
-            const result = Classs.findOne()
-            .where('classsName').equals(classs) 
-            .exec(function(err, datta){
-                      if(err){
-                        console.log("learner controller: Failed to retrieve classs id using classs name"); 
-                        return {error: err };
-                      }else if(datta){
-                        classs_id = datta._id;
-                        return datta;
+                );
+                if(skill_id!=""){
+                    Trainer.attachSkill({id:newLearnerId, skill_id}, feedbackCB);
+                }
+            });
+        }
+        if(req.body.classes){
+            //req.body.classes should be an array of strings (the classes)
+            let classesArray = req.body.classes;
+            classesArray.forEach((key, classs)=>{
+                //retrieve skill id using skill name, create it if it's not found. 
+                let classs_id = "";
+                const result = Classs.findOne()
+                .where('classsName').equals(classs) 
+                .exec(function(err, datta){
+                          if(err){
+                            console.log("learner controller: Failed to retrieve course id using course name"); 
+                            return {error: err };
+                          }else if(datta){
+                            classs_id = datta._id;
+                            console.log("learner, Classs.findOne: classs_id =", classs_id);
+                          }
                       }
-                  }
-            );
-            var ok = learner.attachClasss(classs_id);
-        });
-    }
+                );
+                if(classs_id!=""){
+                    Trainer.attachClasss({id:newLearnerId, classs_id}, feedbackCB);
+                }
+            });
+        }
+        
+    }); 
      
     res.status(201).json({ message: 'Learner profile successfully created' });
   } catch (err) {
@@ -167,83 +285,7 @@ res.body = {
   }
 };
 
-// Create learner-institution relationship.
-Learner.attachInstitution = async (institution_id) => {
-    //grab this trainer's id
-    let learner_id = this._id;
-    
-    //create a new institution-learner relationship  
-    let relationship = {institution: institution_id, learner:learner_id};
-    
-    let returned = LearnerSkill.create(relationship);
-    if(returned.error){
-        console.log(returned.error);
-        return false;
-    }
-    if(returned.success){
-        console.log(returned.success);
-        return true;
-    }
-};
-
-// attach courses .
-Learner.attachCourse = async (course_id) => {
-    //grab this trainer's id
-    let learner_id = this._id;
-    
-    //create a new learner-skill relationship
-    let relationship = {learner: learner_id, course: course_id};
-    
-    let returned = CourseLearner.create(relationship);
-    if(returned.error){
-        console.log(returned.error);
-        return false;
-    }
-    if(returned.success){
-        console.log(returned.success);
-        return true;
-    }
-};
-
-// Create learner-classs relationship.
-Learner.attachClasss = async (classs_id) => {
-    //grab this learner's id
-    let learner_id = this._id;
-    
-    //create a new institution-learner relationship  
-    let relationship = {classs: classs_id, learner:learner_id};
-    
-    let returned = LearnerClasss.create(relationship);
-    if(returned.error){
-        console.log(returned.error);
-        return false;
-    }
-    if(returned.success){
-        console.log(returned.success);
-        return true;
-    }
-};
-
-// attach skills .
-Learner.attachSkill = async (skill_id) => {
-    //grab this trainer's id
-    let learner_id = this._id;
-    
-    //create a new trainer-skill relationship  
-    let relationship = {learner: learner_id, skill: skill_id};
-    
-    let returned = LearnerSkill.create(relationship);
-    if(returned.error){
-        console.log(returned.error);
-        return false;
-    }
-    if(returned.success){
-        console.log(returned.success);
-        return true;
-    }
-};
-
-// Adding or updating profile picture for an trainer
+// Adding or updating profile picture for a learner
 Learner.updateProfilePicture = async (req, res) => {
    try {
    // uploading profile picture to cloudinary

@@ -3,15 +3,27 @@ const mongoose = require('mongoose');
 const InstitutionLearner = require('../models/institution_learner');
 
 // Creating a new institution-learner relationship
-InstitutionLearner.create = async (relationship) => {
-  try { 
+InstitutionLearner.create = async (relationship, cback) => {
+  try {
     // saving the relationship
     const institutionLearner = new InstitutionLearner(relationship); 
     //eg. relationship = { institution: "5db6b26730f133b65dbbe459", learner: "23b65dbbe45db6b27530f13a"} 
-    await institutionLearner.save();
-    return { success: 'InstitutionLearner profile successfully created' };
+    let feedback = null;
+    await institutionLearner.save((err,inslrnr) => {
+        if(err){ 
+            console.log("await institutionLearner.save(...):  error = ", err);    
+            feedback = {error: err.message || 'Failed to create new institution-learner relationship'};
+            cback(feedback);
+            return;
+        } 
+        console.log("await institutionLearner.save(...): success, inslrnr = ", inslrnr);
+        feedback = {success: 'Institution-learner relationship successfully created'};
+        cback(feedback); 
+    }); 
   } catch (err) {
-    return {error: err.message || 'An error occured while creating new institution-learner relationship'};
+    console.log("InstitutionLearner.create: .catch error ", err);
+    let feedback = {error: err.message || 'An error occured while creating new institution-learner relationship'};
+    cback(feedback);
   }
 }; 
 
