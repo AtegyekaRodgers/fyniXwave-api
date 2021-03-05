@@ -5,7 +5,7 @@ const User = require('../models/user');
 const Course = require('../models/course');
 const Learner = require('../models/learner');
 const Skill = require('../models/skill');
-const Classs = require('../models/class');
+const Classs = require('../models/classs');
  
 const InstitutionLearner = require('./institution_learner');
 const CourseLearner = require('./course_learner');
