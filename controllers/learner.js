@@ -115,7 +115,7 @@ Learner.attachSkill = async (params, cback) => {
     }
 };
 
-// Creating a new trainer profile
+// Creating a new lear profile
 Learner.create = async (req, res) => {
 /* req.body = 
 {
@@ -140,7 +140,7 @@ res.body = {
 }
 */
   try {
-    //first create a parent user entity for this trainer, or identify if already exists.
+    //first create a parent user entity for this learner, or identify if already exists.
     //retrieve the possibly existing user
     let usr_id;
     let count = 0;
@@ -150,14 +150,14 @@ res.body = {
     .where('lastname').equals(req.body.lastname)
     .select("_id")
     .exec(function(err, datta){
-        if(err){ console.log("trainer controller: Failed to check for existance of user"); return 0; }
+        if(err){ console.log("learner controller: Failed to check for existance of user"); return 0; }
         else if(datta){
          usr_id = datta._id;
          if(usr_id){count = 1;}
          console.log("count = ", count);
          if(count > 0){
             // usr exists,
-            // add 'trainer' to the set of usercategory of existing user
+            // add 'learner' to the set of usercategory of existing user
             let categories = ["learner"];
             const updated = User.findByIdAndUpdate(
               usr_id, { $addToSet: { usercategory: { $each: categories } } }, { useFindAndModify: false }
@@ -203,7 +203,7 @@ res.body = {
         var newLearnerId = lrnr._id;
         if(req.body.institution){  
             //creation request has told me which institution this learner belongs to.
-            Trainer.attachInstitution({id:newLearnerId, institution_id:req.body.institution}, feedbackCB);
+            Learner.attachInstitution({id:newLearnerId, institution_id:req.body.institution}, feedbackCB);
         }
         if(req.body.courses){
             //req.body.courses should be an array of strings 
@@ -224,7 +224,7 @@ res.body = {
                       }
                 );
                 if(course_id!=""){
-                    Trainer.attachCourse({id:newLearnerId, course_id}, feedbackCB);
+                    Learner.attachCourse({id:newLearnerId, course_id}, feedbackCB);
                 }
             });
         }
@@ -247,7 +247,7 @@ res.body = {
                       }
                 );
                 if(skill_id!=""){
-                    Trainer.attachSkill({id:newLearnerId, skill_id}, feedbackCB);
+                    Learner.attachSkill({id:newLearnerId, skill_id}, feedbackCB);
                 }
             });
         }
@@ -270,7 +270,7 @@ res.body = {
                       }
                 );
                 if(classs_id!=""){
-                    Trainer.attachClasss({id:newLearnerId, classs_id}, feedbackCB);
+                    Learner.attachClasss({id:newLearnerId, classs_id}, feedbackCB);
                 }
             });
         }
@@ -280,7 +280,7 @@ res.body = {
     res.status(201).json({ message: 'Learner profile successfully created' });
   } catch (err) {
     res.status(500).json({
-      message: err.message || 'An error occured while creating new trainer profile',
+      message: err.message || 'An error occured while creating new learner profile',
     });
   }
 };
@@ -314,12 +314,12 @@ Learner.readAll = async (req, res) => {
     res.status(200).json(learners);
   } catch (err) {
     res.status(500).json({
-      message: err.message || 'An error occured while retrieving trainers',
+      message: err.message || 'An error occured while retrieving Learners',
     });
   }
 };
 
-// Retrieve single trainer
+// Retrieve single learner
 Learner.readOne = async (req, res) => {
   try {
     const learner = await Learner.findById(req.query.id);
