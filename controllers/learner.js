@@ -7,10 +7,10 @@ const Learner = require('../models/learner');
 const Skill = require('../models/skill');
 const Classs = require('../models/classs');
  
-const InstitutionLearner = require('./institution_learner');
-const CourseLearner = require('./course_learner');
-const LearnerSkill = require('./learner_skill');
-const LearnerClasss = require('./learner_classs');
+const {InstitutionLearner} = require('./institution_learner');
+const {CourseLearner} = require('./course_learner');
+const {LearnerSkill} = require('./learner_skill');
+const {LearnerClasss} = require('./learner_classs');
 
 // Create institution-learner relationship.
 Learner.attachInstitution = async (params, cback) => {
