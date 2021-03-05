@@ -42,9 +42,10 @@ describe('learner tests', () => {
         "lastname": "Kened",
         "username": "kabagambe@yahoo.com",
         "password": "kenedpass",
-        "discipline": "IT",
+        "discipline": null,
         "specialization": "Software engineering",
-        "institution": "Makerere",
+        "institution": "603f8a84efc9d14364393f0a",
+        "userId": "603f47b30659d72147b9506a",
         "courses": ["Systems analysis and design", "Golang", "React"],
         "skills": ["PHP", "Laravel", "CSS"],
         "classes": ["Evening class"]

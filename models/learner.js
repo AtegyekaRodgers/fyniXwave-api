@@ -7,7 +7,7 @@ const { Schema } = mongoose;
 const learnerSchema = new Schema({
     fullName: String,
     userId: { type: Schema.Types.ObjectId, ref: "User" },
-    discipline: { type: Schema.Types.ObjectId, ref: "Disciplines" },
+    discipline: { type: String },
     profilePicture: { type: String, required: false }, 
     cloudinaryId: { type: String },
     completed: [{ type: String }] //the list of courses a learner has completed. This will help us to award training certificates
