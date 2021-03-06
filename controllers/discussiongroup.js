@@ -90,8 +90,8 @@ DiscussionGroup.joingroup = async (req, res) => {
 // Retrieve single discussionGroup
 DiscussionGroup.readOne = async (req, res) => {
   try {
-    const userDiscussionGroup = await UserDiscussionGroup.findById(req.query.id);
-    res.json(userDiscussionGroup);
+    const discussionGroup = await DiscussionGroup.findById(req.query.id);
+    res.json(discussionGroup);
   } catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while retrieving you membership in discussion group',

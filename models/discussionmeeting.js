@@ -12,7 +12,7 @@ const discussionMeetingSchema = new Schema({
     theme: String,
     sponsoredBy: [String],
     startDate: Date,
-    startTime: Date,
+    startTime: String,
     duration: String,
     parentGroup: {type: Schema.Types.ObjectId, ref: "DiscussionGroup"},
     meetingLink: String  //eg, zoom meeting link

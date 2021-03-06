@@ -11,8 +11,8 @@ DiscussionMeeting.create = async (req, res) => {
         "venue": "...",
         "theme": "......",
         "sponsoredBy": [], //optional
-        "startDate": "...",
-        "startTime": "...",
+        "startDate": "20/05/2021",
+        "startTime": "12:00:00",
         "duration": "2 hours", //optional
         "parentGroup": "...", //must be a valid group id
         "meetingLink": "..."  //url link to external meeting platform such as zoom

@@ -41,7 +41,7 @@ describe('tests for discussion meetings', () => {
         "venue": "CoCIS Makerere",
         "theme": "Encouragement at the core",
         "sponsoredBy": ["Well wisher 1", "MTN", "Delv"], //optional
-        "startDate": "17/03/2021",
+        "startDate": "2021-03-17",
         "startTime": "12:00:00",
         "duration": "2 hours", //optional
         "parentMeeting": "603f7a74efc9d14364393f3b", //must be a valid group id
