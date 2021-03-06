@@ -20,8 +20,7 @@ const followedDisciplines = async (userID) => {
   } catch (err) {
     return {
       message:
-        err.message
-        || 'An error occured while getting user followed disciplines',
+        err.message || 'An error occured while getting user followed disciplines',
     };
   }
 };
@@ -36,7 +35,7 @@ home.feed = async (req, res) => {
     const content = await searchContentByTags(tags);
     const sessions = await searchSessionsByTags(tags);
     res.status(200).json({ content, sessions });
-  } catch (err) {
+  }catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while searching',
     });

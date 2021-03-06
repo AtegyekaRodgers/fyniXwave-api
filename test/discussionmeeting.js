@@ -5,9 +5,9 @@ const { before, after, describe, it } = require('mocha');
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe('institution tests', () => {
+describe('tests for discussion meetings', () => {
   let token; 
-  let institutionId;
+  let discussionMeetingId;
   
   before((done) => {
     dbConnect().then(() => {}).catch((err) => done(err));
@@ -24,6 +24,7 @@ describe('institution tests', () => {
       })
       .catch((err) => done(err)); 
   });
+  
   after((done) => {
     dbClose()
       .then(() => done())
@@ -31,28 +32,34 @@ describe('institution tests', () => {
   });
   
   //Creates---
-  it('creating an institution entity', (done) => {
+  it('creating a discussion meeting', (done) => {
     request(app)
-     .post('/institution')
+     .post('/discussionmeeting')
      .send({
-        "institutionName": "Delv",
-        "location": "603f8538ab61df4327543280",
-        "admins": ["603f47b30659d72147b9506a"],
-        "alumniGroup": null
-     })
+        "disMeetingName": "Discussion group 3",
+        "remote": true,
+        "venue": "CoCIS Makerere",
+        "theme": "Encouragement at the core",
+        "sponsoredBy": ["Well wisher 1", "MTN", "Delv"], //optional
+        "startDate": "17/03/2021",
+        "startTime": "12:00:00",
+        "duration": "2 hours", //optional
+        "parentMeeting": "603f7a74efc9d14364393f3b", //must be a valid group id
+        "meetingLink": "https://zoom.meetings.com/d/78587732"  //url link to external meeting platform such as zoom
+    })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        institutionId = res.body._id;
+        discussionMeetingId = res.body._id;
         expect(res.status).to.equal(201);
         done();
       })
       .catch((err) => done(err));
   });
 
-  // Gets all---
-  it('getting all institutions', (done) => {
+  // Get all---
+  it('reading/retreiving all discussoin meetings', (done) => {
     request(app)
-      .get('/institution')
+      .get('/discussionmeeting')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -61,10 +68,10 @@ describe('institution tests', () => {
       .catch((err) => done(err));
   });
 
-  // Gets one ---
-  it('get specific institution', (done) => {
+  // Get one ---
+  it('get specific discussion meeting', (done) => {
     request(app)
-      .get(`/institution/${institutionId}`)
+      .get(`/discussionmeeting/${discussionMeetingId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);

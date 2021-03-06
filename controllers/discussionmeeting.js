@@ -6,7 +6,16 @@ const DiscussionMeeting = require('../models/discussionmeeting');
 DiscussionMeeting.create = async (req, res) => {
     /* req.body = 
     {
-        
+        "disMeetingName": "...",
+        "remote": true, //can also be false in case the meeting should be physical
+        "venue": "...",
+        "theme": "......",
+        "sponsoredBy": [], //optional
+        "startDate": "...",
+        "startTime": "...",
+        "duration": "2 hours", //optional
+        "parentGroup": "...", //must be a valid group id
+        "meetingLink": "..."  //url link to external meeting platform such as zoom
     }
     */ 
   
@@ -14,10 +23,10 @@ DiscussionMeeting.create = async (req, res) => {
     // saving the profile
     const discussionMeeting = new DiscussionMeeting(req.body);
     await discussionMeeting.save();
-    res.status(201).json({ message: 'DiscussionMeeting profile successfully created' });
+    res.status(201).json({ message: 'Discussion meeting successfully created' });
   } catch (err) {
     res.status(500).json({
-      message: err.message || 'An error occured while creating new discussionMeeting profile',
+      message: err.message || 'An error occured while creating new discussion meeting',
     });
   }
 };

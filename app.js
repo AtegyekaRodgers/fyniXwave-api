@@ -48,7 +48,7 @@ app.use('/location', location);
 app.use('/course', course);
 app.use('/trainer', trainer);
 app.use('/skill', skill);
-app.use('/learner', learner);
+app.use('/learner', learner); 
 app.use('/classs', classs);
 app.use('/activity', activity);
 app.use('/payment', payment);

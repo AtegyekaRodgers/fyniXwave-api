@@ -9,6 +9,7 @@ const classsSchema = new Schema({
     classsName: String,
     parentCourse: { type: Schema.Types.ObjectId, ref: "Course" , required: false},
     parentInstitution: {type: String, required: true}, //_id for the parent institution, default institution is Delv
+    admins: [{type: Schema.Types.ObjectId, ref: "User"}],
     profilePicture: { type: String },
     cloudinaryId: { type: String },
     startDate: { type: Date },

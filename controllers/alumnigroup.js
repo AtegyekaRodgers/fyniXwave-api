@@ -6,18 +6,19 @@ const Alumni = require('../models/alumnigroup');
 Alumni.create = async (req, res) => {
     /* req.body = 
     {
-         
+        "groupName": "Delv alumni",
+        "started": "01/01/2000",
+        "parentInstitution": "603f8a84efc9d14364393f0a",
+        "admins": ["603f47b30659d72147b9506a"]
     }
     */
   try {
     // saving the profile
     const alumni = new Alumni(req.body);
     await alumni.save();
-    res.status(201).json({ message: 'Alumni profile successfully created' });
+    res.status(201).json({ message: 'Alumni group successfully created' });
   } catch (err) {
-    res.status(500).json({
-      message: err.message || 'An error occured while creating new alumni profile',
-    });
+    res.status(500).json({message: err.message || 'An error occured while creating new alumni group'});
   }
 };
 
@@ -62,7 +63,7 @@ Alumni.readOne = async (req, res) => {
     res.json(alumni);
   } catch (err) {
     res.status(500).send({
-      message: err.message || 'An error occured while retrieving this alumni',
+      message: err.message || 'An error occured while retreiving this alumni',
     });
     console.log(err);
   }

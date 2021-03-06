@@ -23,6 +23,18 @@ router.get('/:id', Learner.readOne);
 // // Delete a learner with id
 // router.delete('/:id', Learner.delete);
 
+// access content that the learner is allowed to
+//TODO: router.post('/accesscontent', Learner.accessContent);
+
+// Market courses to a learner
+//TODO: router.post('/marketcourses', Learner.marketCourses);
+
+// Market jobs to a learner
+//TODO: router.post('/marketjobs', Learner.marketJobs);
+
+// Market career sessions to a learner
+//TODO: router.post('/marketcareersessions', Learner.marketCareerSessions);
+
 module.exports = router;
 
 

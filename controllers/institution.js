@@ -8,6 +8,7 @@ Institution.create = async (req, res) => {
     {
         "institutionName": "Delv",
         "location": "603f8538ab61df4327543280",
+        "admins": ["603f47b30659d72147b9506a"],
         "alumniGroup": null
     }
     */ 

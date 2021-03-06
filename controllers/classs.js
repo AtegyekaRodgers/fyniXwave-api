@@ -16,6 +16,7 @@ Classs.create = async (req, res) => {
        "classsName": "Class of 2021",
        "parentCourse": "...",
        "parentInstitution": "603f8a84efc9d14364393f0a",
+       "admins": ["603f47b30659d72147b9506a"],
        "startDate": Date.now(),
        "endDate": endDate
     }

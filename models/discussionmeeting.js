@@ -12,8 +12,10 @@ const discussionMeetingSchema = new Schema({
     theme: String,
     sponsoredBy: [String],
     startDate: Date,
-    endDate: Date,
-    parentGroup: {type: Schema.Types.ObjectId, ref: "DiscussionGroup"}
+    startTime: Date,
+    duration: String,
+    parentGroup: {type: Schema.Types.ObjectId, ref: "DiscussionGroup"},
+    meetingLink: String  //eg, zoom meeting link
 });
 
 discussionMeetingSchema.plugin(uniqueValidator);

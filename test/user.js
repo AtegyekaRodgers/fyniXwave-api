@@ -76,4 +76,28 @@ describe('user tests', () => {
       })
       .catch((err) => done(err));
   });
+  
+  // request To Join institution/lumni-group/classs/discussion-group
+  it('requesting to join institution/lumni-group/classs/discussion-group', (done) => {
+    request(app)
+      .post('/user/requesttojoin')
+      .send({
+        "userId": "603f47b30659d72147b9506a",
+        "fullName": "Rodgers Ategyeka",
+        "whatToJoin": "discoussiongroup",
+        "idOfWhatToJoin": "612f44b30659d72147b9503b",
+        "nameOfWhatToJoin": "Discussion group two",
+        "toJoinAs": "member",
+        "canBeAcceptedBy": ["603f47b30659d72147b95062","413e47b30659d72147b95033"]
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        requestId = res.body._id;
+        expect(res.status).to.equal(201);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  
 });

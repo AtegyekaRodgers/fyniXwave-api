@@ -12,6 +12,9 @@ router.post('/', DiscussionGroup.create);
 
 // Retrieve all DiscussionGroups
 router.get('/', DiscussionGroup.readAll);
+
+// Join a discussion groups
+router.post('/joingroup', DiscussionGroup.joingroup);
  
 // // Retrieve a single discussion group with this id
 router.get('/:id', DiscussionGroup.readOne);

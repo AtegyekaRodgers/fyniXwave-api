@@ -22,4 +22,15 @@ router.get('/:id', Institution.readOne);
 // // Delete a institution with id
 // router.delete('/:id', Institution.delete);
 
+// register staff
+//TODO: router.post('/registerstaff', Institution.registerStaff);
+
+// register stident
+//TODO: router.post('/registerstudent', Institution.registerStudent);
+
 module.exports = router;
+
+
+
+
+

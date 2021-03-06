@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 
 const DiscussionGroup = require('../models/discussiongroup');
+const DiscussionGroupMembership =  require('../models/discussionGroup_membership');
+
 
 // Creating a new discussionGroup profile
 DiscussionGroup.create = async (req, res) => {
     /* req.body = 
     {
-        
+        "groupName": "...",
+        "admins": ["603f47b30659d72147b9506a"]
     }
-    */ 
-  
+    */
   try {
     // saving the profile
     const discussionGroup = new DiscussionGroup(req.body);
@@ -56,14 +58,43 @@ DiscussionGroup.readAll = async (req, res) => {
   }
 };
 
+DiscussionGroup.joingroup = async (req, res) => {
+    /* req.body = 
+    {
+        "member": "...", //user id 
+        "discussiongroup": "" //group id 
+    }
+    
+    res.body = 
+    {
+      "message": "You have joined the discussion group",
+      "membership_id": "..." //the new mebership id
+    }
+    */ 
+  
+  try {
+    // saving the group
+    const discussionGroupMembership = new DiscussionGroupMembership(req.body);
+    await discussionGroupMembership.save((err, newMembership)=>{
+        if(err){ res.status(201).send({ message: err.message || "Failed to register you to the group! Please try again"}); }
+        res.status(201).send({ message: 'You have joined the discussion group', membership_id:(newMembership?newMembership._id:"") });
+    }); 
+  }catch (err) {
+    res.status(500).json({
+      message: err.message || 'An error occured while creating your membership to the discussion group profile',
+    });
+  }
+};
+
+
 // Retrieve single discussionGroup
 DiscussionGroup.readOne = async (req, res) => {
   try {
-    const discussionGroup = await DiscussionGroup.findById(req.query.id);
-    res.json(discussionGroup);
+    const userDiscussionGroup = await UserDiscussionGroup.findById(req.query.id);
+    res.json(userDiscussionGroup);
   } catch (err) {
     res.status(500).send({
-      message: err.message || 'An error occured while retrieving this discussionGroup',
+      message: err.message || 'An error occured while retrieving you membership in discussion group',
     });
     console.log(err);
   }

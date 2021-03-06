@@ -5,9 +5,9 @@ const { before, after, describe, it } = require('mocha');
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe('institution tests', () => {
+describe('discussion groups testing', () => {
   let token; 
-  let institutionId;
+  let discussionGroupId;
   
   before((done) => {
     dbConnect().then(() => {}).catch((err) => done(err));
@@ -24,6 +24,7 @@ describe('institution tests', () => {
       })
       .catch((err) => done(err)); 
   });
+  
   after((done) => {
     dbClose()
       .then(() => done())
@@ -31,28 +32,43 @@ describe('institution tests', () => {
   });
   
   //Creates---
-  it('creating an institution entity', (done) => {
+  it('creating a discussion group', (done) => {
     request(app)
-     .post('/institution')
+     .post('/discussiongroup')
      .send({
-        "institutionName": "Delv",
-        "location": "603f8538ab61df4327543280",
-        "admins": ["603f47b30659d72147b9506a"],
-        "alumniGroup": null
-     })
+          "groupName": "discussion group one",
+          "admins": ["603f47b30659d72147b9506a"]
+      })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        institutionId = res.body._id;
+        discussionGroupId = res.body._id;
+        expect(res.status).to.equal(201);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  
+  it('joining a discussion group', (done) => {
+    request(app)
+     .post('/discussiongroup/joingroup')
+     .send({
+          "member": "603f47b30659d72147b9506a", //user id 
+          "discussiongroup": "613f47b30659d72147b9506b" //group id
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        discussionGroupId = res.body._id;
         expect(res.status).to.equal(201);
         done();
       })
       .catch((err) => done(err));
   });
 
-  // Gets all---
-  it('getting all institutions', (done) => {
+  // Get all---
+  it('reading/retreiving all discussoin groups', (done) => {
     request(app)
-      .get('/institution')
+      .get('/discussiongroup')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -61,10 +77,10 @@ describe('institution tests', () => {
       .catch((err) => done(err));
   });
 
-  // Gets one ---
-  it('get specific institution', (done) => {
+  // Get one ---
+  it('get specific discussion group', (done) => {
     request(app)
-      .get(`/institution/${institutionId}`)
+      .get(`/discussiongroup/${discussionGroupId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);

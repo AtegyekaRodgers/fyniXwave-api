@@ -5,9 +5,9 @@ const { before, after, describe, it } = require('mocha');
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe('institution tests', () => {
+describe('tests for alumni groups', () => {
   let token; 
-  let institutionId;
+  let alumniGroupId;
   
   before((done) => {
     dbConnect().then(() => {}).catch((err) => done(err));
@@ -24,6 +24,7 @@ describe('institution tests', () => {
       })
       .catch((err) => done(err)); 
   });
+  
   after((done) => {
     dbClose()
       .then(() => done())
@@ -31,28 +32,28 @@ describe('institution tests', () => {
   });
   
   //Creates---
-  it('creating an institution entity', (done) => {
+  it('creating alumni group', (done) => {
     request(app)
-     .post('/institution')
+     .post('/alumnigroup')
      .send({
-        "institutionName": "Delv",
-        "location": "603f8538ab61df4327543280",
-        "admins": ["603f47b30659d72147b9506a"],
-        "alumniGroup": null
-     })
+        "groupName": "Delv alumni",
+        "started": "01/01/2000",
+        "parentInstitution": "603f8a84efc9d14364393f0a",
+        "admins": ["603f47b30659d72147b9506a"]
+      })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        institutionId = res.body._id;
+        alumniGroupId = res.body._id;
         expect(res.status).to.equal(201);
         done();
       })
       .catch((err) => done(err));
   });
 
-  // Gets all---
-  it('getting all institutions', (done) => {
+  // Get all---
+  it('reading/retreiving all alumni groups', (done) => {
     request(app)
-      .get('/institution')
+      .get('/alumnigroup')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -61,10 +62,10 @@ describe('institution tests', () => {
       .catch((err) => done(err));
   });
 
-  // Gets one ---
-  it('get specific institution', (done) => {
+  // Get one ---
+  it('get specific alumni group', (done) => {
     request(app)
-      .get(`/institution/${institutionId}`)
+      .get(`/alumnigroup/${alumniGroupId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);

@@ -8,7 +8,8 @@ const { Schema } = mongoose;
 const alumniGroupSchema = new Schema({
     groupName: { type: String },
     started: { type: Date },
-    parentInstituion: { type: String },
+    parentInstitution: { type: Schema.Types.ObjectId, ref: "Institution" },
+    admins: [{type: Schema.Types.ObjectId, ref: "User"}],
     profilePicture: { type: String },
     cloudinaryId: { type: String }
 });
