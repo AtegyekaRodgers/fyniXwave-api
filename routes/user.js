@@ -23,22 +23,22 @@ router.put('/interests', auth.authorize, User.addInterests);
 // router.delete('/:userId', User.delete);
 
 // view activity summary
-//TODO: router.post('/viewactivity', User.viewUserActivity);
+router.get('/viewactivity/:userId', User.viewUserActivity);
 
 // request to join
 router.post('/requesttojoin', User.requestToJoin);
 
 // view all requests to join
-//TODO: router.get('/viewrequeststojoin', User.viewRequestsToJoin);
+router.get('/viewrequeststojoin/:userId', User.viewRequestsToJoin);
 // <hidden: request-id> <user-id> <firstname lastname> would like to join your 
 // <institution/discoussion-group/class/alumni-group/> 
 // <name-of-what-the-user-wants-to-join> as <what-the-user-wants-to-become-there>
 
 // accept requests to join
-//TODO: router.post('/acceptrequeststojoin', User.acceptRequestsToJoin);
+router.post('/requesttojoin/accept', User.acceptRequestsToJoin);
 
 // reject requests to join
-//TODO: router.post('/rejectrequeststojoin', User.rejectRequestsToJoin);
+router.post('/requesttojoin/reject', User.rejectRequestsToJoin);
 
 module.exports = router;
 

@@ -13,19 +13,19 @@ router.post('/', Institution.create);
 // Retrieve all Institutions
 router.get('/', Institution.readAll);
  
-// // Retrieve a single institution with this id
+// Retrieve a single institution with this id
 router.get('/:id', Institution.readOne);
 
-// // Update a institution with id
+// Update a institution with id
 // router.put('/:id', Institution.update);
 
-// // Delete a institution with id
+// Delete a institution with id
 // router.delete('/:id', Institution.delete);
 
 // register staff
 //TODO: router.post('/registerstaff', Institution.registerStaff);
 
-// register stident
+// register student
 //TODO: router.post('/registerstudent', Institution.registerStudent);
 
 module.exports = router;

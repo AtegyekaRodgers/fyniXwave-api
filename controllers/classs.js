@@ -128,7 +128,7 @@ Classs.open = async (req, res) => {
     let newAttendenceListIndex = existingListsCount;
     //send it to client
     res.status(200).send({ success: "The class is now open.", listIndex:newAttendenceListIndex });
-  } catch (err) {
+  }catch (err) {
     res.status(500).send({
       message: err.message || 'Failed to open this classs! please try again',
     });

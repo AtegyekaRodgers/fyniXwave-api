@@ -8,6 +8,7 @@ const { Schema } = mongoose;
 const discussionGroupSchema = new Schema({
     groupName: String,
     admins: [{type: Schema.Types.ObjectId, ref: "User"}],
+    members: [{type: Schema.Types.ObjectId, ref: "User"}],
     profilePicture: { type: String, required: false },
     cloudinaryId: { type: String }
 });

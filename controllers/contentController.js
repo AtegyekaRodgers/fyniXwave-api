@@ -147,7 +147,7 @@ exports.modifyFile = async (req, res) => {
       new: true,
     });
     res.json(content);
-  } catch (err) {
+  }catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while updating content',
     });
@@ -181,9 +181,7 @@ exports.searchContentByTags = async (tags) => {
 
 exports.getRelatedContent = async (req, res) => {
   try {
-    const { tags } = await Content.findById(req.params.contentId, {
-      tags: 1,
-    });
+    const { tags } = await Content.findById(req.params.contentId, {tags: 1});
     const relatedContent = await this.searchContentByTags(tags);
     res.status(200).json(relatedContent);
   } catch (err) {

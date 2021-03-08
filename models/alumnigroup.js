@@ -10,6 +10,7 @@ const alumniGroupSchema = new Schema({
     started: { type: Date },
     parentInstitution: { type: Schema.Types.ObjectId, ref: "Institution" },
     admins: [{type: Schema.Types.ObjectId, ref: "User"}],
+    members: [{type: Schema.Types.ObjectId, ref: "User"}],
     profilePicture: { type: String },
     cloudinaryId: { type: String }
 });

@@ -6,7 +6,15 @@ const Job = require('../models/job');
 Job.create = async (req, res) => {
     /* req.body = 
     {
-        
+        jobName: { type: Schema.Types.ObjectId, ref: "Institution" },
+        discipline: { type: String },
+        jobLink: { type: String },
+        jobSummary: { type: String },
+        profilePicture: { type: String },
+        cloudinaryId: { type: String },
+        datePosted: { type: Date },
+        deadline: { type: Date },
+        tags: [String]
     }
     */ 
   

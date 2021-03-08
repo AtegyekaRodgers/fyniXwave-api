@@ -5,6 +5,8 @@ const User = require('../models/user');
 const Course = require('../models/course');
 const Learner = require('../models/learner');
 const Skill = require('../models/skill');
+const LearnerSkillModel = require('../models/learner_skill');
+const JobSkill = require('../models/job_skill');
 const Classs = require('../models/classs');
  
 const {InstitutionLearner} = require('./institution_learner');
@@ -120,24 +122,25 @@ Learner.attachSkill = async (params, cback) => {
 Learner.create = async (req, res) => {
 /* req.body = 
 {
-    email: "...",
-    phone: "...",
-    country: "...",
-    firstname: "...",
-    lastname: "...",
-    username: "...",
-    password: "...",
-    interests: ["...", "..."],
-    discipline: "...",
-    specialization: "...",
-    institution: "...",
-    courses: ["...", "...", "..."],
-    skills: ["...", "...", "..."],
-    classes: ["...", "...", "..."]
+    "email": "...",
+    "phone": "...",
+    "country": "...",
+    "firstname": "...",
+    "lastname": "...",
+    "username": "...",
+    "password": "...",
+    "interests": ["...", "..."],
+    "discipline": "...",
+    "specialization": "...",
+    "userId": "...", //key
+    "institution": "...",
+    "courses": ["...", "...", "..."],
+    "skills": ["...", "...", "..."],
+    "classes": ["...", "...", "..."]
 } 
 
 res.body = {
-    message: '......'
+    "message": "......"
 }
 */
   try {
@@ -329,6 +332,87 @@ Learner.readOne = async (req, res) => {
     res.status(500).send({
       message: err.message || 'An error occured while retrieving this learner',
     });
+    console.log(err);
+  }
+};
+
+Learner.marketCourses = async (req, res) => {
+  try {
+    const targetLearner = await Learner.find({userId:req.body.userId}, (err, learnr)=>{
+        if(err){ throw {message: "Target learner not found"}; }
+        const relevantCourses = Course.find({discipline:learnr.discipline}, (er, crses)=>{
+            if(er){ throw {message: "Relevant course not found"}; } 
+            //find interests of this user in User collection
+            const thisUser = User.find({_id:req.body.userId}, (er1, usrr)=>{
+                const relevantCourses =  Course.find({$or: [{discipline:learnr.discipline}, {tags: {$in: usrr.interests}}] }, 
+                (er2, crses2)=>{
+                   let allRelevantCourses = [];
+                   if(!er2){
+                       allRelevantCourses = crses.concat(crses2);
+                   }
+                   //then send all together
+                   res.status("200").send(allRelevantCourses); 
+                });
+            });
+        });
+    });
+  }catch (err) {
+    res.status(500).send({message: err.message || 'Unfortunitely the system can not retreive suitable courses for you'});
+    console.log(err);
+  }
+};
+
+Learner.marketJobs = async (req, res) => {
+  /* req.body = 
+    {
+       "userId": "..."
+    }
+  */
+  try {
+    const targetLearner = await Learner.findOne({userId:req.body.userId}, (err, learnr)=>{
+        if(err){ throw {message: "Target learner not found"}; }
+        //if the learner was found,
+        if(learnr._id){
+        //first consider skills possessed by this learner for relevant jobs
+        const result = LearnerSkillModel.find({learner:learnr._id}, (err1, relationships)=>{
+            if(err1){ throw {message: err1.message || "Some error occured while identifying the learner"}; }
+            //if atleast one relationship was found,
+            if (relationships && (relationships.length>0)){
+            //now get all returned records/documents into an array of their 'relationship.skill' attribute
+            let learnerSkillsArr = relationships.map((rlship)=>{ return rlship.skill; }); 
+            //now query the job skills that match any of the skills in the  'learnerSkillsArr'
+            const resultx = JobSkill.find({skill: {$in: learnerSkillsArr}}, (err1_2, jobSkillRelationships)=>{
+                let jobsKeysArr = jobSkillRelationships.map((jsrlship)=>{ return jsrlship.job; });
+                //if atleast one jobSkillRelationship was found,
+                if (jobSkillRelationships && (jobSkillRelationships.length>0)){
+                //now query all jobs with _id included in the 'jobsKeysArr'
+                const relevantJobs1 = Job.find({_id:{$in: jobsKeysArr }},(errr, jbs1)=>{
+                   
+                   // consider discipline for relevant jobs 
+                    const relevantJobs = Job.find({discipline:learnr.discipline}, (er, jbs2)=>{
+                        if(er){ throw {message: "Relevant job not found"}; } 
+                        //find interests of this user in User collection
+                        const thisUser = User.find({_id:req.body.userId}, (er1, usrr)=>{
+                            //consider interests to find more relevant jobs for the learner
+                            const relevantJobs = Job.find({$or: [{discipline:learnr.discipline}, {tags: {$in: usrr.interests}}] }, 
+                            (er2, jbs3)=>{
+                               let allRelevantJobs = [...jbs1, ...jbs2, ...jbs3];
+                               //remove duplicates from the array 'allRelevantJobs'
+                               let uniqueRelevantJobs = [...new Set(allRelevantJobs)];
+                               //then send all jobs found
+                               res.status("200").send(uniqueRelevantJobs);
+                            });
+                        });
+                    }); 
+                });
+               } //end if job-skill relationships found
+            });
+           } //end if relationships found
+        });
+       } //end if learner found
+    });
+  }catch (err) {
+    res.status(500).send({message: err.message || 'Unfortunitely the system can not retreive suitable jobs for you'});
     console.log(err);
   }
 };

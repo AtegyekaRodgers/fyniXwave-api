@@ -14,23 +14,23 @@ router.post('/', Learner.create);
 // Retrieve all learners
 router.get('/', Learner.readAll);
  
-// // Retrieve a single learner with this id
+// Retrieve a single learner with this id
 router.get('/:id', Learner.readOne);
 
-// // Update a learner with id
+// Update a learner with id
 // router.put('/:id', Learner.update);
 
-// // Delete a learner with id
+// Delete a learner with id
 // router.delete('/:id', Learner.delete);
 
 // access content that the learner is allowed to
 //TODO: router.post('/accesscontent', Learner.accessContent);
 
 // Market courses to a learner
-//TODO: router.post('/marketcourses', Learner.marketCourses);
+router.post('/marketcourses', Learner.marketCourses);
 
 // Market jobs to a learner
-//TODO: router.post('/marketjobs', Learner.marketJobs);
+router.post('/marketjobs', Learner.marketJobs);
 
 // Market career sessions to a learner
 //TODO: router.post('/marketcareersessions', Learner.marketCareerSessions);

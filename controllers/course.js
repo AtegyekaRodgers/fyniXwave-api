@@ -95,7 +95,8 @@ Course.create = async (req, res) => {
     specialization: "...",
     institution: "...",
     trainers: ["...", "...", "..."],
-    skills: ["...", "...", "..."]
+    skills: ["...", "...", "..."],
+    tags: ["...", "...", "..."]
 }
 */
 
@@ -105,6 +106,7 @@ Course.create = async (req, res) => {
         courseName: req.body.courseName,
         discipline: req.body.discipline,
         specialization: req.body.specialization,
+        tags: req.body.tags
     };
     const course = new Course( cours );
     await course.save((err,crs) => {

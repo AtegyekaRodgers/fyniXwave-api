@@ -12,7 +12,8 @@ const jobSchema = new Schema({
     profilePicture: { type: String },
     cloudinaryId: { type: String },
     datePosted: { type: Date },
-    deadline: { type: Date }
+    deadline: { type: Date },
+    tags: [String]
 });
 
 jobSchema.plugin(uniqueValidator);
