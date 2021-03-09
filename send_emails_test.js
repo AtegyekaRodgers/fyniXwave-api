@@ -1,4 +1,5 @@
-
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
 
 let sendEmails = (params) => {
 var transporter = nodemailer.createTransport(smtpTransport({
@@ -22,7 +23,7 @@ var mailOptions = {
           Hello `+(params.client_name?params.client_name:'delv user')+`, <br/><br/>
           We are carrying out a survey and we would like to know your opinion 
           concerning the topic below. <br/>
-          <h3><i>TOPIC: </i> <span>`+(params.topic?params.topic:'Not specified.')+`</span> </h3>
+          <h3><i>TOPIC: </i> <span><b>`+(params.topic?params.topic:'Not specified.')+`</b></span> </h3>
           Please click on the button below to find and answer
           a few questions. <br/>
           <a href="`+params.link+`">
@@ -41,7 +42,12 @@ transporter.sendMail(mailOptions, function(error, info){
   }
 });
         
-}         
+}
 
-module.exports = { sendEmails };
-        
+sendEmails({ to: ['atrodgers7@gmail.com','atrodgers777@gmail.com'],
+             link: "http://195.201.136.61:9900/",
+             topic:"Some survey questions from delv portal team",
+             client_name:null });
+
+
+
