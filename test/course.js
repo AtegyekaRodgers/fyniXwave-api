@@ -109,7 +109,7 @@ describe('course tests', () => {
   // enroll an learner into this course
   it('enroll an learner into course', (done) => {
     request(app)
-     .post('/enroll')
+     .post('/course/enroll')
      .send({
         "learner_id": `${learnerId}`,
         "course_id": `${courseId}`

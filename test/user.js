@@ -105,7 +105,7 @@ describe('user tests', () => {
   // Retreives user activity logs
   it('getting user activity logs', (done) => {
     request(app)
-      .get(`/viewactivity/${userId}`)
+      .get(`/user/viewactivity/${userId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -117,7 +117,7 @@ describe('user tests', () => {
   // view requests to join that are directed to the user who is currently logged in
   it('viewing all requests to join institution/lumni-group/classs/discussion-group', (done) => {
     request(app)
-      .get(`/viewrequeststojoin/${userId}`)
+      .get(`/user/viewrequeststojoin/${userId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -129,7 +129,7 @@ describe('user tests', () => {
   // reject request to join institution/lumni-group/classs/discussion-group
   it('accepting a request to join institution/lumni-group/classs/discussion-group', (done) => {
     request(app)
-      .post('/requesttojoin/accept')
+      .post('/user/requesttojoin/accept')
       .send({
         "accepted_request_id": `${requestId}` //must be a valid mongoose ObjectId
       })
@@ -144,7 +144,7 @@ describe('user tests', () => {
   // reject request to join institution/lumni-group/classs/discussion-group
   it('rejecting a request to join institution/lumni-group/classs/discussion-group', (done) => {
     request(app)
-      .post('/requesttojoin/reject')
+      .post('/user/requesttojoin/reject')
       .send({
         "rejected_request_id": `${requestId}`, //must be a valid mongoose ObjectId
         "reason": "You are not allowed to join this group"

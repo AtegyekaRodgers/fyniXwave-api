@@ -35,7 +35,7 @@ describe('classs tests', () => {
      })
       .then((res) => {
         expect(res.status).to.equal('201');
-        done(); 
+        //done(); 
       })
       .catch((err) => done(err));
       
@@ -44,7 +44,7 @@ describe('classs tests', () => {
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         parentCourseID = res.body[0]._id;
-        expect(res.status).to.equal('200');
+        expect(res.status).to.equal(200);
         done(); 
       })
       .catch((err) => done(err));

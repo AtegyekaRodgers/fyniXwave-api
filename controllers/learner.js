@@ -351,7 +351,7 @@ Learner.marketCourses = async (req, res) => {
                        allRelevantCourses = crses.concat(crses2);
                    }
                    //then send all together
-                   res.status("200").send(allRelevantCourses); 
+                   res.status(200).send(allRelevantCourses); 
                 });
             });
         });
@@ -400,7 +400,7 @@ Learner.marketJobs = async (req, res) => {
                                //remove duplicates from the array 'allRelevantJobs'
                                let uniqueRelevantJobs = [...new Set(allRelevantJobs)];
                                //then send all jobs found
-                               res.status("200").send(uniqueRelevantJobs);
+                               res.status(200).send(uniqueRelevantJobs);
                             });
                         });
                     }); 
