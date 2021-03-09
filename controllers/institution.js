@@ -77,18 +77,15 @@ Institution.readOne = async (req, res) => {
 };
 
 Institution.sendSurveys = async (req, res) => {
-  /*
+  /* req.body = 
     {
       "topic": "Topic of the survey",
-      "link": "https://some-link-to-the-survey-page.com/questions",
-      "email_message": "This is the message that users will see. It's a summary of what the survey is 
-                        all about also telling them to click the link for them to respond to the 
-                        survey questions. "
+      "link": "https://some-link-to-the-survey-page.com/questions"
     }
   */
   try {
     //unpack the request and prepare the message
-    
+    let li
     //retreive all user emails to which we want to send the survey 
     const usrs = await User.find({}, (err, users)=>{
         if(err){ throw err.message || "Could not retreive the target emails to which we want to send surveys"; }
@@ -97,7 +94,8 @@ Institution.sendSurveys = async (req, res) => {
         }
         let targetEmails = users.map((usr)=>{ return usr.email; });
         //send the emails
-        sendEmails({to: targetEmails, link: "http://195.201.136.61:9900/" });
+        sendEmails({ to: targetEmails, link: req.body.link, topic:req.body.topic, client_name:null });
+        //TODO: specify the exact name of the recipient
         //respond to the client
         res.status(200).send({message: "surveys sent successfully"});
     }); 

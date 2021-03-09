@@ -17,11 +17,12 @@ var transporter = nodemailer.createTransport(smtpTransport({
 var mailOptions = {
   from: 'atrodgers77@gmail.com',
   to: params.to,
-  subject: 'Some survey questions from delv portal',
+  subject: (params.topic?params.topic:'Some survey questions from delv portal'),
   html: `<h3> <img src="https://front-end-delv.herokuapp.com/static/media/logo.99549d24.png" width="70px" height="40px"/> </h3>
-          Hello delv user, <br/><br/>
+          Hello `+(params.client_name?params.client_name:'delv user')+`, <br/><br/>
           We are carrying out a survey and we would like to know your opinions 
-          concerning the above topic. <br/>
+          concerning the topic below. <br/>
+          <h3><i>TOPIC: </i> <span>`+(params.topic?params.topic:'Not specified.')+`</span> </h3>
           Please click on the button below to find and answer
           a few questions. <br/>
           <a href="`+params.link+`">
