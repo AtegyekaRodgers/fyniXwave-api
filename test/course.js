@@ -107,14 +107,13 @@ describe('course tests', () => {
   });
   
   // enroll an learner into this course
-  it('enroll an learner into course', (done) => {
+  it('enroll a learner into course', (done) => {
     request(app)
      .post('/course/enroll')
      .send({
         "learner_id": `${learnerId}`,
         "course_id": `${courseId}`
      })
-      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
         done();

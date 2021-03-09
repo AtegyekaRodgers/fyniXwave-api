@@ -34,7 +34,7 @@ describe('classs tests', () => {
         "tags": ["Software","Engineering","Programming","Development"]
      })
       .then((res) => {
-        expect(res.status).to.equal('201');
+        expect(res.status).to.equal(201);
         //done(); 
       })
       .catch((err) => done(err));
