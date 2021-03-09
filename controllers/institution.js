@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
 
 const Institution = require('../models/institution');
+const { sendEmails } = require('./send_emails');
+
 
 // Creating a new institution profile
 Institution.create = async (req, res) => {
@@ -69,6 +73,37 @@ Institution.readOne = async (req, res) => {
       message: err.message || 'An error occured while retrieving this institution',
     });
     console.log(err);
+  }
+};
+
+Institution.sendSurveys = async (req, res) => {
+  /*
+    {
+      "topic": "Topic of the survey",
+      "link": "https://some-link-to-the-survey-page.com/questions",
+      "email_message": "This is the message that users will see. It's a summary of what the survey is 
+                        all about also telling them to click the link for them to respond to the 
+                        survey questions. "
+    }
+  */
+  try {
+    //unpack the request and prepare the message
+    
+    //retreive all user emails to which we want to send the survey 
+    const usrs = await User.find({}, (err, users)=>{
+        if(err){ throw err.message || "Could not retreive the target emails to which we want to send surveys"; }
+        if((!users) || (!users.length) || (users.length<=0)){
+            res.status(200).send({message: "There are no users to send surveys to"});
+        }
+        let targetEmails = users.map((usr)=>{ return usr.email; });
+        //send the emails
+        sendEmails({to: targetEmails, link: "http://195.201.136.61:9900/" });
+        //respond to the client
+        res.status(200).send({message: "surveys sent successfully"});
+    }); 
+  }catch (err) {
+    console.log(err);
+    res.status(500).send({message: err.message || 'An error occured while sending the survey to users/participants'});
   }
 };
 

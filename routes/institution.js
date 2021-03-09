@@ -28,6 +28,9 @@ router.get('/:id', Institution.readOne);
 // register student
 //TODO: router.post('/registerstudent', Institution.registerStudent);
 
+// send out surveys
+//TODO: router.post('/sendsurveys', Institution.sendSurveys);
+
 module.exports = router;
 
 
