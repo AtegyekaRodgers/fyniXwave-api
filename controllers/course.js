@@ -218,19 +218,20 @@ Course.enrolLearner = async (req, res) => {
     
     let relationship = {course: course_id, learner: learner_id};
     
-    let returned = CourseLearner.create(relationship);
-    if(returned.error){
-        console.log(returned.error);
-        res.status(200).send({ error: "Sory, enrollment operation failed." });
+    let feedBackCB = (returned) => {
+        if(returned.error){
+            console.log("Course.enrolLearner: CourseLearner.create(relationship) returned error=", returned.error);
+            res.status(500).send({ error: "Sory, enrollment operation failed." });
+        }
+        if(returned.success){
+            console.log("Course.enrolLearner: CourseLearner.create(relationship) returned success=", returned.success);
+            res.status(200).send({ success: "Successfully enrolled for this course" });
+        }
+        res.status(500).send({ error: "Unknown error occured while enrolling the learner." });
     }
-    if(returned.success){
-        console.log(returned.success);
-        res.status(200).send({ success: "Successfully enrolled for this course" });
-    }
+    CourseLearner.create(relationship, feedBackCB);
   }catch (err) {
-    res.status(500).json({
-       message: err.message || 'An error occured while trying to enroll learner to this course',
-    });
+    res.status(500).json({ message: err.message || 'An error occured while trying to enroll learner to this course' });
   }
 };
 

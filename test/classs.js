@@ -16,7 +16,7 @@ describe('classs tests', () => {
       .post('/auth/login')
       .send({
         "email": 'auth@delv.ac.ug',
-        "password": 'newPassword',
+        "password": 'newPassword'
       })
       .then((res) => {
         token = res.body.token;
@@ -25,13 +25,27 @@ describe('classs tests', () => {
       })
       .catch((err) => done(err));
       
-      //TODO: create a new course to be sure there is a record
+      request(app)
+      .post('/course')
+      .send({
+        "courseName": "Programming",
+        "discipline": "IT",
+        "specialization": "Software engineering",
+        "tags": ["Software","Engineering","Programming","Development"]
+     })
+      .then((res) => {
+        expect(res.status).to.equal('201');
+        done(); 
+      })
+      .catch((err) => done(err));
+      
       request(app)
       .get('/course')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        parentCourseID = res.body[0] ? res.body[0]._id : null;
-        done();
+        parentCourseID = res.body[0]._id;
+        expect(res.status).to.equal('200');
+        done(); 
       })
       .catch((err) => done(err));
   }); 

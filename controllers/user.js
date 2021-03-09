@@ -200,13 +200,15 @@ User.acceptRequestsToJoin = async (req, res) => {
                                 //Now create a learner-institution relationship
                                 let relationship = {institution: requestData.idOfWhatToJoin, learner:newlrnr._id}; 
                                 InstitutionLearner.create(relationship, feedBackCB);
-                            });
+                            }); 
                         }
+                        res.status(200).json({message: 'Client has joined the institution' });
                     }); 
                 }
             case "discoussiongroup":
                 //needed: requestData.idOfWhatToJoin, requestData.userId, toJoinAs="member"
                 const updatedgroup = DiscussionGroup.findByIdAndUpdate( requestData.idOfWhatToJoin, {$addToSet: {members: requestData.userId}} );
+                res.status(200).json({message: 'Client has joined the discussion group' });
                 break;
             case "classs":
                 //needed: requestData.idOfWhatToJoin, requestData.userId, requestData.toJoinAs="member"
@@ -248,13 +250,16 @@ User.acceptRequestsToJoin = async (req, res) => {
                             LearnerClasss.create(relationship, feedBackCB);
                         });
                     }
+                    res.status(200).json({message: 'Client has joined the classs' });
                 }); 
                 break;
             case "alumnigroup":
                 //needed: requestData.idOfWhatToJoin, requestData.userId, toJoinAs="member"
                 const updatedclass = AlumniGroup.findByIdAndUpdate( requestData.idOfWhatToJoin, {$addToSet: {members: requestData.userId}} );
+                res.status(200).json({message: 'Client has joined the alumni group' });
                 break;
             default:
+                res.status(500).json({message: 'The client who requested to join did not specify what to join: institution,lumnigroup,classs,discussiongroup'});
             //do nothing
         } 
     });
@@ -278,10 +283,9 @@ User.rejectRequestsToJoin = async (req, res) => {
     res.status(500).json({message: err.message || 'Failed to record rejection'});
   }
 };
+ 
 
-module.exports = {
-  User,
-};
+module.exports = { User };
 
 
 

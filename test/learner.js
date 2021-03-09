@@ -8,6 +8,7 @@ const { dbConnect, dbClose } = require('../config/db');
 describe('learner tests', () => {
   let token; 
   let learnerId;
+  let userId;
   
   before((done) => {
     dbConnect().catch((err) => done(err));
@@ -19,11 +20,13 @@ describe('learner tests', () => {
       })
       .then((res) => {
         token = res.body.token;
+        userId = res.body.user._id;
         expect(res.body).to.contain.property('token');
         done();
       })
       .catch((err) => done(err)); 
   });
+  
   after((done) => {
     dbClose()
       .then(() => done())
@@ -82,6 +85,38 @@ describe('learner tests', () => {
       })
       .catch((err) => done(err));
   });
+  
+  //Marketing courses to a learner
+  it('marketing courses to a learner, relevant to them', (done) => {
+    request(app)
+     .post('/marketcourses')
+     .send({
+        "userId": `${userId}`
+    })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  //Marketing jobs to a learner
+  it('marketing jobs to a learner, relevant to them', (done) => {
+    request(app)
+     .post('/marketjobs')
+     .send({
+        "userId": `${userId}`
+    })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  
 });
 
 

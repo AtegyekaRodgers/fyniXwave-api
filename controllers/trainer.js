@@ -30,7 +30,7 @@ Trainer.attachInstitution = async (params, cback) => {
             }
         }
         Affiliation.create(relationship, feedBackCB);
-    }catch (err) {
+    }catch(err){
         console.log("Trainer.attachInstitution: !! Error =", err);
         cback(false);
     }

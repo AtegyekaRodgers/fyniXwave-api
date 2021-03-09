@@ -13,13 +13,13 @@ router.get('/', auth.authorize, User.readAll);
 // Add user interests
 router.put('/interests', auth.authorize, User.addInterests);
 
-// // Retrieve a single user with userId
+// Retrieve a single user with userId
 // router.get('/:userId', User.readOne);
 
-// // Update a user with UserId
+// Update a user with UserId
 // router.put('/:userId', User.update);
 
-// // Delete a user with userId
+// Delete a user with userId
 // router.delete('/:userId', User.delete);
 
 // view activity summary

@@ -5,9 +5,10 @@ const { before, after, describe, it } = require('mocha');
 const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
-describe('institution tests', () => {
-  let token; 
-  let institutionId;
+describe('classs tests', () => {
+  let token;
+  let parentCourseID; 
+  let jobId;
   
   before((done) => {
     dbConnect().then(() => {}).catch((err) => done(err));
@@ -15,15 +16,29 @@ describe('institution tests', () => {
       .post('/auth/login')
       .send({
         "email": 'auth@delv.ac.ug',
-        "password": 'newPassword',
+        "password": 'newPassword'
       })
       .then((res) => {
         token = res.body.token;
         expect(res.body).to.contain.property('token');
-        done();
+        //done(); 
       })
-      .catch((err) => done(err)); 
-  });
+      .catch((err) => done(err));
+      
+      request(app)
+      .post('/course')
+      .send({
+        "courseName": "Programming",
+        "discipline": "IT",
+        "specialization": "Software engineering",
+        "tags": ["Software","Engineering","Programming","Development"]
+     })
+      .then((res) => {
+        expect(res.status).to.equal('201');
+        done(); 
+      })
+      .catch((err) => done(err));
+  }); 
   
   after((done) => {
     dbClose()
@@ -32,18 +47,22 @@ describe('institution tests', () => {
   });
   
   //Creates---
-  it('creating an institution entity', (done) => {
+  it('creating a classs entity', (done) => {
+    let days = 20;
+    let endDate = new Date(Date.now() + (days * 24*60*60*1000));
     request(app)
-     .post('/institution')
+     .post('/classs')
      .send({
-        "institutionName": "Delv",
-        "location": "603f8538ab61df4327543280",
-        "admins": ["603f47b30659d72147b9506a"],
-        "alumniGroup": null
+         "classsName": "Class of 2021",
+         "parentCourse": parentCourseID,
+         "parentInstitution": "603f8a84efc9d14364393f0a",
+         "admins": ["603f47b30659d72147b9506a"],
+         "startDate": Date.now(),
+         "endDate": endDate
      })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
-        institutionId = res.body._id;
+        classsId = res.body._id;
         expect(res.status).to.equal(201);
         done();
       })
@@ -51,9 +70,9 @@ describe('institution tests', () => {
   });
 
   // Gets all---
-  it('getting all institutions', (done) => {
+  it('retrieving all classses', (done) => {
     request(app)
-      .get('/institution')
+      .get('/classs')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -63,9 +82,9 @@ describe('institution tests', () => {
   });
 
   // Gets one ---
-  it('get specific institution', (done) => {
+  it('retrieving a specific classs', (done) => {
     request(app)
-      .get(`/institution/${institutionId}`)
+      .get(`/classs/${classsId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -73,7 +92,6 @@ describe('institution tests', () => {
       })
       .catch((err) => done(err));
   });
- 
 });
 
 

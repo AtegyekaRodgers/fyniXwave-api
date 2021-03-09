@@ -357,8 +357,8 @@ Learner.marketCourses = async (req, res) => {
         });
     });
   }catch (err) {
-    res.status(500).send({message: err.message || 'Unfortunitely the system can not retreive suitable courses for you'});
     console.log(err);
+    res.status(500).send({message: err.message || "Unfortunitely we could not retreive suitable courses for you. Let's keep trying..."});
   }
 };
 
@@ -387,7 +387,7 @@ Learner.marketJobs = async (req, res) => {
                 if (jobSkillRelationships && (jobSkillRelationships.length>0)){
                 //now query all jobs with _id included in the 'jobsKeysArr'
                 const relevantJobs1 = Job.find({_id:{$in: jobsKeysArr }},(errr, jbs1)=>{
-                   
+                   if(errr){ throw {message: "Fail while retreiving suitable jobs for you. We will keep trying."}; } 
                    // consider discipline for relevant jobs 
                     const relevantJobs = Job.find({discipline:learnr.discipline}, (er, jbs2)=>{
                         if(er){ throw {message: "Relevant job not found"}; } 

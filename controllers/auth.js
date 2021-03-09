@@ -108,13 +108,13 @@ auth.authorize = async (req, res, next) => {
       }
       req.userID = tokenValid.id;
       next();
-    } catch (err) {
+    }catch (err) {
       res.status(500).json({
         err: err.message || 'Server Error',
       });
     }
-  } else {
-    // If header is undefined gives status Forbidden
+  }else {
+    // If header is undefined, gives status Forbidden
     res.status(403).json({
       err: 'Forbidden. Please login',
     });

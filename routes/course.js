@@ -26,3 +26,6 @@ router.get('/:id', Course.readOne);
 // router.delete('/:id', Course.delete);
 
 module.exports = router;
+
+
+

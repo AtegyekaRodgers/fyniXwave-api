@@ -10,6 +10,8 @@ const app = require('../app');
 const { dbConnect, dbClose } = require('../config/db');
 
 describe('user tests', () => {
+  let userId;
+  let requestId;
   before((done) => {
     dbConnect()
       .then(() => done())
@@ -35,6 +37,7 @@ describe('user tests', () => {
         usercategory: 'mentor',
       })
       .then((res) => {
+        userId = res.body._id;
         const { body, status } = res;
         expect(body).to.contain.property('message');
         expect(status).to.equal(201);
@@ -99,5 +102,59 @@ describe('user tests', () => {
       .catch((err) => done(err));
   });
   
+  // Retreives user activity logs
+  it('getting user activity logs', (done) => {
+    request(app)
+      .get(`/viewactivity/${userId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  // view requests to join that are directed to the user who is currently logged in
+  it('viewing all requests to join institution/lumni-group/classs/discussion-group', (done) => {
+    request(app)
+      .get(`/viewrequeststojoin/${userId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  // reject request to join institution/lumni-group/classs/discussion-group
+  it('accepting a request to join institution/lumni-group/classs/discussion-group', (done) => {
+    request(app)
+      .post('/requesttojoin/accept')
+      .send({
+        "accepted_request_id": `${requestId}` //must be a valid mongoose ObjectId
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+   
+  // reject request to join institution/lumni-group/classs/discussion-group
+  it('rejecting a request to join institution/lumni-group/classs/discussion-group', (done) => {
+    request(app)
+      .post('/requesttojoin/reject')
+      .send({
+        "rejected_request_id": `${requestId}`, //must be a valid mongoose ObjectId
+        "reason": "You are not allowed to join this group"
+      })
+      .set('Authorization', `Bearer ${token}`)
+      .then((res) => {
+        expect(res.status).to.equal(200);
+        done();
+      })
+      .catch((err) => done(err));
+  });
   
 });
