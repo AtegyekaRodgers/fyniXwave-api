@@ -368,7 +368,7 @@ Learner.marketJobs = async (req, res) => {
   */
   try {
     const targetLearner = await Learner.findOne({userId:req.body.userId}, (err, learnr)=>{
-        if(err){ throw {message: "Target learner not found"}; }
+        if(err){ throw err.message || "Target learner not found"; }
         //if the learner was found,
         if(learnr && learnr._id){
         //first consider skills possessed by this learner for relevant jobs
@@ -403,11 +403,18 @@ Learner.marketJobs = async (req, res) => {
                         });
                     }); 
                 });
+               }else{
+                  res.status(200).send({message: "There are no jobs that require the target learner's current skills"});
                } //end if job-skill relationships found
             });
+           }else{
+              res.status(200).send({message: "The target learner has no skills to be considered for jobs"});
            } //end if relationships found
         });
+       }else{
+          res.status(200).send({message: "The specified target learner was not found"});
        } //end if learner found
+       
     });
   }catch (err) {
     res.status(500).send({message: err.message || 'Unfortunitely the system can not retreive suitable jobs for you'});

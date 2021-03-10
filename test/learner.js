@@ -107,7 +107,7 @@ describe('learner tests', () => {
      .post('/learner/marketjobs')
      .send({
         "userId": userId
-    })
+     })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
