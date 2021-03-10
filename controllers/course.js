@@ -146,11 +146,9 @@ Course.create = async (req, res) => {
                 }
             });
         }
-    });
-     
-    res.status(201).json({ message: 'Course profile successfully created' });
-    
-  } catch (err) {
+        res.status(201).json({ message: 'Course profile successfully created', _id:newCourseId });
+    }); 
+  }catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while creating new course profile',
     });

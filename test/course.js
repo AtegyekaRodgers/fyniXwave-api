@@ -111,8 +111,8 @@ describe('course tests', () => {
     request(app)
      .post('/course/enroll')
      .send({
-        "learner_id": `${learnerId}`,
-        "course_id": `${courseId}`
+        "learner_id": learnerId,
+        "course_id": courseId
      })
       .then((res) => {
         expect(res.status).to.equal(200);

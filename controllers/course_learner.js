@@ -8,7 +8,7 @@ CourseLearner.create = async (relationship, cback) => {
   try {
     // saving the relationship
     if (!relationship.course || !relationship.learner || !ObjectId.isValid(relationship.course) || !ObjectId.isValid(relationship.learner)){
-        throw {message: "!! CourseLearner.create reeceived invalid arguments."};
+        throw "!! CourseLearner.create reeceived invalid arguments.";
     }
     const courseLearner = new CourseLearner(relationship); 
     //eg. relationship = { course: "5db6b26730f133b65dbbe459", learner: "23b65dbbe45db6b27530f13a"} 

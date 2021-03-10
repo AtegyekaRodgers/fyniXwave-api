@@ -7,9 +7,10 @@ Alumni.create = async (req, res) => {
     /* req.body = 
     {
         "groupName": "Delv alumni",
-        "started": "01/01/2000",
+        "started": "2000-01-01",
         "parentInstitution": "603f8a84efc9d14364393f0a",
-        "admins": ["603f47b30659d72147b9506a"]
+        "admins": ["603f47b30659d72147b9506a"],
+        "members": ["603f47b30659d72147b9506a"]
     }
     */
   try {
@@ -60,8 +61,8 @@ Alumni.readAll = async (req, res) => {
 Alumni.readOne = async (req, res) => {
   try {
     const alumni = await Alumni.findById(req.query.id);
-    res.json(alumni);
-  } catch (err) {
+    res.status(200).json(alumni);
+  }catch (err) {
     res.status(500).send({
       message: err.message || 'An error occured while retreiving this alumni',
     });

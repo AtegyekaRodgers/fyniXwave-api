@@ -37,9 +37,10 @@ describe('tests for alumni groups', () => {
      .post('/alumnigroup')
      .send({
         "groupName": "Delv alumni",
-        "started": "01/01/2000",
+        "started": "2000-01-01",
         "parentInstitution": "603f8a84efc9d14364393f0a",
-        "admins": ["603f47b30659d72147b9506a"]
+        "admins": ["603f47b30659d72147b9506a"],
+        "members": ["603f47b30659d72147b9506a"]
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {

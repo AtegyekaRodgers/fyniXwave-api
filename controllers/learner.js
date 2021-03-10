@@ -278,11 +278,9 @@ res.body = {
                 }
             });
         }
-        
-    }); 
-     
-    res.status(201).json({ message: 'Learner profile successfully created' });
-  } catch (err) {
+        res.status(201).json({ message: 'Learner profile successfully created', _id:newLearnerId });
+    });  
+  }catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while creating new learner profile',
     });
