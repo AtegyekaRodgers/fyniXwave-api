@@ -131,7 +131,7 @@ describe('user tests', () => {
     request(app)
       .post('/user/requesttojoin/accept')
       .send({
-        "accepted_request_id": `${requestId}` //must be a valid mongoose ObjectId
+        "accepted_request_id": requestId //must be a valid mongoose ObjectId
       })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
@@ -146,7 +146,7 @@ describe('user tests', () => {
     request(app)
       .post('/user/requesttojoin/reject')
       .send({
-        "rejected_request_id": `${requestId}`, //must be a valid mongoose ObjectId
+        "rejected_request_id": requestId, //must be a valid mongoose ObjectId
         "reason": "You are not allowed to join this group"
       })
       .set('Authorization', `Bearer ${token}`)

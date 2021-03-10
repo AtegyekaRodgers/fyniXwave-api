@@ -91,7 +91,7 @@ describe('learner tests', () => {
     request(app)
      .post('/marketcourses')
      .send({
-        "userId": `${userId}`
+        "userId": userId
     })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
@@ -106,7 +106,7 @@ describe('learner tests', () => {
     request(app)
      .post('/marketjobs')
      .send({
-        "userId": `${userId}`
+        "userId": userId
     })
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {

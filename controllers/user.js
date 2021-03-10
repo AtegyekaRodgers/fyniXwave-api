@@ -102,8 +102,11 @@ User.requestToJoin = async (req, res) => {
     }
     // saving the request
     const joinRequest = new JoinRequest(req.body);
-    await joinRequest.save();
-    res.status(201).json({ message: 'You have successfully joined' });
+    await joinRequest.save((err, reqst)=>{
+        if(err){ throw err.message || "Your request to join was not received. Please try again"; }
+        res.status(201).json({ message: 'Your request to join will be accepted soon by the admin', _id:reqst._id });
+    });
+    
   }catch (err) {
     res.status(500).json({message: err.message || 'An error occured while submitting your request to join'});
   }
