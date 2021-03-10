@@ -271,7 +271,8 @@ User.acceptRequestsToJoin = async (req, res) => {
                 console.log("<> user requested to join unknown <>");
                 res.status(500).json({message: 'The client who requested to join did not specify what to join: institution,lumnigroup,classs,discussiongroup'});
             //do nothing
-        } 
+        }
+         
     });
   }catch (err) {
     res.status(500).json({message: err.message || 'Failed to record acceptance'});
@@ -287,8 +288,12 @@ User.rejectRequestsToJoin = async (req, res) => {
     
   */
   try {
-    const updated = await JoinRequest.findByIdAndUpdate(req.body.rejected_request_id, {status: "rejected", whyRejected: req.body.reason });
-    res.status(200).json({message: 'Join request was rejected successfully'});
+    const updated = await JoinRequest.findByIdAndUpdate(req.body.rejected_request_id, {status: "rejected", whyRejected: req.body.reason }, 
+    (err, reqst )=>{
+        if(err){ throw err.message || "Could not update the status of a join request"+err; }
+        res.status(200).json({message: 'Join request was rejected successfully'});
+    });
+    
   }catch(err){
     res.status(500).json({message: err.message || 'Failed to record rejection'});
   }
