@@ -30,8 +30,10 @@ User.create = async (req, res) => {
     req.body.usercategory = [req.body.usercategory];
     // Saving user 
     const user = new User(req.body);
-    await user.save();
-    res.status(201).json({ message: 'user successfully created' });
+    await user.save((err, newusr)=>{
+        if(err){ throw "New user profile creation failed. Err: "+err.message; } 
+        res.status(201).json({ message: 'user successfully created', _id: newusr._id });
+    }); 
   } catch (err) {
     res.status(500).json({
       message: err.message || 'An error occured while creating new user',
@@ -110,8 +112,10 @@ User.requestToJoin = async (req, res) => {
 // Retrieve all user activity logs
 User.viewUserActivity = async (req, res) => {
   try {
-    const activities = await Activity.find({user: req.params.userId});
-    res.status(200).json(activities);
+    const activities = await Activity.find({user: req.params.userId},(err, actvties)=>{
+        if(err){ throw  err.message || "Failed to find activity logs for the user"; }
+        res.status(200).send(actvties);
+    }); 
   }catch (err){
     res.status(500).json({
       message: err.message || 'An error occured while retreiving activity logs'
