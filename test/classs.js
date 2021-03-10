@@ -42,6 +42,7 @@ describe('classs tests', () => {
       request(app)
       .get('/course')
       .then((res) => {
+        console.log(">>>res.body = ",res.body);
         parentCourseID = res.body[0]._id;
         expect(res.status).to.equal(200);
         done(); 
