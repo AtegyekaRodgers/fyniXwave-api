@@ -370,7 +370,7 @@ Learner.marketJobs = async (req, res) => {
     const targetLearner = await Learner.findOne({userId:req.body.userId}, (err, learnr)=>{
         if(err){ throw {message: "Target learner not found"}; }
         //if the learner was found,
-        if(learnr._id){
+        if(learnr && learnr._id){
         //first consider skills possessed by this learner for relevant jobs
         const result = LearnerSkillModel.find({learner:learnr._id}, (err1, relationships)=>{
             if(err1){ throw {message: err1.message || "Some error occured while identifying the learner"}; }
