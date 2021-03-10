@@ -41,7 +41,6 @@ describe('classs tests', () => {
       
       request(app)
       .get('/course')
-      .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         parentCourseID = res.body[0]._id;
         expect(res.status).to.equal(200);

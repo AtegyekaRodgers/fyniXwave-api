@@ -143,8 +143,10 @@ User.acceptRequestsToJoin = async (req, res) => {
     let targetRequest = await JoinRequest.findById(req.body.accepted_request_id, (err, requestData)=>{
         if(err){ res.status(500).send({ message: err.message || "Failed to trace join request." }); return; }
         //needed: userId, whatToJoin, toJoinAs, idOfWhatToJoin ,fullName, nameOfWhatToJoin
+        console.log("requestData.whatToJoin = ",requestData.whatToJoin);
         switch(requestData.whatToJoin){
             case "institution":
+                console.log("<> user requested to join institution <>");
                 //needed: idOfWhatToJoin, userId, toJoinAs
                 if(requestData.toJoinAs=="staff"){
                     //insert into institution_staff collection
@@ -206,11 +208,13 @@ User.acceptRequestsToJoin = async (req, res) => {
                     }); 
                 }
             case "discoussiongroup":
+                console.log("<> user requested to join discoussiongroup <>");
                 //needed: requestData.idOfWhatToJoin, requestData.userId, toJoinAs="member"
                 const updatedgroup = DiscussionGroup.findByIdAndUpdate( requestData.idOfWhatToJoin, {$addToSet: {members: requestData.userId}} );
                 res.status(200).json({message: 'Client has joined the discussion group' });
                 break;
             case "classs":
+                console.log("<> user requested to join classs <>");
                 //needed: requestData.idOfWhatToJoin, requestData.userId, requestData.toJoinAs="member"
                 //check if this user is already a learner, if not, register him as learner
                 const alearner = Learner.findOne({userId: requestData.userId}, (er, lrner)=>{
@@ -254,11 +258,13 @@ User.acceptRequestsToJoin = async (req, res) => {
                 }); 
                 break;
             case "alumnigroup":
+                console.log("<> user requested to join alumnigroup <>");
                 //needed: requestData.idOfWhatToJoin, requestData.userId, toJoinAs="member"
                 const updatedclass = AlumniGroup.findByIdAndUpdate( requestData.idOfWhatToJoin, {$addToSet: {members: requestData.userId}} );
                 res.status(200).json({message: 'Client has joined the alumni group' });
                 break;
             default:
+                console.log("<> user requested to join unknown <>");
                 res.status(500).json({message: 'The client who requested to join did not specify what to join: institution,lumnigroup,classs,discussiongroup'});
             //do nothing
         } 
@@ -278,7 +284,7 @@ User.rejectRequestsToJoin = async (req, res) => {
   */
   try {
     const updated = await JoinRequest.findByIdAndUpdate(req.body.rejected_request_id, {status: "rejected", whyRejected: req.body.reason });
-    res.status(200).json({message: err.message || 'Join request was rejected'});
+    res.status(200).json({message: 'Join request was rejected successfully'});
   }catch(err){
     res.status(500).json({message: err.message || 'Failed to record rejection'});
   }
