@@ -220,12 +220,12 @@ Course.enrolLearner = async (req, res) => {
         if(returned.error){
             console.log("Course.enrolLearner: CourseLearner.create(relationship) returned error=", returned.error);
             res.status(500).send({ error: "Sory, enrollment operation failed." });
-        }
-        if(returned.success){
+        }else if(returned.success){
             console.log("Course.enrolLearner: CourseLearner.create(relationship) returned success=", returned.success);
             res.status(200).send({ success: "Successfully enrolled for this course" });
+        }else{
+            res.status(500).send({ error: "Unknown error occured while enrolling the learner." });
         }
-        res.status(500).send({ error: "Unknown error occured while enrolling the learner." });
     }
     CourseLearner.create(relationship, feedBackCB);
   }catch (err) {

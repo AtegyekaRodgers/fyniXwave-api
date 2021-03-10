@@ -34,7 +34,7 @@ describe('tests for alumni groups', () => {
   //Creates---
   it('creating alumni group', (done) => {
     request(app)
-     .post('/alumnigroup')
+     .post('/alumni')
      .send({
         "groupName": "Delv alumni",
         "started": "2000-01-01",
@@ -54,7 +54,7 @@ describe('tests for alumni groups', () => {
   // Get all---
   it('reading/retreiving all alumni groups', (done) => {
     request(app)
-      .get('/alumnigroup')
+      .get('/alumni')
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
@@ -66,7 +66,7 @@ describe('tests for alumni groups', () => {
   // Get one ---
   it('get specific alumni group', (done) => {
     request(app)
-      .get(`/alumnigroup/${alumniGroupId}`)
+      .get(`/alumni/${alumniGroupId}`)
       .set('Authorization', `Bearer ${token}`)
       .then((res) => {
         expect(res.status).to.equal(200);
