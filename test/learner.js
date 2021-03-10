@@ -89,7 +89,7 @@ describe('learner tests', () => {
   //Marketing courses to a learner
   it('marketing courses to a learner, relevant to them', (done) => {
     request(app)
-     .post('/marketcourses')
+     .post('/learner/marketcourses')
      .send({
         "userId": userId
     })
@@ -104,7 +104,7 @@ describe('learner tests', () => {
   //Marketing jobs to a learner
   it('marketing jobs to a learner, relevant to them', (done) => {
     request(app)
-     .post('/marketjobs')
+     .post('/learner/marketjobs')
      .send({
         "userId": userId
     })
