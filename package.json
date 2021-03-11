@@ -1,7 +1,7 @@
 {
-  "name": "delv",
+  "name": "FyniXwave",
   "version": "1.0.0",
-  "description": "delv web application",
+  "description": "FyniXwave loans api",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/123MwanjeMike/delv.git"
+    "url": "git+https://github.com/AtegyekaRodgers/FyniXwave.git"
   },
   "husky": {
     "hooks": {
@@ -24,12 +24,12 @@
     "web",
     "application"
   ],
-  "author": "Ed Tech @ Refactory",
+  "author": "Eng. Rodgers @ FyniXwave",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/123MwanjeMike/delv/issues"
+    "url": "https://github.com/AtegyekaRodgers/FyniXwave/issues"
   },
-  "homepage": "https://github.com/123MwanjeMike/delv#readme",
+  "homepage": "https://github.com/AtegyekaRodgers/FyniXwave#readme",
   "devDependencies": {
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",

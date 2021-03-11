@@ -1,3 +1,3 @@
-# delv
+# FyniXwave
 
-delv web application
+FyniXwave api
