@@ -118,7 +118,7 @@ Payment.readByMember = async (req, res) => {
             let totalPrincipalPaid = eval(memberPayments.map((pymt)=>{ return (!isNaN(pymt.principalPaid)) ? pymt.principalPaid : 0; }).join('+'));
             //get total outstandingBalance
             let totalOutstandingBalance = eval(memberPayments.map((pymt)=>{ return (!isNaN(pymt.outstandingBalance)) ? pymt.outstandingBalance : 0; }).join('+'));    
-            eval([1,2,3].join('+'))
+            
             //add the above totals to responseData object
             responseData.totalAmountPaid = totalAmountPaid;
             responseData.totalInterestPaid = totalInterestPaid;
