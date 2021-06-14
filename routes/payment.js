@@ -15,7 +15,7 @@ router.get('/:payment_id', Payment.readOne);
 
 
 // Retrieve payments by a particular member and for a particular loan
-router.get('/filtered/:payment_id', Payment.readByMember);
+router.get('/filtered/:memberId/:loanId', Payment.readByMember);
 
 module.exports = router;
 

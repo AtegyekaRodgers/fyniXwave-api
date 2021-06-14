@@ -14,7 +14,7 @@ router.get('/', Loan.readAll);
 router.get('/:loan_id', Loan.readOne);
 
 // Retrieve loans for a particular member
-router.get('/filtered/:loan_id', Loan.readByMember);
+//router.get('/filtered/:loan_id', Loan.readByMember);
 
 module.exports = router;
 

@@ -1,71 +1,110 @@
-const mongoose = require('mongoose');
 
 const Payment = require('../models/payment');
 const { checkIfloanIsBadDebt } = require('./check_bad_debts');
+const {paymentDb} = require('../data-access/payment');
+const {loanDb} = require('../data-access/loan');
+const {makeNewPayment} = require('../entities/payment');
 
 // Creating a new payment record
 Payment.create = async (req, res) => {
   try {
-    if(req.body.member_id && req.body.loan_id){
-    //include static attributes of the payment instance
-    let paymentInstance = {member_id:req.body.member_id, loan_id:req.body.loan_id, amountPaid:req.body.amountPaid};
+    const { memberId, loanId, amountPaid };
     
-    //process other (dynamic) attributes of the payment instance eg. interestPaid, principalPaid, etc
-    paymentInstance.paymentDate = Date.now();
+    //first include static paramenters of the payment instance
+    let paymentInstance = { memberId, loanId, amountPaid };
     
-    let monthsElapsedSinceLastPayment = 1; //initially before the borrower makes any payment for their current loan
+    //process and include other (dynamic) parameters of the payment instance eg. interestPaid, principalPaid, etc
+    paymentInstance.paymentDate = new Date();
     
+    let instalmentsElapsedSinceLastPayment = 1; // initially before the borrower makes any payment for their current loan
     
-    let prevoiusOutstandingBalance = 0;
+    let targetLoan = await loanDb.findByHash({hash:paymentInstance.loanId});
     
+    let prevoiusOutstandingBalance = targetLoan.principalAmount;
     
-    //update monthsElapsedSinceLastPayment = <retreive this from database> and calculate 
-    await Payment.findOne().sort({ paymentDate: -1 }).limit(1).exec((err, lastPaymnt)=>{
-         if(err){ throw err.message || "Failure to retreive the borrower's outstanding balance"; }
-         
-         monthsElapsedSinceLastPayment = (new Date()).getMonth() - lastPaymnt.paymentDate.getMonth();
-         
-         //update prevoiusOutstandingBalance = <retreived from database>
-         if(lastPaymnt && lastPaymnt.outstandingBalance){
-            prevoiusOutstandingBalance = lastPaymnt.outstandingBalance;
-         }
-    });
+    //update instalmentsElapsedSinceLastPayment = <retreive this from database> and calculate 
+    let lastPaymnt = await paymentDb.findLastByMember(paymentInstance.memberId);
+    
+     if(lastPaymnt && lastPaymnt.paymentDate){
+        instalmentsElapsedSinceLastPayment = Number((new Date()).getMonth() - lastPaymnt.paymentDate.getMonth());
+        //TODO: calculate it considering other instalment periods, not only month.
+        //      the above is only considering monthly instalments, hence using the getMonth() function to 
+        //      get months elapsed since borrower last made a payment. 
+        //TODO: We need to get weeks elapsed in case instalments are per week, days in case instalments are per day, etc
+     }
+     
+     //update prevoiusOutstandingBalance = <retreived from database>
+     if(lastPaymnt && lastPaymnt.outstandingBalance){
+        prevoiusOutstandingBalance = lastPaymnt.outstandingBalance;
+     }
     
     //if the time frame has not yet elapsed, interestPaid = <calculated> : otherwise interestPaid = 0;
-    let isBadDebt = checkIfloanIsBadDebt(req.body.loan_id);  //returns true/false
-    let interestPaid = (!isBadDebt) ? (((10/100) / (monthsElapsedSinceLastPayment/12)) * prevoiusOutstandingBalance) : 0;
-    //The above means, if the member pays more than once during the same month, 
-    //interest will be charged only once, the other times it will be zero because 
-    //monthsElapsedSinceLastPayment = 0
+    let isBadDebt = checkIfloanIsBadDebt(loanId);  //returns true/false
+    let delayFinePercentage = 0;
+    if(instalmentsElapsedSinceLastPayment>1){
+        //apply delay fine: fine rate 20% of the interest
+        delayFinePercentage = (20/100) * instalmentsElapsedSinceLastPayment;
+    }
     
-    let principalPaid = req.body.amountPaid - interestPaid; 
+    let loanInterestRate = targetLoan.loanInterestRate/100;  // default: 10%
+    const interestRatedPer = targetLoan.interestRatedPer; // default: "anum"
+    const instalmentsToBePer = targetLoan.instalmentsToBePer; // default: "month"
+    const loanToLastFor = targetLoan.loanToLastFor; // eg: 3, default: 2
+    const loanToLastForDurationType = targetLoan.loanToLastForDurationType; // default: "years"
+    
+    const ratingPeriodToInstalmentDuration = 
+       { anum: { day:366, week: 54, month: 12, quarter: 4, semi: 2, year:1 },
+         semi: { day:183, week: 27, month: 6, quarter: 2, semi: 1, year:0.5 },
+         quarter:{ day:91, week: 13.5, month: 3, quarter: 1, semi: 0.5, year:0.25 },
+         month: { day:31, week: 4.4, month: 1, quarter: 0.33, semi: 0.167, year:0.083 },
+         week: { day:7, week: 4.4, month: 0.228, quarter: 0.074, semi: 0.037, year:0.018 },
+         day: { day:1, week: 0.143, month: 0.032, quarter: 0.011, semi: 0.005, year:0.003 }
+       }
+    const totalInstalmentsPerRatingPeriod = ratingPeriodToInstalmentDuration[interestRatedPer][instalmentsToBePer];
+    
+    let interestToBePaid = (loanInterestRate * (instalmentsElapsedSinceLastPayment/totalInstalmentsPerRatingPeriod) ) * prevoiusOutstandingBalance;
+    //Example: let interestToBePaid = (0.085 * (1/12) ) * 100000;
+    let interestPaid = (!isBadDebt) ? interestToBePaid : 0;
+    interestPaid = (delayFinePercentage * interestToBePaid) + interestPaid;
+    //The above means, if the member pays more than once during the same instalment period (month),
+    //interest will be charged only once, the other times it will be zero because 
+    //instalmentsElapsedSinceLastPayment = 0
+    
+    let principalPaid = amountPaid - interestPaid;
     //From above line, if borrower has paid less than interest calculated, principalPaid will be negative. This means that
     // in the next uncommented line (below), the outcome of "(prevoiusOutstandingBalance - principalPaid)" will be 
     // (prevoiusOutstandingBalance minus minus principalPaid) which results into (math: -- = +) ->
     // (prevoiusOutstandingBalance + principalPaid). Hence the remaining -would be- interest is added to outstanding principal.
     
-    let outstandingBalance = ((prevoiusOutstandingBalance - principalPaid) > 0) ? (prevoiusOutstandingBalance - principalPaid) : 0;
+    let outstandingBalance = ((prevoiusOutstandingBalance - principalPaid) > 0) ? (prevoiusOutstandingBalance - principalPaid) : 0; //0 means loan cleared
     
+    //add the calculated (dynamic) parameters to paymentInstance object needed later
     paymentInstance.interestPaid = interestPaid;
     paymentInstance.principalPaid = principalPaid;
     paymentInstance.outstandingBalance = outstandingBalance;
     
-    // new payment instance
-    const payment = new Payment(paymentInstance);
-    // saving the payment record
-    payment.save((err, newpayment)=>{
-        if(err){ throw err.message || "Sory, an error has occured while recording the payment"; }
-         
-        //TODO: if the new outstandingBalance is zero, update loan status from "ongoing" to "cleared"
-        
-        let responseData = { message: 'Payment successfully recorded', newpayment };  //newpayment = newpayment:newpayment
-        res.status(201).send(responseData);
-    }); 
-    }else{
-        let newpayment = {_id:null};
-        let responseData = { message: 'member id or loan id missing, payment can not be made', newpayment };
-        res.status(201).send(responseData);
+    // new payment instance, using entity layer
+    const payment = makeNewPayment(paymentInstance);
+    
+    //if the new outstandingBalance is zero, update loan status from "ongoing" to "cleared"
+    if (outstandingBalance < 1) {
+        loanDb.updateByHash({loanId:paymentInstance.loanId, loanStatus:"CLEARED"});
     }
+    // save the payment record now
+    const inserted = await paymentDb.insert({
+       paymentId: payment.getId(),
+       loanId: payment.getLoanId(),
+       memberId: payment.getMemberId(),
+       amountPaid: payment.getAmountPaid(), 
+       interestPaid: payment.getInterestPaid(), 
+       principalPaid: payment.getPrincipalPaid(), 
+       outstandingBalance: payment.getOutstandingBalance(), 
+       paymentDate: payment.getPaymentDate(),
+    });
+    
+    let responseData = { message: 'Payment successfully recorded', ...inserted };
+    res.status(201).send(responseData);
+    
   }catch (err){
     let responseData = { message: err.message || 'An error occured while creating new payment record'};
     res.status(500).send(responseData);
@@ -75,11 +114,10 @@ Payment.create = async (req, res) => {
 // Retrieve all payments
 Payment.readAll = async (req, res) => {
   try {
-    const payments = await Payment.find((err, paymentsFound)=>{
-        if(err){ throw err.message || "Failed to retreive payment records"; }
-        res.status(200).json(paymentsFound);
-    });
+    const payments = await paymentDb.findAll();
+    res.status(200).send(payments);
   }catch (err) {
+    console.log(err);
     let responseData = { message: err.message || 'An error occured while retrieving payments' };
     res.status(500).send(responseData);
   }
@@ -88,13 +126,11 @@ Payment.readAll = async (req, res) => {
 // Retrieve a specific payment
 Payment.readOne = async (req, res) => {
   try {
-    await Payment.findById(req.params.payment_id, (err, paymentFound)=>{
-        if(err){ throw err.message || "Failed to retreive a payment record"; }
-        res.status(200).json(paymentFound);
-    });
+    const payment = await paymentDb.findByHash({ hash: req.params.payment_id });
+    res.status(200).send(payment);
   }catch (err) {
     console.log(err);
-    let responseData = { message: err.message || 'An error occured while retrieving the payment record' };
+    let responseData = { message: err.message || 'An error occured while retrieving the loan record' };
     res.status(500).send(responseData); 
   }
 };
@@ -102,9 +138,9 @@ Payment.readOne = async (req, res) => {
 // Retrieve payments by a particular member and for a particular loan
 Payment.readByMember = async (req, res) => {
   try {
-    let filters = req.query.loan_id ? {member_id:req.params.member_id, loan_id:req.query.loan_id} : {member_id:req.params.member_id};    
-    const mpayments = await Payment.find( filters, (err, memberPayments)=>{
-        if(err){ throw  err.message || "An error occured while retreiving the member's payment records"; }
+    const {memberId, loanId} = req.params;
+     
+    let mpayments = await paymentDb.findAllByMember({memberId, loanId}, (memberPayments) => {
         let responseData = {};
         //if atleast one record was found, then
         if(memberPayments && memberPayments.length && (memberPayments.length > 0)){
