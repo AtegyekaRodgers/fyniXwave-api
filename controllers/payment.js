@@ -8,7 +8,7 @@ const {makeNewPayment} = require('../entities/payment');
 // Creating a new payment record
 Payment.create = async (req, res) => {
   try {
-    const { memberId, loanId, amountPaid };
+    const { memberId, loanId, amountPaid } = req.body;
     
     //first include static paramenters of the payment instance
     let paymentInstance = { memberId, loanId, amountPaid };
