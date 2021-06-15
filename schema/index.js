@@ -109,11 +109,11 @@ loans.remove = ({loanId}) => {
 
 let payments = {};
 payments.lastpayments = {};
-payments.add = (paymentsObject) => {
+payments.add = (paymentObject) => {
     let newId = "PI"+(new Date().getUTCMilliseconds());
-    paymentsObject.paymentId = newId;
-    payments[newId] = paymentsObject;
-    const memberLastPaymentKey = paymentsObject.memberId;
+    paymentObject.paymentId = newId;
+    payments[newId] = paymentObject;
+    const memberLastPaymentKey = paymentObject.loanId;
     payments.lastpayments[memberLastPaymentKey] = newId;
     return newId;
 };
@@ -131,9 +131,9 @@ payments.readAll = () => {
     return paymentsArr;
 };
 
-payments.readLastByMember = ({memberId}) => {
-    let memberLastPaymentKey = payments.lastpayments[memberId];
-    return payments[memberLastPaymentKey];
+payments.readLastByLoanId = ({ loanId }) => {
+    let loanLastPaymentKey = payments.lastpayments[loanId];
+    return payments[loanLastPaymentKey];
 };
 
 payments.readAllByMember = ({memberId, loanId}) => {

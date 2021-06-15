@@ -4,7 +4,7 @@ module.exports.makePaymentDb  =  function () {
   return Object.freeze({
     findByHash,
     findAll,
-    findLastByMember,
+    findLastByLoanId,
     findAllByMember,
     updateByHash,
     insert,
@@ -26,9 +26,9 @@ module.exports.makePaymentDb  =  function () {
    return paymentss;
   }
   
-  async function findLastByMember( memberId ) {
-   const payment = payments.readLastByMember({memberId});
-   return (payment || null );
+  async function findLastByLoanId({ loanId }) {
+   const lastPayment = payments.readLastByLoanId({ loanId });
+   return lastPayment;
   }
   
   async function findAllByMember({memberId, loanId}, cback ) {
