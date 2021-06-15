@@ -26,7 +26,7 @@ Payment.create = async (req, res) => {
     let lastPaymnt = await paymentDb.findLastByMember(paymentInstance.memberId);
     
      if(lastPaymnt && lastPaymnt.paymentDate){
-        instalmentsElapsedSinceLastPayment = Number((new Date()).getMonth() - lastPaymnt.paymentDate.getMonth());
+        instalmentsElapsedSinceLastPayment = Number((new Date()).getMinutes() - lastPaymnt.paymentDate.getMinutes());
         //TODO: calculate it considering other instalment periods, not only month.
         //      the above is only considering monthly instalments, hence using the getMonth() function to 
         //      get months elapsed since borrower last made a payment. 
@@ -41,10 +41,10 @@ Payment.create = async (req, res) => {
     //if the time frame has not yet elapsed, interestPaid = <calculated> : otherwise interestPaid = 0;
     let isBadDebt = checkIfloanIsBadDebt(loanId);  //returns true/false
     let delayFinePercentage = 0;
-    if(instalmentsElapsedSinceLastPayment>1){
+    //if(instalmentsElapsedSinceLastPayment>1){
         //apply delay fine: fine rate 20% of the interest
-        delayFinePercentage = (20/100) * instalmentsElapsedSinceLastPayment;
-    }
+        //delayFinePercentage = (20/100) * instalmentsElapsedSinceLastPayment;
+    //}
     
     let loanInterestRate = targetLoan.loanInterestRate/100;  // default: 10%
     const interestRatedPer = targetLoan.interestRatedPer; // default: "anum"
@@ -74,7 +74,8 @@ Payment.create = async (req, res) => {
     //From above line, if borrower has paid less than interest calculated, principalPaid will be negative. This means that
     // in the next uncommented line (below), the outcome of "(prevoiusOutstandingBalance - principalPaid)" will be 
     // (prevoiusOutstandingBalance minus minus principalPaid) which results into (math: -- = +) ->
-    // (prevoiusOutstandingBalance + principalPaid). Hence the remaining -would be- interest is added to outstanding principal.
+    // (prevoiusOutstandingBalance + principalPaid). 
+    // Hence the remaining -would be- interest is added to outstanding principal.
     
     let outstandingBalance = ((prevoiusOutstandingBalance - principalPaid) > 0) ? (prevoiusOutstandingBalance - principalPaid) : 0; //0 means loan cleared
     
