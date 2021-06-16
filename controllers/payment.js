@@ -14,53 +14,64 @@ const ratingPeriodToInstalmentDuration =
 }
 
 //============================= functions to be used: ==========================
-const getInstalmentsElapsedSinceLastPayment = ({targetLoan, lastPayment} = {}) => {
+const getInstalmentsElapsedSinceLastPayment = async ({targetLoan, lastPayment} = {}) => {
    let instalmentsElapsedSinceLastPayment = 1;
-   if(lastPayment && lastPayment.paymentDate){
-     let differenceInMinutes = (new Date()).getMinutes() - lastPayment.paymentDate.getMinutes();
-     const minutesInOneHour = 60;
-     const hoursInOneDay = 24;
-     let totalMinutesInOneDay = minutesInOneHour * hoursInOneDay;
-     let daysElapsed = differenceInMinutes / totalMinutesInOneDay;
-     let numberOfDaysInInstalmentPeriod = ratingPeriodToInstalmentDuration[targetLoan.instalmentsToBePer].day;
-     instalmentsElapsedSinceLastPayment = numberOfDaysInInstalmentPeriod / daysElapsed;
+   let differenceInMinutes
+   if(lastPayment){
+     differenceInMinutes = (new Date()).getMinutes() - lastPayment.paymentDate.getMinutes();
+   }else{
+     differenceInMinutes = (new Date()).getMinutes() - targetLoan.loanStartDate.getMinutes();
+   }
+   const minutesInOneHour = 60;
+   const hoursInOneDay = 24;
+   let totalMinutesInOneDay = minutesInOneHour * hoursInOneDay;
+   let daysElapsed = differenceInMinutes / totalMinutesInOneDay;
+   let numberOfDaysInInstalmentPeriod = ratingPeriodToInstalmentDuration[targetLoan.instalmentsToBePer].day;
+   if(daysElapsed){
+      instalmentsElapsedSinceLastPayment = daysElapsed / numberOfDaysInInstalmentPeriod;
    }
    return instalmentsElapsedSinceLastPayment;
 };
 
-const enforceDelayFine = ({targetLoan, fineRate = 20, ov, lastPayment, interestToBePaid }) => {
-    let delayFine = 0;
-    const instalmentsElapsed = getInstalmentsElapsedSinceLastPayment({targetLoan, lastPayment});
-    if(instalmentsElapsed > 1){
-       if (ov && (typeof ov === "number")){
-          delayFine = ((fineRate/100) * ov) * instalmentsElapsed;
-       }
+const enforceDelayFine = async ({targetLoan, fineRate = 20, ov, lastPayment, interestToBePaid }) => {
+    if(lastPayment){
+        let delayFine = 0;
+        const instalmentsElapsed = await getInstalmentsElapsedSinceLastPayment({targetLoan, lastPayment});
+        if(instalmentsElapsed > 1){
+           if (ov && (typeof ov === "number")){
+              delayFine = ((fineRate/100) * ov) * instalmentsElapsed;
+           }
+        }
+        return delayFine + interestToBePaid;
+    }else{
+        return interestToBePaid;
     }
-    return delayFine + interestToBePaid;
 }
  
-const calculateInstalmentInterest = ({
+const calculateInstalmentInterest = async ({
     targetLoan,
     prevoiusOutstandingBalance,
     totalInstalmentsPerRatingPeriod,
     lastPayment,
 }) => {
      let percentageInterestRate = targetLoan.loanInterestRate/100;
-     let instalmentsElapsed = getInstalmentsElapsedSinceLastPayment({targetLoan, lastPayment});
+     let instalmentsElapsed = 1;
+     instalmentsElapsed = await getInstalmentsElapsedSinceLastPayment({targetLoan, lastPayment});
      let x = instalmentsElapsed;
      let y = totalInstalmentsPerRatingPeriod;
-     let obal = targetLoan.prevoiusOutstandingBalance;
+     let obal = prevoiusOutstandingBalance;
      let r = percentageInterestRate;
      let instalmentInterest = (r * (x/y)) * obal;
      //The above means, if the member pays more than once during the same instalment period,
      //interest will be charged only once, the other times it will be zero because, 
      //instalmentsElapsed = 0
      // ie, from the formula above, (x/y) = (0/y) = 0
-     interestToBePaid = (!checkIfloanIsBadDebt(targetLoan.loanId)) ? instalmentInterest : 0;
+     let isBadDebt = checkIfloanIsBadDebt(targetLoan.loanId);
+     interestToBePaid = (!isBadDebt) ? instalmentInterest : 0;
      return interestToBePaid;
 };
 
-const getPreviousOutstandingBalance = ({targetLoan, lastPayment }) => {
+const getPreviousOutstandingBalance = async ({targetLoan, lastPayment }) => {
     let prevoiusOutstandingBalance = targetLoan.principalAmount;
     if(lastPayment && lastPayment.outstandingBalance){
        prevoiusOutstandingBalance = lastPayment.outstandingBalance;
@@ -68,7 +79,7 @@ const getPreviousOutstandingBalance = ({targetLoan, lastPayment }) => {
     return prevoiusOutstandingBalance;
 }
 
-const calculatePrincipalPaid = ({ amountPaid, interestPaid }) => {
+const calculatePrincipalPaid = async ({ amountPaid, interestPaid }) => {
     let principalPaid = amountPaid - interestPaid;
     //From above line, if borrower has paid less than interest calculated (interestPaid), 
     //principalPaid will be negative. This means that
@@ -79,7 +90,7 @@ const calculatePrincipalPaid = ({ amountPaid, interestPaid }) => {
     return principalPaid;
 };
 
-const updateOutstandingBalance = ({prevoiusOutstandingBalance, principalPaid} = {}) => {
+const updateOutstandingBalance = async ({prevoiusOutstandingBalance, principalPaid} = {}) => {
     try {
         if(!prevoiusOutstandingBalance || !principalPaid){
             throw "prevoiusOutstandingBalance and principalPaid are required fields.";
@@ -112,18 +123,17 @@ Payment.create = async (req, res) => {
           } = targetLoan;
     const totalInstalmentsPerRatingPeriod = ratingPeriodToInstalmentDuration[interestRatedPer][instalmentsToBePer];
           
-    const prevoiusOutstandingBalance = getPreviousOutstandingBalance({targetLoan, lastPayment });
+    const prevoiusOutstandingBalance = await getPreviousOutstandingBalance({targetLoan, lastPayment });
     
-    let interestToBePaid = calculateInstalmentInterest({
+    let interestToBePaid = await calculateInstalmentInterest({
         targetLoan,
         prevoiusOutstandingBalance,
         totalInstalmentsPerRatingPeriod,
         lastPayment,
     });
-    
-    const interestPaid = enforceDelayFine({targetLoan, fineRate:15, ov:interestToBePaid, lastPayment, interestToBePaid });
-    const principalPaid = calculatePrincipalPaid({amountPaid, interestPaid });
-    const outstandingBalance = updateOutstandingBalance({prevoiusOutstandingBalance, principalPaid});
+    const interestPaid = await enforceDelayFine({targetLoan, fineRate:15, ov:interestToBePaid, lastPayment, interestToBePaid });
+    const principalPaid = await calculatePrincipalPaid({amountPaid, interestPaid });
+    const outstandingBalance = await updateOutstandingBalance({prevoiusOutstandingBalance, principalPaid});
     
     //add the calculated (dynamic) parameters to paymentInstance object needed later
     paymentInstance.interestPaid = Math.round(interestPaid);

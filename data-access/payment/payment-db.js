@@ -28,7 +28,7 @@ module.exports.makePaymentDb  =  function () {
   
   async function findLastByLoanId({ loanId }) {
    const lastPayment = payments.readLastByLoanId({ loanId });
-   return lastPayment;
+   return lastPayment || null;
   }
   
   async function findAllByMember({memberId, loanId}, cback ) {
