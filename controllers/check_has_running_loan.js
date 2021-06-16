@@ -1,5 +1,5 @@
-const Loan = require('../models/loan');
-const Payment = require('../models/payment');
+const Loan = {};
+const Payment = {};
 
 let hasNoRunningLoan = ( args ) => {
     //select last record from 'loans' table/collection where member_id = args.member_id

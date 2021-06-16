@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Member = require('../models/member');
+const Member = {};
 const { hasNoRunningLoan } = require('./check_has_running_loan');
 
 // Creating a new member profile

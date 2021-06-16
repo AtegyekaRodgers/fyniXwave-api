@@ -1,0 +1,232 @@
+<hr/>
+
+<button id="run-loanDurationInDays-btn" style="margin-left:2%"> run loanDurationInDays function </button>
+<table width="80%" style="margin-left:2%">
+    <tr> <td> loanToLastFor </td> <td> <input type="text" id="loanToLastFor" value="2"/> </td> </tr>
+    <tr> <td> loanToLastForDurationType </td> <td> <input type="text" id="loanToLastForDurationType" value="years"/> </td> </tr>
+</table>
+
+<hr/>
+
+<div id="screen-div" style="border:3px solid gray; min-height:100px; margin:2%; padding:3px; 
+background:linen; font-size:24px; color:black; ">  
+  
+</div>
+
+<hr/>
+
+<button id="run-calculateEMI-btn" style="margin-left:2%"> run calculateEMI function </button>
+<table width="80%" style="margin-left:2%">
+    <tr> <td> interestRatedPer </td> <td> <input type="text" id="interestRatedPerr" value="anum"/> </td> </tr>
+    <tr> <td> instalmentsToBePer </td> <td> <input type="text" id="instalmentsToBePerr" value="month"/> </td> </tr>
+    <tr> <td> principalAmount </td> <td> <input type="text" id="principalAmountt" value="100000"/> </td> </tr>
+    <tr> <td> loanInterestRate </td> <td> <input type="text" id="loanInterestRatee" value="8.5"/> </td> </tr>
+    <tr> <td> loanToLastFor </td> <td> <input type="text" id="loanToLastForr" value="3"/> </td> </tr>
+    <tr> <td> loanToLastForDurationType </td> <td> <input type="text" id="loanToLastForDurationTypee" value="years"/> </td> </tr>
+</table>
+
+<hr/>
+
+<div id="screen-div2" style="border:3px solid gray; min-height:100px; margin:2%; padding:3px; 
+background:linen; font-size:24px; color:black; ">  
+  
+</div>
+
+<script>
+    const ratingPeriodToInstalmentDuration = 
+       { anum: { day:366, week: 54, month: 12, quarter: 4, semi: 2, year:1 },
+         semi: { day:183, week: 27, month: 6, quarter: 2, semi: 1, year:0.5 },
+         quarter: { day:91, week: 13.5, month: 3, quarter: 1, semi: 0.5, year:0.25 },
+         month: { day:31, week: 4.4, month: 1, quarter: 0.33, semi: 0.167, year:0.083 },
+         week: { day:7, week: 4.4, month: 0.228, quarter: 0.074, semi: 0.037, year:0.018 },
+         day: { day:1, week: 0.143, month: 0.032, quarter: 0.011, semi: 0.005, year:0.003 }
+       }
+                               
+    const loanDurationToRatingPeriodMatrix = 
+       { years: { day:366, week: 54, month: 12, quarter: 4, semi: 2, anum:1 },
+         semis: { day:183, week: 27, month: 6, quarter: 2, semi: 1, anum:0.5 },
+         quarters: { day:91, week: 13.5, month: 3, quarter: 1, semi: 0.5, anum:0.25 },
+         months: { day:31, week: 4.4, month: 1, quarter: 0.33, semi: 0.167, anum:0.083 },
+         weeks: { day:7, week: 4.4, month: 0.228, quarter: 0.074, semi: 0.037, anum:0.018 },
+         days: { day:1, week: 0.143, month: 0.032, quarter: 0.011, semi: 0.005, anum:0.003 }
+       }
+       
+    const calculateEMI = ({
+        principalAmount, 
+        interestRatedPer, 
+        instalmentsToBePer, 
+        loanInterestRate, 
+        loanToLastFor = 3, 
+        loanToLastForDurationType = "years"
+      }) => {
+        /* ==Theory=======
+        
+                     R(1+r)^N
+         EMI  = P x ----------
+                    ((1+r)^N)−1
+
+         P = Principal borrowed
+         R = annual interest rate
+         r = Periodic interest rate (annual interest rate/12)
+         N = Total number of payment (number of months during the loan tenure)
+         
+         Example:
+         A borrower takes a $100,000 loan with 8.5% annual interest rate for three years.
+         (P=100000 , r=0.085/12 , N=3*12 )
+         
+              0.085(1 + (0.085/12))^36
+         P x -------------------------
+               ((1+(0.085/12))^36)-1
+         
+        ======================================================
+        */
+        
+        //==defaults:==
+        // instalmentsPerRatingPeriod = 12
+        // ratingPeriod = "anum"
+        // totalInstalments = 36
+        
+        let ratingPeriodsInOneLoanDurationType = loanDurationToRatingPeriodMatrix[loanToLastForDurationType][interestRatedPer];
+        const instalmentsPerRatingPeriod = ratingPeriodToInstalmentDuration[interestRatedPer][instalmentsToBePer];
+        let totalRatingPeriods = loanToLastFor * ratingPeriodsInOneLoanDurationType;
+        totalInstalments = instalmentsPerRatingPeriod * totalRatingPeriods;
+        
+        let percentageRate = loanInterestRate/100;
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        const P = principalAmount;
+        let   R = percentageRate;
+        let   r = percentageRate/instalmentsPerRatingPeriod;
+        let   n = instalmentsPerRatingPeriod;
+        let   N = totalInstalments; // n*3
+        //let LoanEMI = (P *( 0.085 * ( (1 + (0.085/12) )^36))) / (((1+r)^36)-1);
+          let LoanEMI = (P *( R * ((1+r)^N))) / (((1+r)^N)-1);
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        let payingPer = instalmentsToBePer=="year" ? "anum" : instalmentsToBePer;
+        let EMIinInstalmentTime  = LoanEMI * ratingPeriodToInstalmentDuration[payingPer].month;
+        
+        return EMIinInstalmentTime;
+    }
+    
+    const calculateInstalmentInterest = ({
+        principalAmount, 
+        interestRatedPer, 
+        instalmentsToBePer, 
+        loanInterestRate, 
+        loanToLastFor = 3, 
+        loanToLastForDurationType = "years"
+      }) => {
+        /* ==Theory=======
+        
+                        (P×I)×((1+r)n)
+         Iinterest  =  ---------------
+                        (t×((1+r)n)−1)
+
+         P  = Principal amount borrowed
+         I  = Annual interest rate
+         r  = Periodic monthly interest rate   =  I/12
+         n  = Total number of monthly payments =  loanDurationInYears * 12  = total number of months in all the years
+         t  = Number of months in a year       =  12
+         
+         Example:
+         Assume an individual takes out a mortgage to buy a new home. 
+         The principal amount is $100,000, 
+         and the loan terms include an interest rate of 8.5% for 10 years.
+         (P=100000 , I=0.085 , r=0.085/12 , n=10*12 , t=12 )
+             
+         
+         ((P * (0.085)) * (1 + (0.085 / 12)) * 120)
+         ------------------------------------------
+         / (12 x ((1 + (0.085/12)) * 120) - 1)
+        ======================================================
+        */
+        
+        //==defaults:==
+        // instalmentsPerRatingPeriod = 12
+        // ratingPeriod = "anum"
+        // totalInstalments = 120
+        
+        let ratingPeriodsInOneLoanDurationType = loanDurationToRatingPeriodMatrix[loanToLastForDurationType][interestRatedPer];
+        const instalmentsPerRatingPeriod = ratingPeriodToInstalmentDuration[interestRatedPer][instalmentsToBePer];
+        let totalRatingPeriods = loanToLastFor * ratingPeriodsInOneLoanDurationType;
+        totalInstalments = instalmentsPerRatingPeriod * totalRatingPeriods;
+        
+        let percentageRate = loanInterestRate/100;
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        const P = principalAmount;
+        let   R = percentageRate;
+        let   r = percentageRate/instalmentsPerRatingPeriod;
+        let   n = instalmentsPerRatingPeriod;
+        let   N = totalInstalments;
+        
+        //let instalmentInterest = ((P * 0.085) * (1 + (0.085/12)) * 120) / (12 * ((1 + (0.085/12)) * 120) - 1);
+          let instalmentInterest = ((P * R) * (1 + r) * N) / (n * ((1 + r) * N) - 1);
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        
+        return instalmentInterest;
+    }
+
+
+    const loanDurationInDays = ({ 
+      loanToLastFor = 3, 
+      loanToLastForDurationType = "years" 
+    } = {}) => {
+        let totalDays = loanToLastFor * loanDurationToRatingPeriodMatrix[loanToLastForDurationType].day;
+        return totalDays;
+    }
+    
+    document.querySelector("#run-loanDurationInDays-btn").addEventListener("click", function(){
+        let loanToLastFor = document.querySelector("input#loanToLastFor").value;
+        let loanToLastForDurationType = document.querySelector("input#loanToLastForDurationType").value;
+        let displayScreen = document.querySelector("div#screen-div");
+        let totalDays = loanDurationInDays({
+          loanToLastFor, 
+          loanToLastForDurationType
+        });
+        
+        displayScreen.textContent = totalDays;
+    });
+    
+    document.querySelector("#run-calculateEMI-btn").addEventListener("click", function(){
+        let interestRatedPer = document.querySelector("input#interestRatedPerr").value;
+        let instalmentsToBePer = document.querySelector("input#instalmentsToBePerr").value;
+        let principalAmount = document.querySelector("input#principalAmountt").value;
+        let loanInterestRate = document.querySelector("input#loanInterestRatee").value;
+        let loanToLastFor = document.querySelector("input#loanToLastForr").value;
+        let loanToLastForDurationType = document.querySelector("input#loanToLastForDurationTypee").value;
+        
+        console.log("rate: "+(loanInterestRate)+"%", "\nper:",interestRatedPer, "\ninstalment-per:",instalmentsToBePer, "\nPrinciple:",principalAmount);
+        
+        let displayScreen = document.querySelector("div#screen-div2");
+        
+        const LoanEMI = calculateEMI({
+           interestRatedPer, 
+           instalmentsToBePer, 
+           principalAmount, 
+           loanInterestRate, 
+           loanToLastFor,
+           loanToLastForDurationType 
+         });
+         
+         const instalmentInterest = calculateInstalmentInterest({
+           interestRatedPer, 
+           instalmentsToBePer, 
+           principalAmount, 
+           loanInterestRate, 
+           loanToLastFor,
+           loanToLastForDurationType 
+         });
+        displayScreen.innerHTML = "EMI = "+LoanEMI+" <hr/> First instalment Interest = "+instalmentInterest;
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
