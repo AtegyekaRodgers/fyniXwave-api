@@ -1,11 +1,110 @@
 
-const Payment = require('../models/payment');
+const Payment = {};
 const { checkIfloanIsBadDebt } = require('./check_bad_debts');
 const {paymentDb} = require('../data-access/payment');
 const {loanDb} = require('../data-access/loan');
 const {makeNewPayment} = require('../entities/payment');
+const ratingPeriodToInstalmentDuration = 
+{anum: { day:365.25, week: 52.1785714, month: 12, quarter: 4, semi: 2, year:1 },
+ semi: { day:182.625, week: 26.0892857, month: 6, quarter: 2, semi: 1, year:0.5 },
+ quarter: { day:91.311, week: 13.0446429, month: 3, quarter: 1, semi: 0.5, year:0.25 },
+ month: { day:30.4375, week: 4.34821429, month: 1, quarter: 0.33333334, semi: 0.166666667, year:0.08333333333 },
+ week: { day:7, week: 1, month: 0.229979466, quarter: 0.0766598218, semi: 0.038329911, year:0.0191649555 },
+ day: { day:1, week: 0.142857143, month: 0.0328542094, quarter: 0.0109515831, semi: 0.00547570157, year:0.00273785079 }
+}
 
-// Creating a new payment record
+//============================= functions to be used: ==========================
+const getInstalmentsElapsedSinceLastPayment = async ({targetLoan, lastPayment} = {}) => {
+   let instalmentsElapsedSinceLastPayment = 1;
+   let differenceInMinutes
+   if(lastPayment){
+     differenceInMinutes = (new Date()).getMinutes() - lastPayment.paymentDate.getMinutes();
+   }else{
+     differenceInMinutes = (new Date()).getMinutes() - targetLoan.loanStartDate.getMinutes();
+   }
+   const minutesInOneHour = 60;
+   const hoursInOneDay = 24;
+   let totalMinutesInOneDay = minutesInOneHour * hoursInOneDay;
+   let daysElapsed = differenceInMinutes / totalMinutesInOneDay;
+   let numberOfDaysInInstalmentPeriod = ratingPeriodToInstalmentDuration[targetLoan.instalmentsToBePer].day;
+   if(daysElapsed){
+      instalmentsElapsedSinceLastPayment = daysElapsed / numberOfDaysInInstalmentPeriod;
+   }
+   return instalmentsElapsedSinceLastPayment;
+};
+
+const enforceDelayFine = async ({targetLoan, fineRate = 20, ov, lastPayment, interestToBePaid }) => {
+    if(lastPayment){
+        let delayFine = 0;
+        const instalmentsElapsed = await getInstalmentsElapsedSinceLastPayment({targetLoan, lastPayment});
+        if(instalmentsElapsed > 1){
+           if (ov && (typeof ov === "number")){
+              delayFine = ((fineRate/100) * ov) * instalmentsElapsed;
+           }
+        }
+        return delayFine + interestToBePaid;
+    }else{
+        return interestToBePaid;
+    }
+}
+ 
+const calculateInstalmentInterest = async ({
+    targetLoan,
+    prevoiusOutstandingBalance,
+    totalInstalmentsPerRatingPeriod,
+    lastPayment,
+}) => {
+     let percentageInterestRate = targetLoan.loanInterestRate/100;
+     let instalmentsElapsed = 1;
+     instalmentsElapsed = await getInstalmentsElapsedSinceLastPayment({targetLoan, lastPayment});
+     let x = instalmentsElapsed;
+     let y = totalInstalmentsPerRatingPeriod;
+     let obal = prevoiusOutstandingBalance;
+     let r = percentageInterestRate;
+     let instalmentInterest = (r * (x/y)) * obal;
+     //The above means, if the member pays more than once during the same instalment period,
+     //interest will be charged only once, the other times it will be zero because, 
+     //instalmentsElapsed = 0
+     // ie, from the formula above, (x/y) = (0/y) = 0
+     let isBadDebt = checkIfloanIsBadDebt(targetLoan.loanId);
+     interestToBePaid = (!isBadDebt) ? instalmentInterest : 0;
+     return interestToBePaid;
+};
+
+const getPreviousOutstandingBalance = async ({targetLoan, lastPayment }) => {
+    let prevoiusOutstandingBalance = targetLoan.principalAmount;
+    if(lastPayment && lastPayment.outstandingBalance){
+       prevoiusOutstandingBalance = lastPayment.outstandingBalance;
+    }
+    return prevoiusOutstandingBalance;
+}
+
+const calculatePrincipalPaid = async ({ amountPaid, interestPaid }) => {
+    let principalPaid = amountPaid - interestPaid;
+    //From above line, if borrower has paid less than interest calculated (interestPaid), 
+    //principalPaid will be negative. This means that
+    // "(prevoiusOutstandingBalance - principalPaid)" will be 
+    // (prevoiusOutstandingBalance minus minus principalPaid) which results into (math: -- = +) ->
+    // (prevoiusOutstandingBalance + principalPaid). 
+    // Hence the remaining -would be- interest is added to outstanding principal balance.
+    return principalPaid;
+};
+
+const updateOutstandingBalance = async ({prevoiusOutstandingBalance, principalPaid} = {}) => {
+    try {
+        if(!prevoiusOutstandingBalance || !principalPaid){
+            throw "prevoiusOutstandingBalance and principalPaid are required fields.";
+        }
+        let x = prevoiusOutstandingBalance;
+        let y = principalPaid;
+        return ((x - y) > 0) ? (x - y) : 0; //0 means loan cleared
+    }catch(err){
+        return err.message || "An error has occured while updating the outstanding balance";
+    }
+};
+
+//============================= API endpoints below: ==========================
+
 Payment.create = async (req, res) => {
   try {
     const { memberId, loanId, amountPaid } = req.body;
@@ -13,80 +112,38 @@ Payment.create = async (req, res) => {
     //first include static paramenters of the payment instance
     let paymentInstance = { memberId, loanId, amountPaid };
     
-    //process and include other (dynamic) parameters of the payment instance eg. interestPaid, principalPaid, etc
-    paymentInstance.paymentDate = new Date();
+    let   targetLoan  = await loanDb.findByHash({ hash: loanId });
+    const lastPayment = await paymentDb.findLastByLoanId({ loanId });
     
-    let instalmentsElapsedSinceLastPayment = 1; // initially before the borrower makes any payment for their current loan
-    
-    let targetLoan = await loanDb.findByHash({hash:paymentInstance.loanId});
-    
-    let prevoiusOutstandingBalance = targetLoan.principalAmount;
-    
-    //update instalmentsElapsedSinceLastPayment = <retreive this from database> and calculate 
-    let lastPaymnt = await paymentDb.findLastByMember(paymentInstance.memberId);
-    
-     if(lastPaymnt && lastPaymnt.paymentDate){
-        instalmentsElapsedSinceLastPayment = Number((new Date()).getMonth() - lastPaymnt.paymentDate.getMonth());
-        //TODO: calculate it considering other instalment periods, not only month.
-        //      the above is only considering monthly instalments, hence using the getMonth() function to 
-        //      get months elapsed since borrower last made a payment. 
-        //TODO: We need to get weeks elapsed in case instalments are per week, days in case instalments are per day, etc
-     }
-     
-     //update prevoiusOutstandingBalance = <retreived from database>
-     if(lastPaymnt && lastPaymnt.outstandingBalance){
-        prevoiusOutstandingBalance = lastPaymnt.outstandingBalance;
-     }
-    
-    //if the time frame has not yet elapsed, interestPaid = <calculated> : otherwise interestPaid = 0;
-    let isBadDebt = checkIfloanIsBadDebt(loanId);  //returns true/false
-    let delayFinePercentage = 0;
-    if(instalmentsElapsedSinceLastPayment>1){
-        //apply delay fine: fine rate 20% of the interest
-        delayFinePercentage = (20/100) * instalmentsElapsedSinceLastPayment;
-    }
-    
-    let loanInterestRate = targetLoan.loanInterestRate/100;  // default: 10%
-    const interestRatedPer = targetLoan.interestRatedPer; // default: "anum"
-    const instalmentsToBePer = targetLoan.instalmentsToBePer; // default: "month"
-    const loanToLastFor = targetLoan.loanToLastFor; // eg: 3, default: 2
-    const loanToLastForDurationType = targetLoan.loanToLastForDurationType; // default: "years"
-    
-    const ratingPeriodToInstalmentDuration = 
-       { anum: { day:366, week: 54, month: 12, quarter: 4, semi: 2, year:1 },
-         semi: { day:183, week: 27, month: 6, quarter: 2, semi: 1, year:0.5 },
-         quarter:{ day:91, week: 13.5, month: 3, quarter: 1, semi: 0.5, year:0.25 },
-         month: { day:31, week: 4.4, month: 1, quarter: 0.33, semi: 0.167, year:0.083 },
-         week: { day:7, week: 4.4, month: 0.228, quarter: 0.074, semi: 0.037, year:0.018 },
-         day: { day:1, week: 0.143, month: 0.032, quarter: 0.011, semi: 0.005, year:0.003 }
-       }
+    const { interestRatedPer,          // default: "anum"
+            instalmentsToBePer,        // default: "month"
+            loanToLastFor,             // eg: 3, default: 2
+            loanToLastForDurationType, // default: "years"
+            loanInterestRate,          // default: 8.5%
+          } = targetLoan;
     const totalInstalmentsPerRatingPeriod = ratingPeriodToInstalmentDuration[interestRatedPer][instalmentsToBePer];
+          
+    const prevoiusOutstandingBalance = await getPreviousOutstandingBalance({targetLoan, lastPayment });
     
-    let interestToBePaid = (loanInterestRate * (instalmentsElapsedSinceLastPayment/totalInstalmentsPerRatingPeriod) ) * prevoiusOutstandingBalance;
-    //Example: let interestToBePaid = (0.085 * (1/12) ) * 100000;
-    let interestPaid = (!isBadDebt) ? interestToBePaid : 0;
-    interestPaid = (delayFinePercentage * interestToBePaid) + interestPaid;
-    //The above means, if the member pays more than once during the same instalment period (month),
-    //interest will be charged only once, the other times it will be zero because 
-    //instalmentsElapsedSinceLastPayment = 0
-    
-    let principalPaid = amountPaid - interestPaid;
-    //From above line, if borrower has paid less than interest calculated, principalPaid will be negative. This means that
-    // in the next uncommented line (below), the outcome of "(prevoiusOutstandingBalance - principalPaid)" will be 
-    // (prevoiusOutstandingBalance minus minus principalPaid) which results into (math: -- = +) ->
-    // (prevoiusOutstandingBalance + principalPaid). Hence the remaining -would be- interest is added to outstanding principal.
-    
-    let outstandingBalance = ((prevoiusOutstandingBalance - principalPaid) > 0) ? (prevoiusOutstandingBalance - principalPaid) : 0; //0 means loan cleared
+    let interestToBePaid = await calculateInstalmentInterest({
+        targetLoan,
+        prevoiusOutstandingBalance,
+        totalInstalmentsPerRatingPeriod,
+        lastPayment,
+    });
+    const interestPaid = await enforceDelayFine({targetLoan, fineRate:15, ov:interestToBePaid, lastPayment, interestToBePaid });
+    const principalPaid = await calculatePrincipalPaid({amountPaid, interestPaid });
+    const outstandingBalance = await updateOutstandingBalance({prevoiusOutstandingBalance, principalPaid});
     
     //add the calculated (dynamic) parameters to paymentInstance object needed later
-    paymentInstance.interestPaid = interestPaid;
-    paymentInstance.principalPaid = principalPaid;
-    paymentInstance.outstandingBalance = outstandingBalance;
+    paymentInstance.interestPaid = Math.round(interestPaid);
+    paymentInstance.principalPaid = Math.round(principalPaid);
+    paymentInstance.outstandingBalance = Math.round(outstandingBalance);
     
     // new payment instance, using entity layer
     const payment = makeNewPayment(paymentInstance);
     
-    //if the new outstandingBalance is zero, update loan status from "ongoing" to "cleared"
+    //if the new outstandingBalance is zero, update loan status from "ONGOING" to "CLEARED"
     if (outstandingBalance < 1) {
         loanDb.updateByHash({loanId:paymentInstance.loanId, loanStatus:"CLEARED"});
     }
